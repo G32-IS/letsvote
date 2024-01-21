@@ -1,0 +1,16 @@
+version: '3.9'
+
+services:
+  db:
+    env_file: ./backend/.env
+    image: prismagraphql/mongo-single-replica:4.4.3-bionic
+    environment:
+      MONGO_INITDB_DATABASE: letsvote
+      INIT_WAIT_SEC: 3
+    ports:
+      - 27017:27017
+    volumes:
+      - mongodb_data:/data/db  # Volume per la persistenza dei dati
+
+volumes:
+  mongodb_data: {} # Definizione del volume per la persistenza dei dati
