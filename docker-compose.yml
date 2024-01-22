@@ -6,10 +6,10 @@ services:
     build:
       context: ./frontend
       dockerfile: frontend.dockerfile
-    ports:
-      - 3000:3000
     environment:
-      - NEXT_PUBLIC_API_URL=http://localhost:6969/
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+    ports:
+      - ${FE_PORT}:${FE_PORT}
     restart: always
     depends_on:
       - backend
@@ -18,19 +18,21 @@ services:
     build: 
       context: ./backend
       dockerfile: backend.dockerfile
-    ports: 
-      - 6969:6969
     environment:
-      - DATABASE_URL=mongodb://rovery:antbucc@db:27017/letsvote?authSource=admin&directConnection=true
+      - BE_PORT=${BE_PORT}
+      - DATABASE_URL=${DATABASE_URL}
+    ports: 
+      - ${BE_PORT}:${BE_PORT}
   db:
     container_name: db
-    env_file: ./backend/.env
     image: prismagraphql/mongo-single-replica:4.4.3-bionic
     environment:
-      MONGO_INITDB_DATABASE: letsvote
-      INIT_WAIT_SEC: 4
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
+      - MONGO_INITDB_DATABASE=${MONGO_INITDB_DATABASE}
+      - INIT_WAIT_SEC=${INIT_WAIT_SEC}
     ports:
-      - 27017:27017
+      - ${DB_PORT}:${DB_PORT}
     volumes:
       - mongodb_data:/data/db
 
