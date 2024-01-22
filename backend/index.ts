@@ -30,7 +30,7 @@ app.get('/users', async (req: Request, res: Response) => {
 });
 
 //insert new user
-app.post('/users', async (req: Request, res: Response) => {
+app.post('/user', async (req: Request, res: Response) => {
     const { name, email } = req.body;
     const user = await prisma.user.create({
         data: {

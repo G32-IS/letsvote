@@ -1,7 +1,29 @@
 version: '3.9'
 
 services:
+  frontend:
+    container_name: frontend
+    build:
+      context: ./frontend
+      dockerfile: frontend.dockerfile
+    ports:
+      - 3000:3000
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:6969/
+    restart: always
+    depends_on:
+      - backend
+  backend:
+    container_name: backend
+    build: 
+      context: ./backend
+      dockerfile: backend.dockerfile
+    ports: 
+      - 6969:6969
+    environment:
+      - DATABASE_URL=mongodb://rovery:antbucc@db:27017/letsvote?authSource=admin&directConnection=true
   db:
+    container_name: db
     env_file: ./backend/.env
     image: prismagraphql/mongo-single-replica:4.4.3-bionic
     environment:
