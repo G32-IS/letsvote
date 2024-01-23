@@ -1,4 +1,4 @@
-version: '3.9'
+version: "3.9"
 
 services:
   frontend:
@@ -10,7 +10,7 @@ services:
       - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
     ports:
       - ${FE_PORT}:${FE_PORT}
-    restart: always
+    restart: unless-stopped
     depends_on:
       - backend
   backend:
@@ -38,4 +38,4 @@ services:
       - mongodb_data:/data/db
 
 volumes:
-  mongodb_data:
+    mongodb_data:
