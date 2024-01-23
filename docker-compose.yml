@@ -21,6 +21,7 @@ services:
     environment:
       - BE_PORT=${BE_PORT}
       - DATABASE_URL=${DATABASE_URL}
+      - JWT_SECRET=${JWT_SECRET}
     ports: 
       - ${BE_PORT}:${BE_PORT}
   db:
