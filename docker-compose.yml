@@ -1,11 +1,11 @@
 version: "3.9"
 
 services:
+
   frontend:
     container_name: frontend
     build:
       context: ./frontend
-      dockerfile: frontend.dockerfile
     environment:
       - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
     ports:
@@ -13,17 +13,18 @@ services:
     restart: unless-stopped
     depends_on:
       - backend
+
   backend:
     container_name: backend
     build: 
       context: ./backend
-      dockerfile: backend.dockerfile
     environment:
       - BE_PORT=${BE_PORT}
       - DATABASE_URL=${DATABASE_URL}
       - JWT_SECRET=${JWT_SECRET}
     ports: 
       - ${BE_PORT}:${BE_PORT}
+
   db:
     container_name: db
     image: prismagraphql/mongo-single-replica:4.4.3-bionic
