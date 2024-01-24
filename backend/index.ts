@@ -22,6 +22,10 @@ app.use((req: Request, res: Response, next: any) => {
 app.use("/auth", authRouter);
 app.use("/user", userRouter);
 
+app.get("/", (req: Request, res: Response) => {
+    res.send("Connected to server successfully!");
+});
+
 // Test endpoint
 app.get("/test", (req: Request, res: Response) => {
     res.send("Hello World!");
