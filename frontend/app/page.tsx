@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import Nav from "./components/nav";
 
 export default function Home() {
     const [data, setData] = useState("");
@@ -24,6 +25,7 @@ export default function Home() {
 
     return (
         <main>
+            <Nav></Nav>
             <h1>letsvote frontend</h1>
             <p>{data}</p>
         </main>
