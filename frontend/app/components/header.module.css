@@ -1,0 +1,23 @@
+.header {
+    background-color: hsl(var(--clr-primary));
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding-block: var(--fs-400);
+}
+
+.logo {
+    width: var(--fs-800);
+}
+
+.nav {
+    display: flex;
+    gap: var(--fs-500);
+}
+
+.nav a {
+    color: white;
+    font-weight: 700;
+    font-size: var(--fs-400);
+    text-decoration: none;
+}
