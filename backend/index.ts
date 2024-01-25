@@ -1,8 +1,11 @@
 import { Request, Response } from "express";
 import express from "express";
+import { PrismaClient, User } from "@prisma/client";
 
 import { authRouter } from "./routes/auth.router";
 import { userRouter } from "./routes/user.router";
+
+const prisma = new PrismaClient();
 
 const app = express();
 
@@ -22,13 +25,15 @@ app.use((req: Request, res: Response, next: any) => {
 app.use("/auth", authRouter);
 app.use("/user", userRouter);
 
+// test server connection
 app.get("/", (req: Request, res: Response) => {
     res.send("Connected to server successfully!");
 });
 
-// Test endpoint
-app.get("/test", (req: Request, res: Response) => {
-    res.send("Hello World!");
+// test db connection
+app.get("/users", async (req: Request, res: Response) => {
+    const countUsers = await prisma.user.count({});
+    res.send("n° of users: " + countUsers);
 });
 
 const port = process.env.BE_PORT || 4000;
