@@ -32,11 +32,11 @@ export default function Home() {
 
     return (
         <main>
-            <Header></Header>
+            <Header>Header</Header>
             <h1>letsvote frontend</h1>
             <p>{data}</p>
             <SPIDReactButtonDropdown url={defaultURL}></SPIDReactButtonDropdown>
-            <Footer></Footer>
+            <Footer>Footer</Footer>
         </main>
     );
 }
