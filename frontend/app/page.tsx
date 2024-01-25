@@ -4,6 +4,12 @@ import React, { useEffect, useState } from "react";
 import Header from "./components/header";
 import Footer from "./components/footer";
 
+import { SPIDReactButtonDropdown } from "@dej611/spid-react-button";
+// import "bootstrap-italia/dist/css/bootstrap-italia.min.css";
+import "@dej611/spid-react-button/dist/index.css";
+
+const defaultURL = "/myLogin/idp={{idp}}";
+
 export default function Home() {
     const [data, setData] = useState("");
 
@@ -29,6 +35,7 @@ export default function Home() {
             <Header></Header>
             <h1>letsvote frontend</h1>
             <p>{data}</p>
+            <SPIDReactButtonDropdown url={defaultURL}></SPIDReactButtonDropdown>
             <Footer></Footer>
         </main>
     );
