@@ -11,7 +11,7 @@ export default function Header() {
             <nav className={styles.nav}>
                 <Link href="/auth">login</Link>
                 <a href="/guide">guida introduttiva</a>
-                <a href="/votes">votazioni</a>
+                <a href="/pools">votazioni</a>
             </nav>
         </header>
     );
