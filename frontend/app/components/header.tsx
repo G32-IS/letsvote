@@ -1,15 +1,17 @@
+import Link from "next/link";
+
 import styles from "./header.module.css";
 
-export default function Header({ children }: { children: React.ReactNode }) {
+export default function Header() {
     return (
         <header className={styles.header}>
-            <a href="#">
+            <Link href="/">
                 <img className={styles.logo} src="./logo.svg" alt="Logo" />
-            </a>
+            </Link>
             <nav className={styles.nav}>
-                <a href="#">crea votazione</a>
-                <a href="#">le tue votazioni</a>
-                <a href="#">impostazioni</a>
+                <Link href="/auth">login</Link>
+                <a href="/guide">guida introduttiva</a>
+                <a href="/votes">votazioni</a>
             </nav>
         </header>
     );

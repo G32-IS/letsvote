@@ -20,4 +20,5 @@
     font-weight: 700;
     font-size: var(--fs-400);
     text-decoration: none;
+    padding: var(--fs-400);
 }

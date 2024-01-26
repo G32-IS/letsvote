@@ -1,6 +1,6 @@
 import styles from "./footer.module.css";
 
-export default function Footer({ children }: { children: React.ReactNode }) {
+export default function Footer() {
     return (
         <footer className={styles.footer}>
             <nav>

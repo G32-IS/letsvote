@@ -42,6 +42,15 @@
 
 body {
     overflow-x: hidden;
+    min-height: 100svh;
+    /* to allow the footer to get all the remaining bottom space */
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    padding-block: var(--fs-700);
+    min-height: 60svh;
 }
 
 img,

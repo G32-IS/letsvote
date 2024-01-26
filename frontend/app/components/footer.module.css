@@ -1,3 +1,4 @@
 .footer {
     background-color: hsl(var(--clr-bkg));
+    flex-grow: 1;
 }
