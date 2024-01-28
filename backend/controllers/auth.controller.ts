@@ -7,20 +7,29 @@ const prisma = new PrismaClient()
 
 export const authorize = (...args: UserRole[]) => {
     return async (req: Request, res: Response) => {
-        const { email } = req.body
+        const { email, password } = req.body
 
-        prisma.user.findUnique({
+        const user = await prisma.user.findUnique({
             where: {
                 email: email
             }
-        }).then((user) => {
-            if (args.some(role => user?.role == role)) {
+        });
+
+        try {
+            const hashedPassword = await hashPassword(password);
+            const isValid = await passwordMatches(hashedPassword, user!.hashedPassword);
+
+            if (isValid && args.some(role => user?.role == role)) {
                 next();
             } else {
                 res.status(403).json({ message: 'Unauthorized' });
             }
-        })
-    }
+        } catch (err: any) {
+            res.status(400).json({ message: 'Bad request'});
+        }
+
+        next();
+   }
 }
 
 export const createIfNew = async (req: Request, res: Response) => {
