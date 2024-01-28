@@ -1,5 +1,5 @@
 import express, {Request, Response} from 'express'
-import { createIfNew, withSpid } from '../controllers/user.controller';
+import { createIfNew, withSpid } from '../controllers/auth.controller';
 import { PrismaClient } from '@prisma/client';
 
 export const testRouter = express();
