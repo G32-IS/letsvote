@@ -1,10 +1,11 @@
 import { Request, Response } from "express";
 import express from "express";
-import { PrismaClient, User } from "@prisma/client";
 
 import { authRouter } from "./routes/auth.router";
 import { userRouter } from "./routes/user.router";
 import { testRouter } from "./routes/test.router";
+import { electionRouter } from "./routes/election.router";
+import { voteRouter } from "./routes/vote.router";
 
 const app = express();
 
@@ -21,9 +22,11 @@ app.use((req: Request, res: Response, next: any) => {
 });
 
 // Routes
-app.use("/auth", authRouter);
 app.use("/test", testRouter);
+app.use("/auth", authRouter);
 app.use("/user", userRouter);
+app.use("/election", electionRouter);
+app.use("/vote", voteRouter);
 
 const port = process.env.BE_PORT || 4000;
-app.listen(port, () => console.log(`Server running on port ${port}`));
+app.listen(port, () => console.log(`Server running http://localhost:${port}`));

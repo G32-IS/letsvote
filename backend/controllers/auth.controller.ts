@@ -1,10 +1,27 @@
 import next, { Request, Response } from "express"
-import { PrismaClient, UserRole } from "@prisma/client";
+import { PrismaClient, User, UserRole } from "@prisma/client";
 import { hashPassword, passwordMatches } from "../utils/bcrypt";
 import jwt from 'jsonwebtoken'
-import { hash } from "bcrypt";
 
 const prisma = new PrismaClient()
+
+export const authorize = (...args: UserRole[]) => {
+    return async (req: Request, res: Response) => {
+        const { email } = req.body
+
+        prisma.user.findUnique({
+            where: {
+                email: email
+            }
+        }).then((user) => {
+            if (args.some(role => user?.role == role)) {
+                next();
+            } else {
+                res.status(403).json({ message: 'Unauthorized' });
+            }
+        })
+    }
+}
 
 export const createIfNew = async (req: Request, res: Response) => {
     const { email, password } = req.body;
