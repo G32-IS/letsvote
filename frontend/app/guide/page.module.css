@@ -1,0 +1,16 @@
+.main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.main article {
+    height: 50vh;
+    aspect-ratio: 2;
+    background-color: red;
+}
+
+.main article {
+    display: inherit;
+}

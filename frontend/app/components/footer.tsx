@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import styles from "./footer.module.css";
 
 export default function Footer() {
@@ -6,7 +8,9 @@ export default function Footer() {
             <nav>
                 <ul>
                     <li>copyright</li>
-                    <li>contanct</li>
+                    <li>
+                        <Link href="/guide/api-docs">api-docs</Link>
+                    </li>
                     <li>help</li>
                 </ul>
             </nav>
