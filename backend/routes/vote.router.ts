@@ -5,4 +5,4 @@ import { UserRole } from '@prisma/client';
 export const voteRouter = express.Router();
 voteRouter.use(express.json());
 
-voteRouter.use('/createVote', authorize(UserRole.Voter, UserRole.Admin, UserRole.SysAdmin))
+voteRouter.post('/createVote', authorize(UserRole.Voter, UserRole.Admin, UserRole.SysAdmin))

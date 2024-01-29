@@ -6,7 +6,7 @@ export const electionRouter = express.Router();
 electionRouter.use(express.json());
 
 // electionRouter.use('/getElections')
-electionRouter.use('/getMyElections', authorize(UserRole.Admin))
-electionRouter.use('/createElection', authorize(UserRole.Admin))
-electionRouter.use('/updateElection', authorize(UserRole.Admin))
+electionRouter.get('/getMyElections', authorize(UserRole.Admin))
+electionRouter.post('/createElection', authorize(UserRole.Admin))
+electionRouter.put('/updateElection', authorize(UserRole.Admin))
 // electionRouter.use('/getResults')

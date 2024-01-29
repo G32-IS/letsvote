@@ -1,4 +1,4 @@
-import next, { Request, Response } from "express"
+import { NextFunction, Request, Response } from "express"
 import { PrismaClient, User, UserRole } from "@prisma/client";
 import { hashPassword, passwordMatches } from "../utils/bcrypt";
 import jwt from 'jsonwebtoken'
@@ -6,7 +6,7 @@ import jwt from 'jsonwebtoken'
 const prisma = new PrismaClient()
 
 export const authorize = (...args: UserRole[]) => {
-    return async (req: Request, res: Response) => {
+    return async (req: Request, res: Response, next: NextFunction) => {
         const { email, password } = req.body
 
         const user = await prisma.user.findUnique({
@@ -32,8 +32,13 @@ export const authorize = (...args: UserRole[]) => {
    }
 }
 
-export const createIfNew = async (req: Request, res: Response) => {
+export const createIfNew = async (req: Request, res: Response, next: NextFunction) => {
     const { email, password } = req.body;
+
+    if (!email || !password) {
+        res.status(400).json({ message: 'Bad request' });
+        return;
+    }
 
     const user = await prisma.user.findUnique({
         where: {
@@ -41,23 +46,26 @@ export const createIfNew = async (req: Request, res: Response) => {
         }
     });
 
-    if (user) {
-        return next();
-    }
+    if (!user) {
+        const hashedPassword = await hashPassword(password);
+        const userData = {
+            email: email,
+            hashedPassword: hashedPassword,
+            role: UserRole.Voter
+        };
+        const newUser = await prisma.user.create({
+            data: userData
+        });
 
-    const hashedPassword = await hashPassword(password);
-    const userData = {
-        email: email,
-        hashedPassword: hashedPassword,
-        role: UserRole.Voter
-    };
-    const newUser = await prisma.user.create({
-        data: userData
-    });
-
-    if (!newUser) {
-        res.status(400).json({ message: 'Could not create user' });
-        return;
+        if (newUser) {
+            res.status(201).json({
+                message: 'New user created',
+                data: userData
+            })
+        } else {
+            res.status(400).json({ message: 'Could not create user' });
+            return;
+        }
     }
 
     next();
@@ -77,20 +85,18 @@ export const withSpid = async (req: Request, res: Response) => {
     }
 
     const hashedPassword = await hashPassword(password);
-    try {
-        const validPassword = await passwordMatches(password, hashedPassword);
+    const validPassword = await passwordMatches(password, hashedPassword);
 
-        if (!validPassword) {
-            res.status(401).json({ message: 'Invalid password' });
-            return;
-        }
-
-        // Set cookie
-        const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET!, { expiresIn: "7d" })
-        res.cookie("token", token, { httpOnly: true, secure: true, path: "/", });
-
-        res.status(200).json({ message: 'Login successfull' });
-    } catch (err: any) {
-        res.status(500).json(err);
+    if (!validPassword) {
+        res.status(401).json({ message: 'Invalid password' });
+        return;
     }
+
+    // Set cookie
+    if (!process.env.JWT_SECRET) {
+        res.status(500).json({ message: 'Could not generate token' });
+        return;
+    }
+    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET!, { expiresIn: "7d" })
+    res.cookie("token", token, { httpOnly: true, secure: true, path: "/", });
 }
