@@ -2,6 +2,12 @@
 
 import React, { useEffect, useState } from "react";
 
+import { SPIDReactButtonDropdown } from "@dej611/spid-react-button";
+// import "bootstrap-italia/dist/css/bootstrap-italia.min.css";
+import "@dej611/spid-react-button/dist/index.css";
+
+const defaultURL = "/myLogin/idp={{idp}}";
+
 export default function Home() {
     const [data, setData] = useState("");
 
@@ -23,9 +29,10 @@ export default function Home() {
     }, []); // Empty dependency array ensures this runs once on component mount
 
     return (
-        <main>
+        <>
             <h1>letsvote frontend</h1>
             <p>{data}</p>
-        </main>
+            <SPIDReactButtonDropdown url={defaultURL}></SPIDReactButtonDropdown>
+        </>
     );
 }

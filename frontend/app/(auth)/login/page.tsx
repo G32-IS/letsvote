@@ -7,12 +7,17 @@ import styles from "./page.module.css";
 
 const defaultURL = "/myLogin/idp={{idp}}";
 
-// `app/dashboard/page.tsx` is the UI for the `/dashboard` URL
 export default function Page() {
     return (
-        <main className={styles.main}>
-            <h1>Login</h1>
+        <div className={styles.wrapper}>
+            <div className={styles.textCont}>
+                <h1>Accedi al tuo profilo</h1>
+                <p>
+                    Accedi al tuo profilo per poter votare e partecipare alle
+                    votazioni.
+                </p>
+            </div>
             <SPIDReactButtonDropdown url={defaultURL}></SPIDReactButtonDropdown>
-        </main>
+        </div>
     );
 }

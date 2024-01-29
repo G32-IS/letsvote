@@ -2,12 +2,14 @@
     background-color: hsl(var(--clr-primary));
     display: flex;
     align-items: center;
-    justify-content: space-around;
-    padding-block: var(--fs-400);
+    justify-content: space-between;
 }
 
 .logo {
-    width: var(--fs-800);
+    font-size: var(--fs-400);
+    color: white;
+    font-weight: 700;
+
 }
 
 .nav {
@@ -17,8 +19,7 @@
 
 .nav a {
     color: white;
-    font-weight: 700;
-    font-size: var(--fs-400);
+    font-size: var(--fs-300);
     text-decoration: none;
-    padding: var(--fs-400);
+    /* padding: var(--fs-400); */
 }

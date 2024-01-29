@@ -1,0 +1,56 @@
+.footer {
+    background-color: hsl(var(--clr-bkg));
+
+    display: flex;
+    justify-content: space-between;
+}
+
+.logo {
+    font-weight: 800;
+    font-size: var(--fs-400);
+}
+
+.textCont {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: var(--fs-500);
+}
+
+.textList {
+    display: flex;
+    flex-direction: column;
+}
+
+.contactTitle {
+    font-weight: 600;
+}
+
+.rightTextCont {
+    text-align: right;
+}
+
+.footer {
+    .link {
+        text-decoration: none;
+    }
+    /* unvisited link */
+    .link:link {
+        color: black;
+    }
+    
+    /* visited link */
+    .link:visited {
+        color: black;
+    }
+    
+    /* mouse over link */
+    .link:hover {
+        color: rgba(0,0,0,0.7);
+    }
+    
+    /* selected link */
+    .link:active {
+        color: black;
+    }
+}
