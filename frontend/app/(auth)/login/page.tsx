@@ -17,7 +17,10 @@ export default function Page() {
                     votazioni.
                 </p>
             </div>
-            <SPIDReactButtonDropdown url={defaultURL}></SPIDReactButtonDropdown>
+            <div>
+                <SPIDReactButtonDropdown url={defaultURL}></SPIDReactButtonDropdown>
+                <div>Accedi con DEMO</div>
+            </div>
         </div>
     );
 }
