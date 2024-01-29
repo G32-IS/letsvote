@@ -57,12 +57,7 @@ export const createIfNew = async (req: Request, res: Response, next: NextFunctio
             data: userData
         });
 
-        if (newUser) {
-            res.status(201).json({
-                message: 'New user created',
-                data: userData
-            })
-        } else {
+        if (!newUser) {
             res.status(400).json({ message: 'Could not create user' });
             return;
         }
@@ -99,4 +94,5 @@ export const withSpid = async (req: Request, res: Response) => {
     }
     const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET!, { expiresIn: "7d" })
     res.cookie("token", token, { httpOnly: true, secure: true, path: "/", });
+    res.status(200).json({ message: 'Login successful' })
 }

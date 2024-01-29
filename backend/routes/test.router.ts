@@ -9,11 +9,11 @@ const prisma = new PrismaClient();
 
 // Test server connection
 testRouter.get("/", (req: Request, res: Response) => {
-    res.send("Connected to server successfully!");
+    res.json({ message: 'Connection succesful' });
 });
 
 // Test db connection
-testRouter.get("/users", async (req: Request, res: Response) => {
+testRouter.get("/userCount", async (req: Request, res: Response) => {
     const countUsers = await prisma.user.count({});
-    res.send("n° of users: " + countUsers);
+    res.json({ count: countUsers })
 });
