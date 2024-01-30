@@ -4,7 +4,7 @@ import express from "express";
 import { authRouter } from "./routes/auth.router";
 import { userRouter } from "./routes/user.router";
 import { testRouter } from "./routes/test.router";
-import { electionRouter } from "./routes/election.router";
+import { eventRouter } from "./routes/event.router";
 import { voteRouter } from "./routes/vote.router";
 
 const app = express();
@@ -25,7 +25,7 @@ app.use((req: Request, res: Response, next: any) => {
 app.use("/test", testRouter);
 app.use("/auth", authRouter);
 app.use("/user", userRouter);
-app.use("/election", electionRouter);
+app.use("/event", eventRouter);
 app.use("/vote", voteRouter);
 
 const port = process.env.BE_PORT || 4000;
