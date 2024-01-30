@@ -14,11 +14,31 @@ enum UserRole {
 }
 
 model User {
-  id              String  @id @default(cuid()) @map("_id")
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-  email           String  @unique
-  hashedPassword  String
-  name            String?
-  role            UserRole
+  id             String   @id @default(cuid()) @map("_id")
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  email          String   @unique
+  hashedPassword String
+  name           String?
+  role           UserRole
+  Pool           Pool[]
+  Vote           Vote[]
+}
+
+model Pool {
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  title    String
+  body     String
+  author   User   @relation(fields: [authorId], references: [id])
+  authorId String @db.ObjectId
+  votes    Vote[]
+}
+
+model Vote {
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  author   User   @relation(fields: [authorId], references: [id])
+  authorId String @db.ObjectId
+  choice   String
+  pool     Pool   @relation(fields: [poolId], references: [id])
+  poolId   String @db.ObjectId
 }

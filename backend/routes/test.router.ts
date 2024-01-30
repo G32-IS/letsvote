@@ -1,6 +1,6 @@
-import express, {Request, Response} from 'express'
-import { createIfNew, withSpid } from '../controllers/auth.controller';
-import { PrismaClient } from '@prisma/client';
+import express, { Request, Response } from "express";
+import { createIfNew, withSpid } from "../controllers/auth.controller";
+import { PrismaClient } from "@prisma/client";
 
 export const testRouter = express();
 testRouter.use(express.json());
@@ -9,7 +9,7 @@ const prisma = new PrismaClient();
 
 // Test server connection
 testRouter.get("/", (req: Request, res: Response) => {
-    res.send("Connected to server successfully!");
+    res.send(201).json({ message: "this is an error" });
 });
 
 // Test db connection
