@@ -1,10 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 
 const fetchTest = async () => {
-    const response = await fetch(`${process.env.API_URL}/test/users`);
-    const data = await response.text();
-    
-    return data;
+    const response = await fetch(`${process.env.API_URL}/test/userCount`);
+    const data = await response.json();
+
+    return data.count;
 }
 
 export const useTest = () => {
