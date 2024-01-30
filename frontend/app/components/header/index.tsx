@@ -9,7 +9,7 @@ export default function Header() {
             {/* <Link href="/">
                 <img className={styles.logo} src="./logo.svg" alt="Logo" />
             </Link> */}
-            <div className={styles.logo}>LETSVOTE</div>
+            <div className={styles.logo}>letsvote</div>
             <nav className={styles.nav}>
                 <Link href="/login">Accedi</Link>
                 <a href="/guide">Guida introduttiva</a>

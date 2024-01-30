@@ -9,8 +9,8 @@ import Footer from "./components/footer";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-    title: "Letsvote",
-    description: "Letsvote app",
+    title: "letsvote",
+    description: "letsvote app",
 };
 
 export default function RootLayout({
@@ -23,7 +23,7 @@ export default function RootLayout({
             <Provider>
                 <body className={inter.className}>
                     <Header />
-                    <main>{children}</main>
+                    {children}
                     <Footer />
                 </body>
             </Provider>

@@ -1,16 +1,23 @@
 "use client";
 
 import { useTest } from "../hooks/useTest";
+import Loading from "../components/loading";
 
 export default function Page() {
     const { test, isLoading, error } = useTest();
 
-    if (isLoading) return (<div>Loading...</div>);
-    if (error) return (<div>Error: {error}</div>);
-    
+    if (isLoading) return <Loading />;
+    if (error)
+        return (
+            <main>
+                <h1>Error</h1>
+                <p>{error}</p>
+            </main>
+        );
+
     return (
-        <>
-            <div>test: {test}</div>
-        </>
+        <main>
+            <p>test: {test}</p>
+        </main>
     );
 }

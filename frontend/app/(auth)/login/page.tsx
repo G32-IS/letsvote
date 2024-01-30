@@ -9,18 +9,18 @@ const defaultURL = "/myLogin/idp={{idp}}";
 
 export default function Page() {
     return (
-        <div className={styles.wrapper}>
-            <div className={styles.textCont}>
-                <h1>Accedi al tuo profilo</h1>
-                <p>
-                    Accedi al tuo profilo per poter votare e partecipare alle
-                    votazioni.
-                </p>
-            </div>
-            <div>
-                <SPIDReactButtonDropdown url={defaultURL}></SPIDReactButtonDropdown>
+        <main className={styles.wrapper}>
+            <h1>Accedi al tuo profilo</h1>
+            <p>
+                Accedi al tuo profilo per poter votare e partecipare alle
+                votazioni.
+            </p>
+            <section>
+                <SPIDReactButtonDropdown
+                    url={defaultURL}
+                ></SPIDReactButtonDropdown>
                 <div>Accedi con DEMO</div>
-            </div>
-        </div>
+            </section>
+        </main>
     );
 }

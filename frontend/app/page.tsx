@@ -26,13 +26,13 @@ export default function Home() {
         };
 
         fetchData();
-    }, []); // Empty dependency array ensures this runs once on component mount
+    }, []);
 
     return (
-        <>
+        <main>
             <h1>letsvote frontend</h1>
             <p>{data}</p>
             <SPIDReactButtonDropdown url={defaultURL}></SPIDReactButtonDropdown>
-        </>
+        </main>
     );
 }
