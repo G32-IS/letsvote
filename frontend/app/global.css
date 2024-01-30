@@ -10,6 +10,7 @@
     --fs-400: 0.9375rem;
     --fs-300: 1rem;
     --fs-200: 0.875rem;
+    --fs-100: 0.5rem;
 }
 
 *,
@@ -48,11 +49,6 @@ body {
     flex-direction: column;
 }
 
-main {
-    padding-block: var(--fs-700);
-    min-height: 60svh;
-}
-
 img,
 picture:not([hidden]) {
     max-width: 100%;
@@ -82,4 +78,17 @@ select {
 p {
     max-width: 60ch;
     text-wrap: wrap;
+}
+
+header, footer, main {
+    padding: var(--fs-400) var(--fs-600);
+}
+
+main {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    min-height: 60svh;
+    flex-grow: 1;
 }
