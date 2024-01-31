@@ -7,7 +7,7 @@ import { testRouter } from "./routes/test.router";
 import { electionRouter } from "./routes/election.router";
 import { voteRouter } from "./routes/vote.router";
 
-const app = express();
+export const app = express();
 
 app.use(express.json());
 
