@@ -11,10 +11,10 @@ export default function Page() {
     if (isLoading) return <Loading />;
     if (error)
         return (
-            <main>
+            <>
                 <h1>Error</h1>
-                <p>{error}</p>
-            </main>
+                {/* <p>{error}</p> */}
+            </>
         );
 
     return (

@@ -14,31 +14,41 @@ enum UserRole {
 }
 
 model User {
-  id             String   @id @default(cuid()) @map("_id")
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-  email          String   @unique
-  hashedPassword String
-  name           String?
-  role           UserRole
-  Pool           Pool[]
-  Vote           Vote[]
+  id              String      @id @default(cuid()) @map("_id") @db.ObjectId
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  email           String      @unique
+  hashedPassword  String
+  name            String?
+  role            UserRole
+  events          Event[]
+  votes           Vote[]
 }
 
-model Pool {
-  id       String @id @default(auto()) @map("_id") @db.ObjectId
-  title    String
-  body     String
-  author   User   @relation(fields: [authorId], references: [id])
-  authorId String @db.ObjectId
-  votes    Vote[]
+enum EventType {
+  ReferendumNazionale
+  ReferendumRegionale
+  ElezioneParlamentare
+  ElezioneRegionale
+  ElezioneProvinciale
+  ElezioneComunale
+}
+
+model Event {
+  id        String        @id @default(auto()) @map("_id") @db.ObjectId
+  title     String
+  type      EventType
+  body      String
+  author    User          @relation(fields: [authorId], references: [id])
+  authorId  String        @db.ObjectId
+  votes     Vote[]
 }
 
 model Vote {
-  id       String @id @default(auto()) @map("_id") @db.ObjectId
-  author   User   @relation(fields: [authorId], references: [id])
-  authorId String @db.ObjectId
-  choice   String
-  pool     Pool   @relation(fields: [poolId], references: [id])
-  poolId   String @db.ObjectId
+  id          String      @id @default(auto()) @map("_id") @db.ObjectId
+  author      User        @relation(fields: [authorId], references: [id])
+  authorId    String      @db.ObjectId
+  choice      String
+  event       Event @relation(fields: [eventId], references: [id])
+  eventId     String      @db.ObjectId
 }

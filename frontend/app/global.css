@@ -1,6 +1,9 @@
 :root {
     --clr-primary: 210, 100%, 40%;
     --clr-bkg: 60, 20%, 95%;
+    --clr-grey-0: #e9ebee;
+    --clr-grey-1: #d2d7dd;
+    --clr-grey-2: #adb5bd;
 
     --fs-900: clamp(5rem, 8vw + 1rem, 9.375rem);
     --fs-800: 3.5rem;
@@ -90,6 +93,9 @@ main {
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-direction: column;
+    gap: var(--fs-400);
+    padding: var(--fs-400) var(--fs-900);
 
     min-height: 60svh;
     flex-grow: 1;
