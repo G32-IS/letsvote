@@ -21,18 +21,28 @@ export default function Footer() {
                 <Link className={styles.link} href="#">
                     Richiedi di amministrare le votazioni
                 </Link>
-                <div className={styles.textList}>
-                    <Link className={styles.link} href="#">
-                        Politica sulla riservatezza
-                    </Link>
-                    <Link className={styles.link} href="#">
-                        Termini di servizio
-                    </Link>
-                    <Link className={styles.link} href="/guide/api-docs">
-                        Documentazione api
-                    </Link>
-                    <p>© 2023 letsvote. All rights reserved.</p>
-                </div>
+                <article>
+                    <h4>For developers</h4>
+                    <ul>
+                        <li>
+                            <Link
+                                className={styles.link}
+                                href="/guide/api-docs"
+                            >
+                                api-docs
+                            </Link>
+                        </li>
+                        <li>
+                            <Link
+                                className={styles.link}
+                                href="/guide/api-tests"
+                            >
+                                api-tests
+                            </Link>
+                        </li>
+                    </ul>
+                </article>
+                <p>© 2023 letsvote. All rights reserved.</p>
             </div>
         </footer>
     );

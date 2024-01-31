@@ -19,3 +19,10 @@
     ```
 
 ## docs
+
+## test
+
+if you run locally
+
+-   [frontend tests](./frontend/coverage/lcov-report/index.html)
+-   [backend tests](./backend/coverage/lcov-report/index.html)

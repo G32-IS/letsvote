@@ -80,7 +80,9 @@ p {
     text-wrap: wrap;
 }
 
-header, footer, main {
+header,
+footer,
+main {
     padding: var(--fs-400) var(--fs-600);
 }
 
@@ -88,7 +90,11 @@ main {
     display: flex;
     align-items: center;
     justify-content: center;
-    
+
     min-height: 60svh;
     flex-grow: 1;
+}
+
+li {
+    list-style-type: none;
 }

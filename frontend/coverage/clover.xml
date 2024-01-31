@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1706697014556" clover="3.2.0">
+  <project timestamp="1706697014556" name="All files">
+    <metrics statements="8" coveredstatements="6" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="1" elements="10" coveredelements="7" complexity="0" loc="8" ncloc="8" packages="1" files="1" classes="1"/>
+    <file name="useTest.ts" path="/home/alessandro/repos/letsvote/frontend/app/hooks/useTest.ts">
+      <metrics statements="8" coveredstatements="6" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="1"/>
+      <line num="1" count="1" type="stmt"/>
+      <line num="3" count="1" type="stmt"/>
+      <line num="4" count="1" type="stmt"/>
+      <line num="5" count="1" type="stmt"/>
+      <line num="6" count="1" type="stmt"/>
+      <line num="9" count="1" type="stmt"/>
+      <line num="14" count="0" type="stmt"/>
+      <line num="19" count="0" type="stmt"/>
+    </file>
+  </project>
+</coverage>
