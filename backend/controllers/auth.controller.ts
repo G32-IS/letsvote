@@ -1,45 +1,39 @@
 import { NextFunction, Request, Response } from "express";
-import { PrismaClient, User, UserRole } from "@prisma/client";
+import { UserRole } from "@prisma/client";
 import { hashPassword, passwordMatches } from "../utils/bcrypt";
 import jwt from "jsonwebtoken";
+import prisma from "../prisma/prisma-client";
 
-export const prisma = new PrismaClient();
+export const authorize = (req: Request, res: Response, next: NextFunction) => {
+    const token = req.header('Authorization');
+    if (!token) {
+        res.status(403).json({ message: 'Unauthorized' });
+        return;
+    }
 
-export const authorize = (...args: UserRole[]) => {
+    const key = process.env.JWT_SECRET!;
+    jwt.verify(token, key, (err, user) => {
+        if (err) return res.status(403).json({ message: 'Unauthorized' });
+        req.body.user = user;
+        next();
+    });
+}
+
+export const accessRoles = (...args: UserRole[]) => {
     return async (req: Request, res: Response, next: NextFunction) => {
-        const { email = "", password = "" } = req.body;
+        const user = req.body.user;
 
-        const user = await prisma.user.findUnique({
-            where: {
-                email: email,
-            },
-        });
-
-        try {
-            const hashedPassword = await hashPassword(password);
-            const isValid = await passwordMatches(
-                hashedPassword,
-                user!.hashedPassword
-            );
-
-            if (isValid && args.some((role) => user?.role == role)) {
-                next();
-            } else {
-                res.status(403).json({ message: "Unauthorized" });
-            }
-        } catch (err: any) {
-            res.status(400).json({ message: "Bad request" });
+        if (args.some((role) => user?.role == role)) {
+            next();
+        } else {
+            res.status(403).json({ message: "Unauthorized" });
         }
 
         next();
     };
 };
 
-export const createIfNew = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-) => {
+export const createIfNew = async (req: Request, res: Response, next: NextFunction) => {
     const { email, password } = req.body;
 
     if (!email || !password) {
@@ -74,34 +68,34 @@ export const createIfNew = async (
 };
 
 export const withSpid = async (req: Request, res: Response) => {
+    // Check user
     const { email, password } = req.body;
     const user = await prisma.user.findUnique({
         where: {
             email,
         },
     });
-
     if (!user) {
         res.status(404).json({ message: "User not found" });
         return;
     }
 
+    // Check password
     const hashedPassword = await hashPassword(password);
     const validPassword = await passwordMatches(password, hashedPassword);
-
     if (!validPassword) {
         res.status(401).json({ message: "Invalid password" });
         return;
     }
 
-    // Set cookie
-    if (!process.env.JWT_SECRET) {
+    // Create token
+    const key = process.env.JWT_SECRET;
+    if (!key) {
         res.status(500).json({ message: "Could not generate token" });
         return;
     }
-    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET!, {
+    const token = jwt.sign({ id: user.id }, key, {
         expiresIn: "7d",
     });
-    res.cookie("token", token, { httpOnly: true, secure: true, path: "/" });
-    res.status(200).json({ message: "Login successful" });
+    res.status(200).json({ token: token });
 };

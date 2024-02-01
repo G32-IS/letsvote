@@ -28,5 +28,5 @@ app.use("/user", userRouter);
 app.use("/event", eventRouter);
 app.use("/vote", voteRouter);
 
-const port = process.env.BE_PORT || 4000;
+const port = process.env.BE_PORT || 9999;
 app.listen(port, () => console.log(`Server running http://localhost:${port}`));

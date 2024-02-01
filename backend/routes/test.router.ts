@@ -1,11 +1,8 @@
 import express, { Request, Response } from "express";
-import { createIfNew, withSpid } from "../controllers/auth.controller";
-import { PrismaClient } from "@prisma/client";
+import prisma from "../prisma/prisma-client";
 
 export const testRouter = express();
 testRouter.use(express.json());
-
-const prisma = new PrismaClient();
 
 // Test server connection
 testRouter.get("/", (req: Request, res: Response) => {
