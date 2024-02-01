@@ -30,7 +30,12 @@ export default function Page() {
                                 : styles.displayNone
                         }
                     >
-                        lista votazioni
+                        <h2>Lista Votazioni</h2>
+                        <p>
+                            Nella <Link href="/">Home</Link> page puoi vedere le
+                            votazioni attualmente in corso e, se ne rispetti i
+                            requisiti, puoi prenderne parte.
+                        </p>
                     </section>
                     <section
                         className={
@@ -39,7 +44,11 @@ export default function Page() {
                                 : styles.displayNone
                         }
                     >
-                        andamento votazioni
+                        <h2>Andamento votazioni</h2>
+                        <p>
+                            Per ogni votazione è possibile osservarne
+                            l'andamento in tempo reale
+                        </p>
                     </section>
                     <section
                         className={
@@ -48,7 +57,25 @@ export default function Page() {
                                 : styles.displayNone
                         }
                     >
-                        partecipazione a votazione
+                        <h2>Particepa a votazione</h2>
+                        <p>
+                            Per poter prendere parte a una votazione è
+                            necessario effettuare l'accesso tramie uno tra i
+                            servizi di identità digitale{" "}
+                            <a
+                                href="https://www.spid.gov.it/en/"
+                                target="_blank"
+                            >
+                                SPID
+                            </a>{" "}
+                            o{" "}
+                            <a
+                                href="https://www.cartaidentita.interno.gov.it/en/home/"
+                                target="_blank"
+                            >
+                                CIE
+                            </a>
+                        </p>
                     </section>
                     <section
                         className={
@@ -57,7 +84,12 @@ export default function Page() {
                                 : styles.displayNone
                         }
                     >
-                        storico votazioni
+                        <h2>Storico votazioni</h2>
+                        <p>
+                            Nell' <Link href="#">Area Personale</Link> puoi
+                            visualizzare lo storico delle votazione a cui hai
+                            partecipato
+                        </p>
                     </section>
                     <section
                         className={
@@ -66,7 +98,16 @@ export default function Page() {
                                 : styles.displayNone
                         }
                     >
-                        richiesta amm. delle votazioni
+                        <h2>Richiedi amm. delle votazioni</h2>
+                        <p>
+                            Con questo permesso puoi creare votazioni al livello
+                            e nel territorio di tua competenza, una volta
+                            verificata la tua identità da parte di un amm. di
+                            sistema. Per fare richiesta, visita la pagina{" "}
+                            <Link href="#">
+                                Richiedi di amministrare le votazioni
+                            </Link>
+                        </p>
                     </section>
                 </div>
                 <div className={styles.btnsContainer}>
