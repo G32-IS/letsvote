@@ -8,9 +8,28 @@
 .main article {
     height: 50vh;
     aspect-ratio: 2;
-    background-color: red;
+    background-color: pink;
+    display: flex;
+    flex-direction: column;
 }
 
-.main article {
-    display: inherit;
+.slider {
+    display: flex;
+    overflow-y: scroll;
+    flex: 1;
 }
+
+.displayBlock {
+    display: block;
+}
+
+.displayNone {
+    display: none;
+}
+
+.btnsContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+/* end slider */
