@@ -35,13 +35,15 @@ enum EventType {
 }
 
 model Event {
-    id        String        @id @default(auto()) @map("_id") @db.ObjectId
-    title     String
-    type      EventType
-    body      String
-    author    User          @relation(fields: [authorId], references: [id])
-    authorId  String        @db.ObjectId
-    votes     Vote[]
+    id          String      @id @default(auto()) @map("_id") @db.ObjectId
+    title       String
+    type        EventType
+    body        String
+    author      User        @relation(fields: [authorId], references: [id])
+    authorId    String      @db.ObjectId
+    startDate   DateTime
+    endDate     DateTime
+    votes       Vote[]
 }
 
 model Vote {
@@ -49,6 +51,6 @@ model Vote {
     author      User        @relation(fields: [authorId], references: [id])
     authorId    String      @db.ObjectId
     choice      String
-    event       Event @relation(fields: [eventId], references: [id])
+    event       Event       @relation(fields: [eventId], references: [id])
     eventId     String      @db.ObjectId
 }

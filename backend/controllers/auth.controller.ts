@@ -5,15 +5,15 @@ import jwt from "jsonwebtoken";
 import prisma from "../prisma/prisma-client";
 
 export const authorize = (req: Request, res: Response, next: NextFunction) => {
-    const token = req.header('Authorization');
+    const token = req.cookies.token;
     if (!token) {
-        res.status(403).json({ message: 'Unauthorized' });
+        res.status(403).json({ message: "Unauthorized" });
         return;
     }
 
     const key = process.env.JWT_SECRET!;
-    jwt.verify(token, key, (err, user) => {
-        if (err) return res.status(403).json({ message: 'Unauthorized' });
+    jwt.verify(token, key, (err: any, user: any) => {
+        if (err) return res.status(403).json({ message: "Unauthorized" });
         req.body.user = user;
         next();
     });
@@ -97,5 +97,7 @@ export const login = async (req: Request, res: Response) => {
     const token = jwt.sign({ id: user.id }, key, {
         expiresIn: "7d",
     });
-    res.status(200).json({ token: token });
+    res.cookie("token", token, {httpOnly: true, secure: true, path: "/"})
+
+    res.status(200).json({ message: "Login successful" });
 };
