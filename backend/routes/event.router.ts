@@ -1,4 +1,4 @@
-import express, {Request, Response} from 'express'
+import express from 'express'
 import { accessRoles, authorize } from '../controllers/auth.controller';
 import { UserRole } from '@prisma/client';
 import { create, get, getAll, update } from '../controllers/event.controller';

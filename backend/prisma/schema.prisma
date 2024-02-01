@@ -1,54 +1,54 @@
 generator client {
-  provider = "prisma-client-js"
+    provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "mongodb"
-  url      = env("BE_DATABASE_URL")
+    provider = "mongodb"
+    url      = env("BE_DATABASE_URL")
 }
 
 enum UserRole {
-  SysAdmin
-  Admin
-  Voter
+    SysAdmin
+    Admin
+    Voter
 }
 
 model User {
-  id              String      @id @default(cuid()) @map("_id") @db.ObjectId
-  createdAt       DateTime    @default(now())
-  updatedAt       DateTime    @updatedAt
-  email           String      @unique
-  hashedPassword  String
-  name            String?
-  role            UserRole
-  events          Event[]
-  votes           Vote[]
+    id              String      @id @default(auto()) @map("_id") @db.ObjectId
+    createdAt       DateTime    @default(now())
+    updatedAt       DateTime    @updatedAt
+    email           String      @unique
+    hashedPassword  String
+    name            String?
+    role            UserRole
+    events          Event[]
+    votes           Vote[]
 }
 
 enum EventType {
-  ReferendumNazionale
-  ReferendumRegionale
-  ElezioneParlamentare
-  ElezioneRegionale
-  ElezioneProvinciale
-  ElezioneComunale
+    ReferendumNazionale
+    ReferendumRegionale
+    ElezioneParlamentare
+    ElezioneRegionale
+    ElezioneProvinciale
+    ElezioneComunale
 }
 
 model Event {
-  id        String        @id @default(auto()) @map("_id") @db.ObjectId
-  title     String
-  type      EventType
-  body      String
-  author    User          @relation(fields: [authorId], references: [id])
-  authorId  String        @db.ObjectId
-  votes     Vote[]
+    id        String        @id @default(auto()) @map("_id") @db.ObjectId
+    title     String
+    type      EventType
+    body      String
+    author    User          @relation(fields: [authorId], references: [id])
+    authorId  String        @db.ObjectId
+    votes     Vote[]
 }
 
 model Vote {
-  id          String      @id @default(auto()) @map("_id") @db.ObjectId
-  author      User        @relation(fields: [authorId], references: [id])
-  authorId    String      @db.ObjectId
-  choice      String
-  event       Event @relation(fields: [eventId], references: [id])
-  eventId     String      @db.ObjectId
+    id          String      @id @default(auto()) @map("_id") @db.ObjectId
+    author      User        @relation(fields: [authorId], references: [id])
+    authorId    String      @db.ObjectId
+    choice      String
+    event       Event @relation(fields: [eventId], references: [id])
+    eventId     String      @db.ObjectId
 }
