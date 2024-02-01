@@ -19,12 +19,32 @@
     flex: 1;
 }
 
+.slider > section {
+    flex: 1;
+    background-color: red;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.slider > section h2 {
+    background-color: aqua;
+    text-align: center;
+}
+
+.slider > section p {
+    background-color: white;
+    text-align: center;
+    margin: auto;
+    padding: var(--fs-500);
+}
+
 .displayBlock {
     display: block;
 }
 
 .displayNone {
-    display: none;
+    display: none !important;
 }
 
 .btnsContainer {
