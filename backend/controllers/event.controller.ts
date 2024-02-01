@@ -4,7 +4,7 @@ import { hashPassword, passwordMatches } from "../utils/bcrypt";
 import jwt from "jsonwebtoken";
 import prisma from "../prisma/prisma-client";
 
-export const create = (req: Request, res: Response) => {
+export const create = async (req: Request, res: Response) => {
     try {
         const eventData = {
             title: req.body.event.title,
@@ -13,7 +13,7 @@ export const create = (req: Request, res: Response) => {
             authorId: req.body.autorId,
         };
 
-        const event = prisma.event.create({
+        const event = await prisma.event.create({
             data: eventData
         });
 
@@ -27,9 +27,9 @@ export const create = (req: Request, res: Response) => {
     }
 }
 
-export const update = (req: Request, res: Response) => {
+export const update = async (req: Request, res: Response) => {
     try {
-        const event = prisma.event.update({
+        const event = await prisma.event.update({
             where: {
                 id: req.body.id
             },
@@ -50,10 +50,10 @@ export const update = (req: Request, res: Response) => {
     }
 }
 
-export const get = (req: Request, res: Response) => {
+export const get = async (req: Request, res: Response) => {
     try {
         const userId = req.body.user.id;
-        const events = prisma.event.findMany({
+        const events = await prisma.event.findMany({
             where: {
                 authorId: userId
             }
@@ -69,9 +69,9 @@ export const get = (req: Request, res: Response) => {
     }
 }
 
-export const getAll = (req: Request, res: Response) => {
+export const getAll = async (req: Request, res: Response) => {
     try {
-        const events = prisma.event.findMany();
+        const events = await prisma.event.findMany();
 
         if (events) {
             res.status(200).json({ events: events });

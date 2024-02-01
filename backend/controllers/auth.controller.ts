@@ -67,7 +67,7 @@ export const createIfNew = async (req: Request, res: Response, next: NextFunctio
     next();
 };
 
-export const withSpid = async (req: Request, res: Response) => {
+export const login = async (req: Request, res: Response) => {
     // Check user
     const { email, password } = req.body;
     const user = await prisma.user.findUnique({
