@@ -94,8 +94,7 @@ export const login = async (req: Request, res: Response) => {
     }
 
     // Check password
-    const hashedPassword = await hashPassword(password);
-    const validPassword = await passwordMatches(password, hashedPassword);
+    const validPassword = await passwordMatches(password, user.hashedPassword);
     if (!validPassword) {
         res.status(401).json({ message: "Invalid password" });
         return;
