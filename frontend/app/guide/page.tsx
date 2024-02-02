@@ -6,14 +6,15 @@ import React, { useState } from "react";
 import styles from "./page.module.css";
 
 export default function Page() {
+    const numPages = 5;
     const [currentPage, setCurrentPage] = useState(1);
 
     const nextPage = () => {
-        setCurrentPage((prevPage) => (prevPage < 5 ? prevPage + 1 : 1));
+        setCurrentPage((prevPage) => (prevPage < numPages ? prevPage + 1 : 1));
     };
 
     const prevPage = () => {
-        setCurrentPage((prevPage) => (prevPage > 1 ? prevPage - 1 : 5));
+        setCurrentPage((prevPage) => (prevPage > 1 ? prevPage - 1 : numPages));
     };
 
     return (
@@ -60,7 +61,8 @@ export default function Page() {
                         <h2>Particepa a votazione</h2>
                         <p>
                             Per poter prendere parte a una votazione è
-                            necessario effettuare l'accesso tramie uno tra i
+                            necessario effettuare il{" "}
+                            <Link href="login">login</Link> tramie uno tra i
                             servizi di identità digitale{" "}
                             <a
                                 href="https://www.spid.gov.it/en/"
@@ -93,7 +95,7 @@ export default function Page() {
                     </section>
                     <section
                         className={
-                            currentPage === 5
+                            currentPage === numPages
                                 ? styles.displayBlock
                                 : styles.displayNone
                         }
@@ -112,6 +114,9 @@ export default function Page() {
                 </div>
                 <div className={styles.btnsContainer}>
                     <button onClick={prevPage}>Prev</button>
+                    <p>
+                        {currentPage} / {numPages}
+                    </p>
                     <button onClick={nextPage}>Next</button>
                 </div>
             </article>

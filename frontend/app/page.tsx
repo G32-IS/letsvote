@@ -30,9 +30,8 @@ export default function Home() {
 
     return (
         <>
-            <h1>letsvote frontend</h1>
-            <p>{data}</p>
-            <SPIDReactButtonDropdown url={defaultURL}></SPIDReactButtonDropdown>
+            <h1 className="sr-only">Home</h1>
+            <h2>Votazione attive</h2>
         </>
     );
 }
