@@ -27,7 +27,7 @@ export const authorize = (req: Request, res: Response, next: NextFunction) => {
     });
 }
 
-export const accessRoles = (...args: UserRole[]) => {
+export const roles = (...args: UserRole[]) => {
     return async (req: Request, res: Response, next: NextFunction) => {
         const user = req.body.user;
 

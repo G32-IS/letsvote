@@ -1,5 +1,5 @@
 import express from 'express'
-import { accessRoles, authorize } from '../controllers/auth.controller';
+import { roles, authorize } from '../controllers/auth.controller';
 import { UserRole } from '@prisma/client';
 import { create, get, getAll, update } from '../controllers/event.controller';
 
@@ -8,22 +8,22 @@ eventRouter.use(express.json());
 
 eventRouter.post('/create',
     authorize,
-    accessRoles(UserRole.Admin),
+    roles(UserRole.Admin),
     create);
 
 eventRouter.put('/update',
     authorize,
-    accessRoles(UserRole.Admin),
+    roles(UserRole.Admin),
     update);
 
 eventRouter.get('/get',
     authorize,
-    accessRoles(UserRole.Admin),
+    roles(UserRole.Admin),
     get);
 
 eventRouter.use('/getAll',
     authorize,
-    accessRoles(UserRole.Admin, UserRole.SysAdmin, UserRole.Voter),
+    roles(UserRole.Admin, UserRole.SysAdmin, UserRole.Voter),
     getAll);
 
 // eventRouter.use('/getResults')

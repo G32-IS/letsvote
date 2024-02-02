@@ -1,5 +1,5 @@
 import express from 'express'
-import { accessRoles, authorize } from '../controllers/auth.controller';
+import { authorize } from '../controllers/auth.controller';
 import { UserRole } from '@prisma/client';
 import { profile, update } from '../controllers/user.controller';
 
