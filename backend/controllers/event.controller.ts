@@ -6,18 +6,22 @@ import prisma from "../prisma/prisma-client";
 
 export const create = async (req: Request, res: Response) => {
     try {
-        const eventData = {
-            title: req.body.event.title,
-            type: req.body.eventType,
-            body: req.body.body,
-            authorId: req.body.autorId,
-        };
+        const { event, user } = req.body;
 
-        const event = await prisma.event.create({
-            data: eventData
+        const author = await prisma.user.update({
+            where: {
+                id: user.id
+            },
+            data: {
+                events: {
+                    create: [
+                        event
+                    ]
+                }
+            }
         });
 
-        if (event) {
+        if (author) {
             res.status(200).json({ event: event });
         } else {
             res.status(500).json({ message: 'Internal server error' })
@@ -29,15 +33,12 @@ export const create = async (req: Request, res: Response) => {
 
 export const update = async (req: Request, res: Response) => {
     try {
-        const event = await prisma.event.update({
+        const { event } = req.body
+        const newEvent = await prisma.event.update({
             where: {
-                id: req.body.id
+                id: event.id
             },
-            data: {
-                title: req.body.event.title,
-                type: req.body.eventType,
-                body: req.body.body,
-            }
+            data: event
         });
 
         if (event) {
@@ -52,10 +53,10 @@ export const update = async (req: Request, res: Response) => {
 
 export const get = async (req: Request, res: Response) => {
     try {
-        const userId = req.body.user.id;
+        const { user } = req.body;
         const events = await prisma.event.findMany({
             where: {
-                authorId: userId
+                authorId: user.id
             }
         });
 

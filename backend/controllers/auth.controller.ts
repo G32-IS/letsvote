@@ -7,15 +7,23 @@ import prisma from "../prisma/prisma-client";
 export const authorize = (req: Request, res: Response, next: NextFunction) => {
     const token = req.cookies.token;
     if (!token) {
-        res.status(403).json({ message: "Unauthorized" });
+        res.status(401).json({ message: "Unauthorized" });
         return;
     }
 
     const key = process.env.JWT_SECRET!;
-    jwt.verify(token, key, (err: any, user: any) => {
-        if (err) return res.status(403).json({ message: "Unauthorized" });
-        req.body.user = user;
-        next();
+    jwt.verify(token, key, async (err: any, user: any) => {
+        if (err) {
+            res.status(401).json({ message: "Unauthorized" });
+        } else {
+            const userInfo = await prisma.user.findUnique({
+                where: {
+                    id: user.id
+                }
+            });
+            req.body.user = userInfo;
+            next();
+        }
     });
 }
 
@@ -23,13 +31,13 @@ export const accessRoles = (...args: UserRole[]) => {
     return async (req: Request, res: Response, next: NextFunction) => {
         const user = req.body.user;
 
+        console.log(user)
         if (args.some((role) => user?.role == role)) {
             next();
         } else {
-            res.status(403).json({ message: "Unauthorized" });
+            res.status(401).json({ message: "Unauthorized" });
+            return;
         }
-
-        next();
     };
 };
 
@@ -99,5 +107,5 @@ export const login = async (req: Request, res: Response) => {
     });
     res.cookie("token", token, {httpOnly: true, secure: true, path: "/"})
 
-    res.status(200).json({ message: "Login successful" });
+    res.status(200).json({ user: user });
 };

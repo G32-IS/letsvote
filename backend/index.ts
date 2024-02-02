@@ -1,5 +1,6 @@
-import { Request, Response } from "express";
+import { Request, Response } from "express";;
 import express from "express";
+import cookieParser from "cookie-parser";
 
 import { authRouter } from "./routes/auth.router";
 import { userRouter } from "./routes/user.router";
@@ -10,6 +11,8 @@ import { voteRouter } from "./routes/vote.router";
 export const app = express();
 
 app.use(express.json());
+
+app.use(cookieParser());
 
 app.use((req: Request, res: Response, next: any) => {
     res.setHeader("Access-Control-Allow-Origin", "*");
