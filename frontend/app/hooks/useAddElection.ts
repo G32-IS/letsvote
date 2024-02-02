@@ -1,31 +1,29 @@
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { QUERY_KEY } from "../react-query/client";
+import { Event } from "../types"
 
-interface Election {
-    name: string;
-}
 
-const postElection = async (election: Election): Promise<Election> => {
+const postEvent = async (Event: Event): Promise<Event> => {
     const response = await fetch(`${process.env.API_URL}/vote/createVote`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         }, 
-        body: JSON.stringify(election)
+        body: JSON.stringify(Event)
     }) 
 
     return await response.json();
 }
 
-export const useAddElection = () => {
+export const useAddEvent = () => {
     const client = useQueryClient();
  
-    const { mutate: addElection } = useMutation({
-        mutationFn: postElection,
+    const { mutate: addEvent } = useMutation({
+        mutationFn: postEvent,
         onSuccess: () => {
-            client.invalidateQueries({queryKey: [QUERY_KEY.adminElections]});
+            client.invalidateQueries({queryKey: [QUERY_KEY.adminEvents]});
         }
     });
 
-    return { addElection };
+    return { addEvent };
 }

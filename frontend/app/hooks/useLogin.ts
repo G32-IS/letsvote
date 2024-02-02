@@ -1,12 +1,8 @@
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { QUERY_KEY } from "../react-query/client";
+import { Credentials } from "../types";
 
-export interface Login {
-    email: string;
-    password: string;
-}
-
-const loginFn = async ({email, password}: Login): Promise<Login> => {
+const loginFn = async ({email, password}: Credentials): Promise<Credentials> => {
     const response = await fetch(`${process.env.API_URL}/auth/login`, {
         method: "POST",
         credentials: "include",
@@ -17,7 +13,10 @@ const loginFn = async ({email, password}: Login): Promise<Login> => {
     }) 
     
     const result = await response.json();
-    console.log(result);
+
+    if (!response.ok) {
+        throw new Error(result.message);
+    }
 
     return result;
 }
@@ -25,15 +24,12 @@ const loginFn = async ({email, password}: Login): Promise<Login> => {
 export const useLogin = () => {
     const client = useQueryClient();
  
-    const { mutate: login } = useMutation({
+    const { mutate: login, error, isPending: isLoading } = useMutation({
         mutationFn: loginFn,
         onSuccess: () => {
             client.invalidateQueries({queryKey: [QUERY_KEY.profile]});
-        },
-        onError: (error) => {
-            console.log(error);
         }
     });
 
-    return { login };
+    return { login, error, isLoading };
 }

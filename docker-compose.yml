@@ -22,6 +22,8 @@ services:
       - BE_PORT=${BE_PORT}
       - BE_DATABASE_URL=${DATABASE_URL}
       - JWT_SECRET=${JWT_SECRET}
+      - SA_EMAIL=${SA_EMAIL}
+      - SA_PASSWORD=${SA_PASSWORD}
     ports: 
       - ${BE_PORT}:${BE_PORT}
 

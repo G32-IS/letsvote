@@ -1,15 +1,12 @@
-// All packages except `@mantine/hooks` require styles imports
 import "./global.css";
 
 import { ColorSchemeScript } from '@mantine/core';
 
 import Provider from './provider';
-import Header from './components/header';
-import Footer from './components/footer';
+import Shell from "./components/shell";
 
 import { Inter } from "next/font/google";
 const inter = Inter({ subsets: ["latin"] });
-
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -29,9 +26,7 @@ export default function RootLayout({
       </head>
       <body className={inter.className}>
         <Provider>
-            <Header/>
-            <main>{children}</main>
-            <Footer />
+          <Shell>{children}</Shell>
         </Provider>
       </body>
     </html>

@@ -22,7 +22,9 @@ export const useProfile = () => {
     } = useQuery({
         queryKey: [QUERY_KEY.profile],
         queryFn: fetchProfile,
-        retry: false
+        retry: false,
+        refetchOnWindowFocus: false,
+        refetchOnMount: false
     });
 
     return { user, isLoading, error };

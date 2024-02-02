@@ -5,7 +5,7 @@ import { useProfile } from "./hooks/useProfile";
 
 export default function Home() {
     const { user, isLoading, error } = useProfile();
-    console.log(isLoading, error)
+
     if (isLoading) return <Loading />;
     if (error)
         return (
@@ -15,7 +15,7 @@ export default function Home() {
             </>
         );
     
-    console.log(user)
+
     return (
         <>
             <h1>test</h1>

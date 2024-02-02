@@ -1,18 +1,16 @@
 "use client";
 
 import { TextInput, PasswordInput, Button, Group, Box, Stack, Text } from '@mantine/core';
-import { useLogin, Login } from "@/app/hooks/useLogin";
-import { useState } from "react";
+import { useLogin } from "@/app/hooks/useLogin";
+import { Credentials } from '@/app/types';
+import { useRouter } from "next/navigation"
 import { useForm } from "@mantine/form"
 import ContentTitle from '@/app/components/ContentTitle';
 
 export default function Page() {
-    const { login } = useLogin();
+    const router = useRouter();
 
-    const handleLogin = ({email, password}:Login) => {
-        console.log(email,password);
-        login({email,password});
-    }
+    const { login, error, isLoading } = useLogin();
 
     const form = useForm({
         initialValues: {
@@ -22,8 +20,17 @@ export default function Page() {
 
         validate: {
             email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid email'),
+            password: (value) => null
         },
     });
+
+    const handleLogin = ({email, password}:Credentials) => {
+        login({email,password});
+        if (!error) {
+            form.reset();
+            router.push("/")
+        }
+    }
 
     return (
         <Stack gap="xl">
@@ -35,22 +42,24 @@ export default function Page() {
                         withAsterisk
                         label="Email"
                         placeholder="your@email.com"
+                        disabled={isLoading}
                         {...form.getInputProps('email')}
                         />
 
                     <PasswordInput
-                        type='password'
                         size='md'
                         placeholder='your_pswd'
                         withAsterisk
                         label="Password"
+                        disabled={isLoading}
                         {...form.getInputProps('password')}
+                        error={error ? "Credenziali errate" : false}
                     />
                 </Stack>
 
 
                 <Group justify="flex-end" mt="md">
-                    <Button type="submit">Accedi</Button>
+                    <Button type="submit" disabled={isLoading}>Accedi</Button>
                 </Group>
             </form>
         </Stack>

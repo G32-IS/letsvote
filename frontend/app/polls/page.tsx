@@ -21,11 +21,11 @@ export default function Page() {
         <main className={styles.main}>
             <h1>test</h1>
             <ul>
-                {Object.keys(test).map((key) => (
+                {/* {Object.keys(test).map((key) => (
                     <li key={key}>
                         <strong>{key}:</strong> {test[key]}
                     </li>
-                ))}
+                ))} */}
             </ul>
         </main>
     );
