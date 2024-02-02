@@ -21,7 +21,7 @@ eventRouter.get('/get',
     roles(UserRole.Admin),
     get);
 
-eventRouter.use('/getAll',
+eventRouter.use('/getall',
     verify,
     roles(UserRole.Admin, UserRole.SysAdmin, UserRole.Voter),
     getAll);

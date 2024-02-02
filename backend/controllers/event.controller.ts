@@ -1,28 +1,29 @@
-import { NextFunction, Request, Response } from "express";
-import { UserRole } from "@prisma/client";
-import { hashPassword, passwordMatches } from "../utils/bcrypt";
-import jwt from "jsonwebtoken";
+import { Request, Response } from "express";
 import { prisma } from "../prisma/prisma-client";
 
 export const create = async (req: Request, res: Response) => {
-    try {
-        const { event, user } = req.body;
+    const { event, user } = req.body;
 
-        const author = await prisma.user.update({
-            where: {
-                id: user.id
-            },
+    try {
+        const newEvent = await prisma.event.create({
             data: {
-                events: {
-                    create: [
-                        event
-                    ]
+                title:      event.title,
+                body:       event.body,
+                type:       event.type,
+                startDate:  event.startDate,
+                endDate:    event.endDate,
+                authorId:   user.id,
+                choices: {
+                    create: event.choices
                 }
+            },
+            include: {
+                choices: true
             }
         });
 
-        if (author) {
-            res.status(200).json({ event: event });
+        if (newEvent) {
+            res.status(200).json({ event: newEvent });
         } else {
             res.status(500).json({ message: "Internal server error" })
         }
@@ -34,15 +35,18 @@ export const create = async (req: Request, res: Response) => {
 export const update = async (req: Request, res: Response) => {
     try {
         const { event } = req.body
-        const newEvent = await prisma.event.update({
+        const updatedEvent = await prisma.event.update({
             where: {
                 id: event.id
             },
-            data: event
+            data: event,
+            include: {
+                choices: true
+            }
         });
 
-        if (event) {
-            res.status(200).json({ event: event });
+        if (updatedEvent) {
+            res.status(200).json({ event: updatedEvent });
         } else {
             res.status(500).json({ message: "Internal server error" })
         }
@@ -57,6 +61,9 @@ export const get = async (req: Request, res: Response) => {
         const events = await prisma.event.findMany({
             where: {
                 authorId: user.id
+            },
+            include: {
+                choices: true
             }
         });
 
@@ -72,7 +79,11 @@ export const get = async (req: Request, res: Response) => {
 
 export const getAll = async (req: Request, res: Response) => {
     try {
-        const events = await prisma.event.findMany();
+        const events = await prisma.event.findMany({
+            include: {
+                choices: true
+            }
+        });
 
         if (events) {
             res.status(200).json({ events: events });

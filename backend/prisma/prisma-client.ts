@@ -1,9 +1,10 @@
-import { Prisma, PrismaClient, UserRole } from '@prisma/client'
+import { PrismaClient, UserRole } from '@prisma/client'
 import { hashPassword } from '../utils/bcrypt';
 
 export const prisma = new PrismaClient();
 
 export const setupPrisma = async () => {
+    // TODO: Add constraint for SysAdmin to be unique
     const sysAdmin = await prisma.user.findFirst({
         where: {
             role: UserRole.SysAdmin
@@ -19,17 +20,17 @@ export const setupPrisma = async () => {
         }
 
         const hashedPassword = await hashPassword(password);
-        const adminData = {
+        const userData = {
             email: email,
             hashedPassword: hashedPassword,
             role: UserRole.SysAdmin
         };
 
-        const newSysAdmin = await prisma.user.create({
-            data: adminData
-        })
+        const newUser = await prisma.user.create({
+            data: userData
+        });
 
-        if (!newSysAdmin) {
+        if (!newUser) {
             throw new Error("Could not create SysAdmin user");
         }
     }

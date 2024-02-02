@@ -26,6 +26,15 @@ model User {
     requests        Request[]
 }
 
+model Choice {
+    id              String      @id @default(auto()) @map("_id") @db.ObjectId
+    title           String
+    body            String?
+    event           Event       @relation(fields: [eventId], references: [id])
+    eventId         String      @db.ObjectId
+    votes           Vote[]
+}
+
 enum EventType {
     ReferendumNazionale
     ReferendumRegionale
@@ -35,19 +44,11 @@ enum EventType {
     ElezioneComunale
 }
 
-model Choice {
-    id              String      @id @default(auto()) @map("_id") @db.ObjectId
-    title           String
-    body            String?
-    event           Event       @relation(fields: [eventId], references: [id])
-    eventId         String      @db.ObjectId
-}
-
 model Event {
     id              String      @id @default(auto()) @map("_id") @db.ObjectId
     title           String
-    type            EventType
     body            String?
+    type            EventType
     author          User        @relation(fields: [authorId], references: [id])
     authorId        String      @db.ObjectId
     startDate       DateTime
@@ -68,7 +69,8 @@ model Partecipation {
 
 model Vote {
     id          String      @id @default(auto()) @map("_id") @db.ObjectId
-    choice      String
+    choice      Choice      @relation(fields: [choiceId], references: [id])
+    choiceId    String      @db.ObjectId
     event       Event       @relation(fields: [eventId], references: [id])
     eventId     String      @db.ObjectId
 }

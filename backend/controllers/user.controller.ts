@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { prisma } from "../prisma/prisma-client";
 
-export const profile = async (req: Request, res: Response, ) => {
+export const profile = async (req: Request, res: Response) => {
     const { user } = req.body;
     const userData = await prisma.user.findUnique({
         where: {
@@ -16,7 +16,7 @@ export const profile = async (req: Request, res: Response, ) => {
     }
 }
 
-export const update = async (req: Request, res: Response, ) => {
+export const update = async (req: Request, res: Response) => {
     const { user } = req.body;
     const newUser = await prisma.user.update({
         where: {
