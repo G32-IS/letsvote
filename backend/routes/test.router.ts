@@ -10,7 +10,7 @@ testRouter.get("/", (req: Request, res: Response) => {
 });
 
 // Test db connection
-testRouter.get("/userCount", async (req: Request, res: Response) => {
+testRouter.get("/users", async (req: Request, res: Response) => {
     const countUsers = await prisma.user.count({});
     res.json({ count: countUsers });
 });

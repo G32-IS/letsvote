@@ -8,6 +8,7 @@ import { testRouter } from "./routes/test.router";
 import { eventRouter } from "./routes/event.router";
 import { voteRouter } from "./routes/vote.router";
 import { requestRouter } from "./routes/request.router";
+import { setupPrisma } from "./prisma/prisma-client";
 
 export const app = express();
 
@@ -30,6 +31,9 @@ app.use("/user", userRouter);
 app.use("/request", requestRouter);
 app.use("/event", eventRouter);
 app.use("/vote", voteRouter);
+
+// Setup prisma
+setupPrisma();
 
 const port = process.env.BE_PORT || 9999;
 app.listen(port, () => console.log(`Server running http://localhost:${port}`));
