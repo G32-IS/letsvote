@@ -4,7 +4,7 @@ import { hashPassword, passwordMatches } from "../utils/bcrypt";
 import jwt from "jsonwebtoken";
 import { prisma } from "../prisma/prisma-client";
 
-export function verify(req: Request, res: Response, next: NextFunction) {
+export const verify = async (req: Request, res: Response, next: NextFunction) => {
     const token = req.cookies.token;
     if (!token) {
         res.status(401).json({ message: "Unauthorized" });
@@ -47,74 +47,84 @@ export const roles = (...args: UserRole[]) => {
 };
 
 export const createIfNew = async (req: Request, res: Response, next: NextFunction) => {
-    const { email, password } = req.body;
+    try {
 
-    if (!email || !password) {
-        res.status(400).json({ message: "Bad request" });
-        return;
-    }
+        const { email, password } = req.body.user;
 
-    const user = await prisma.user.findUnique({
-        where: {
-            email: email,
-        },
-    });
-
-    if (!user) {
-        const hashedPassword = await hashPassword(password);
-        const userData = {
-            email: email,
-            hashedPassword: hashedPassword,
-            role: UserRole.Voter,
-        };
-        const newUser = await prisma.user.create({
-            data: userData,
-        });
-
-        if (!newUser) {
-            res.status(400).json({ message: "Could not create user" });
+        if (!email || !password) {
+            res.status(400).json({ message: "Bad request" });
             return;
         }
+
+        const user = await prisma.user.findUnique({
+            where: {
+                email: email,
+            },
+        });
+
+        if (!user) {
+            const hashedPassword = await hashPassword(password);
+            const userData = {
+                email: email,
+                hashedPassword: hashedPassword,
+                role: UserRole.Voter,
+            };
+            const newUser = await prisma.user.create({
+                data: userData,
+            });
+
+            if (!newUser) {
+                res.status(400).json({ message: "Could not create user" });
+                return;
+            }
+        }
+        next();
+    } catch (err: any) {
+        res.status(400).json({ message: "Bad request" });
     }
 
-    next();
 };
 
 export const login = async (req: Request, res: Response) => {
     // Check user
-    const { email, password } = req.body;
-    const user = await prisma.user.findUnique({
-        where: {
-            email,
-        },
-    });
-    if (!user) {
-        res.status(404).json({ message: "User not found" });
-        return;
-    }
+    try {
+        const { email, password } = req.body.user;
+        const user = await prisma.user.findUnique({
+            where: {
+                email,
+            },
+        });
 
-    // Check password
-    const validPassword = await passwordMatches(password, user.hashedPassword);
-    if (!validPassword) {
-        res.status(401).json({ message: "Invalid password" });
-        return;
-    }
+        if (!user) {
+            res.status(404).json({ message: "User not found" });
+            return;
+        }
 
-    // Create token
-    const key = process.env.JWT_SECRET;
-    if (!key) {
-        res.status(500).json({ message: "Could not generate token" });
-        return;
-    }
-    const token = jwt.sign({ id: user.id }, key, {
-        expiresIn: "7d",
-    });
-    res.cookie("token", token, {httpOnly: true, secure: true, path: "/"})
+        // Check password
+        const validPassword = await passwordMatches(password, user.hashedPassword);
+        if (!validPassword) {
+            res.status(401).json({ message: "Invalid password" });
+            return;
+        }
 
-    res.status(200).json({ user: user });
+        // Create token
+        const key = process.env.JWT_SECRET;
+        if (!key) {
+            res.status(500).json({ message: "Could not generate token" });
+            return;
+        }
+        const token = jwt.sign({ id: user.id }, key, {
+            expiresIn: "7d",
+        });
+        res.cookie("token", token, { httpOnly: true, secure: true, path: "/" })
+
+        res.status(200).json({ user: user });
+    } catch (err: any) {
+        res.status(400).json({ message: "Bad request" });
+    }
 };
 
-export const logout = async (req: Request, res: Response) => {
+export const logout = async (res: Response) => {
     res.clearCookie("token");
     res.status(200).end();
 }
