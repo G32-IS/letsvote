@@ -1,10 +1,10 @@
-import express, {Request, Response} from 'express'
+import express from 'express'
 import { accessRoles, authorize } from '../controllers/auth.controller';
 import { UserRole } from '@prisma/client';
+import { profile, update } from '../controllers/user.controller';
 
 export const userRouter = express.Router();
 userRouter.use(express.json());
 
-userRouter.post('/requestPermissions', authorize, accessRoles(UserRole.Voter))
-userRouter.put('/updatePermissions', authorize, accessRoles(UserRole.Admin))
-userRouter.delete('/deletePermissions', authorize, accessRoles(UserRole.Admin))
+userRouter.get('/profile', authorize, profile);
+userRouter.put('/update', authorize, update);
