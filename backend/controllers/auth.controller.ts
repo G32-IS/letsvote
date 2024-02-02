@@ -4,7 +4,7 @@ import { hashPassword, passwordMatches } from "../utils/bcrypt";
 import jwt from "jsonwebtoken";
 import prisma from "../prisma/prisma-client";
 
-export const authorize = (req: Request, res: Response, next: NextFunction) => {
+export function verify(req: Request, res: Response, next: NextFunction) {
     const token = req.cookies.token;
     if (!token) {
         res.status(401).json({ message: "Unauthorized" });
