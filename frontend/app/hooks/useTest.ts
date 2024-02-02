@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 
 export const fetchTest = async () => {
-    const response = await fetch(`http://localhost:6969/test/userCount`);
+    const response = await fetch(`${process.env.API_URL}/test/userCount`);
     const data = await response.json();
     return data;
 };
