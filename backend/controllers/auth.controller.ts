@@ -16,13 +16,19 @@ export function verify(req: Request, res: Response, next: NextFunction) {
         if (err) {
             res.status(401).json({ message: "Unauthorized" });
         } else {
-            const userInfo = await prisma.user.findUnique({
-                where: {
-                    id: user.id
-                }
-            });
-            req.body.user = userInfo;
-            next();
+            try {
+                const userInfo = await prisma.user.findUnique({
+                    where: {
+                        id: user.id
+                    }
+                });
+                req.body.user = userInfo;
+                next();
+            } catch (err: any) {
+                res.status(500).json({
+                    message: "Could not find user for the passed token"
+                });
+            }
         }
     });
 }
@@ -31,7 +37,6 @@ export const roles = (...args: UserRole[]) => {
     return async (req: Request, res: Response, next: NextFunction) => {
         const user = req.body.user;
 
-        console.log(user)
         if (args.some((role) => user?.role == role)) {
             next();
         } else {

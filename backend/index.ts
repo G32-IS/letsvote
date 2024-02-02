@@ -7,6 +7,7 @@ import { userRouter } from "./routes/user.router";
 import { testRouter } from "./routes/test.router";
 import { eventRouter } from "./routes/event.router";
 import { voteRouter } from "./routes/vote.router";
+import { requestRouter } from "./routes/request.router";
 
 export const app = express();
 
@@ -28,6 +29,7 @@ app.use((req: Request, res: Response, next: any) => {
 app.use("/test", testRouter);
 app.use("/auth", authRouter);
 app.use("/user", userRouter);
+app.use("/request", requestRouter);
 app.use("/event", eventRouter);
 app.use("/vote", voteRouter);
 

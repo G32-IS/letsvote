@@ -24,10 +24,10 @@ export const create = async (req: Request, res: Response) => {
         if (author) {
             res.status(200).json({ event: event });
         } else {
-            res.status(500).json({ message: 'Internal server error' })
+            res.status(500).json({ message: "Internal server error" })
         }
     } catch (err: any) {
-        res.status(400).json({ message: 'Bad request' });
+        res.status(400).json({ message: "Bad request" });
     }
 }
 
@@ -44,10 +44,10 @@ export const update = async (req: Request, res: Response) => {
         if (event) {
             res.status(200).json({ event: event });
         } else {
-            res.status(500).json({ message: 'Internal server error' })
+            res.status(500).json({ message: "Internal server error" })
         }
     } catch (err: any) {
-        res.status(400).json({ message: 'Bad request' });
+        res.status(400).json({ message: "Bad request" });
     }
 }
 
@@ -63,10 +63,10 @@ export const get = async (req: Request, res: Response) => {
         if (events) {
             res.status(200).json({ events: events });
         } else {
-            res.status(500).json({ message: 'Internal server error' })
+            res.status(500).json({ message: "Internal server error" })
         }
     } catch (err: any) {
-        res.status(400).json({ message: 'Bad request' });
+        res.status(400).json({ message: "Bad request" });
     }
 }
 
@@ -77,9 +77,9 @@ export const getAll = async (req: Request, res: Response) => {
         if (events) {
             res.status(200).json({ events: events });
         } else {
-            res.status(500).json({ message: 'Internal server error' })
+            res.status(500).json({ message: "Internal server error" })
         }
     } catch (err: any) {
-        res.status(400).json({ message: 'Bad request' });
+        res.status(400).json({ message: "Bad request" });
     }
 }

@@ -25,5 +25,3 @@ eventRouter.use('/getAll',
     verify,
     roles(UserRole.Admin, UserRole.SysAdmin, UserRole.Voter),
     getAll);
-
-// eventRouter.use('/getResults')
