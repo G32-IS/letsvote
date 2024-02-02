@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import prisma from "../prisma/prisma-client";
+import { prisma } from "../prisma/prisma-client";
 
 export const testRouter = express();
 testRouter.use(express.json());

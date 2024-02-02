@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { UserRole } from "@prisma/client";
 import { hashPassword, passwordMatches } from "../utils/bcrypt";
 import jwt from "jsonwebtoken";
-import prisma from "../prisma/prisma-client";
+import { prisma } from "../prisma/prisma-client";
 
 export function verify(req: Request, res: Response, next: NextFunction) {
     const token = req.cookies.token;
@@ -113,3 +113,8 @@ export const login = async (req: Request, res: Response) => {
 
     res.status(200).json({ user: user });
 };
+
+export const logout = async (req: Request, res: Response) => {
+    res.clearCookie("token");
+    res.status(200).end();
+}

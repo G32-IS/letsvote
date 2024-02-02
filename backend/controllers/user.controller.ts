@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import prisma from "../prisma/prisma-client";
+import { prisma } from "../prisma/prisma-client";
 
 export const profile = async (req: Request, res: Response, ) => {
     const { user } = req.body;

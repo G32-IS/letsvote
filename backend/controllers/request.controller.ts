@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { Prisma, PrismaClient, RequestState, User, UserRole } from "@prisma/client";
 import { hashPassword, passwordMatches } from "../utils/bcrypt";
 import jwt from "jsonwebtoken";
-import prisma from "../prisma/prisma-client";
+import { prisma } from "../prisma/prisma-client";
 
 export const request = async (req: Request, res: Response) => {
     const { user } = req.body;
