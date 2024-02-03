@@ -2,9 +2,8 @@ import { Request, Response } from "express";
 import { prisma } from "../prisma/prisma-client";
 
 export const create = async (req: Request, res: Response) => {
-    const { event, user } = req.body;
-
     try {
+        const { event, user } = req.body;
         const newEvent = await prisma.event.create({
             data: {
                 title:      event.title,

@@ -48,7 +48,6 @@ export const roles = (...args: UserRole[]) => {
 
 export const createIfNew = async (req: Request, res: Response, next: NextFunction) => {
     try {
-
         const { email, password } = req.body.user;
 
         if (!email || !password) {
@@ -86,9 +85,9 @@ export const createIfNew = async (req: Request, res: Response, next: NextFunctio
 };
 
 export const login = async (req: Request, res: Response) => {
-    // Check user
     try {
-        const { email, password } = req.body.user;
+        // Check user
+        const { user: { email, password }} = req.body;
         const user = await prisma.user.findUnique({
             where: {
                 email,

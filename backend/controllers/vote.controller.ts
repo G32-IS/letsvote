@@ -1,12 +1,11 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 import { prisma } from "../prisma/prisma-client";
-import { eventNames } from "process";
 
 export const vote = async (req: Request, res: Response) => {
     return prisma.$transaction(async _ => {
-        const { vote, user } = req.body;
-
         try {
+            const { vote, user } = req.body;
+
             // Create vote
             const newVote = await prisma.vote.create({
                 data: vote

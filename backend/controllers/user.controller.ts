@@ -6,6 +6,10 @@ export const profile = async (req: Request, res: Response) => {
     const userData = await prisma.user.findUnique({
         where: {
             id: user.id
+        }, include: {
+            events: true,
+            partecipations: true,
+            requests: true
         }
     });
 

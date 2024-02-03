@@ -3,21 +3,16 @@ import { prisma } from "../prisma/prisma-client";
 import { RequestState, UserRole } from "@prisma/client";
 
 export const request = async (req: Request, res: Response) => {
-    const { user } = req.body;
     try {
-        const requestData = { };
-        const newUser = await prisma.user.update({
-            where: {
-                id: user.id
-            },
+        const { user } = req.body;
+
+        const newRequest = await prisma.request.create({
             data: {
-                requests: {
-                    create: [ requestData ]
-                }
+                userId: user.id
             }
         });
 
-        if (newUser) {
+        if (newRequest) {
             res.status(200).json({ message: "Request created successfully "});
         } else {
             res.status(400).json({ message: "Could not create request"});
@@ -42,9 +37,8 @@ export const getAll = async (req: Request, res: Response) => {
 
 export const handle = async (req: Request, res: Response) => {
     return prisma.$transaction(async _ => {
-        const { request, user } = req.body;
-
         try {
+            const { request } = req.body;
             const newRequest = await prisma.request.update({
                 where: {
                     id: request.id
