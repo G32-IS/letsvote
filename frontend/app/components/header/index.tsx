@@ -16,40 +16,44 @@ export default function Header() {
     };
 
     return (
-        <header className={styles.header}>
-            <Link className={styles.logo} href="/">
-                letsvote
-            </Link>
-            <nav className={styles.nav}>
-                {error || user?.role === "Voter" ? (
-                    <Link href="/guide">Guida introduttiva</Link>
-                ) : (
-                    <></>
-                )}
-                <Link href="/polls">Votazioni</Link>
+        <div className={styles.headerWrapper}>
+            <header className={styles.header}>
+                <Link className={styles.logo} href="/">
+                    letsvote
+                </Link>
+                <nav className={styles.nav}>
+                    {error || user?.role === "Voter" ? (
+                        <Link href="/guide">Guida introduttiva</Link>
+                    ) : (
+                        <></>
+                    )}
+                    <Link href="/polls">Votazioni</Link>
 
-                {error || isLoading ? (
-                    <Link href="/login" className={styles.loginBtn}>
-                        Accedi
-                    </Link>
-                ) : (
-                    <>
-                        {user.role === "SysAdmin" ? (
-                            <>
-                                <Link href="#">Le tue votazioni</Link>
-                                <Link href="/create">Crea una votazione</Link>
-                            </>
-                        ) : (
-                            <></>
-                        )}
-                        <Text c="white">{user.email}</Text>
-                        <MdLogout
-                            color="white"
-                            onClick={(e) => logoutHandle(e)}
-                        />
-                    </>
-                )}
-            </nav>
-        </header>
+                    {error || isLoading ? (
+                        <Link href="/login" className={styles.loginBtn}>
+                            Accedi
+                        </Link>
+                    ) : (
+                        <>
+                            {user.role === "SysAdmin" ? (
+                                <>
+                                    <Link href="#">Le tue votazioni</Link>
+                                    <Link href="/create">
+                                        Crea una votazione
+                                    </Link>
+                                </>
+                            ) : (
+                                <></>
+                            )}
+                            <Text c="white">{user.email}</Text>
+                            <MdLogout
+                                color="white"
+                                onClick={(e) => logoutHandle(e)}
+                            />
+                        </>
+                    )}
+                </nav>
+            </header>
+        </div>
     );
 }

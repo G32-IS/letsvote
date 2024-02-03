@@ -1,5 +1,10 @@
-.header {
+.headerWrapper {
     background-color: hsl(var(--clr-primary));
+}
+
+.header {
+    margin: auto;
+    max-width: var(--max-width-content);
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -15,7 +20,7 @@
 .nav {
     display: flex;
     align-items: center;
-    
+
     gap: var(--fs-500);
 }
 
