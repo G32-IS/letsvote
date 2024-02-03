@@ -1,7 +1,7 @@
 import express from 'express'
 import { roles, verify } from '../controllers/auth.controller';
 import { UserRole } from '@prisma/client';
-import { create, get, getAll, update } from '../controllers/event.controller';
+import { create, getAll, getMine, getPartecipations, getVotes, update } from '../controllers/event.controller';
 
 export const eventRouter = express.Router();
 eventRouter.use(express.json());
@@ -16,11 +16,21 @@ eventRouter.put('/update',
     roles(UserRole.Admin),
     update);
 
-eventRouter.get('/get',
-    verify,
-    roles(UserRole.Admin),
-    get);
-
 eventRouter.get('/get/all',
     verify,
     getAll);
+
+eventRouter.get('/get/mine',
+    verify,
+    roles(UserRole.Admin),
+    getMine);
+
+eventRouter.get("/get/votes/:id",
+    verify,
+    roles(UserRole.Admin),
+    getVotes);
+
+eventRouter.get("/get/partecipations/:id",
+    verify,
+    roles(UserRole.Admin),
+    getPartecipations);

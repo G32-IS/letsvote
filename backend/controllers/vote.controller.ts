@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { prisma } from "../prisma/prisma-client";
 
 export const vote = async (req: Request, res: Response) => {
@@ -33,4 +33,52 @@ export const vote = async (req: Request, res: Response) => {
             res.status(400).json({ message: "Bad request" });
         }
     });
+}
+
+export const check = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const { vote, user } = req.body;
+
+        const event = await prisma.event.findUnique({
+            where: {
+                id: vote.eventId
+            }
+        });
+
+        if (!event) {
+            res.status(404).json({ message: "Event not found"});
+            return;
+        }
+
+        // Check if the date is correct
+        const currentDate = new Date();
+
+        if (currentDate < event.startDate) {
+            res.status(401).json({ message: "Event has not started yet"});
+            return;
+        }
+
+        if (currentDate > event.endDate) {
+            res.status(401).json({ message: "Event has already terminated"});
+            return;
+        }
+
+        // Check if the user already partecipated
+        const partecipation = await prisma.partecipation.findFirst({
+            where: {
+                userId: user.id,
+                eventId: event.id
+            }
+        });
+
+        if (partecipation) {
+            res.status(401).json({ message: "User already partecipated to this event" });
+            return;
+        }
+
+        next();
+
+    } catch (err: any) {
+        res.status(400).json({ message: "Bad request" });
+    }
 }
