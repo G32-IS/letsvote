@@ -27,6 +27,11 @@ MONGO_INITDB_DATABASE=letsvote
 DATABASE_URL="mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@db:${DB_PORT}/letsvote?authSource=admin&directConnection=true"
 INIT_WAIT_SEC=4
 
+# Cache
+REDIS_USERNAME=<redis_username>
+REDIS_PASSWORD=<redis_password>
+REDIS_PORT=6379
+
 # Backend
 BE_PORT=4000
 JWT_SECRET=<jwt_secret>

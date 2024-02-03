@@ -1,34 +1,46 @@
 import { Request, Response } from "express";
 import { prisma } from "../prisma/prisma-client";
+import { redisClient } from "../redis/redis-client";
 
 export const create = async (req: Request, res: Response) => {
-    try {
-        const { event, user } = req.body;
-        const newEvent = await prisma.event.create({
-            data: {
-                title:      event.title,
-                body:       event.body,
-                type:       event.type,
-                startDate:  event.startDate,
-                endDate:    event.endDate,
-                authorId:   user.id,
-                choices: {
-                    create: event.choices
+    return prisma.$transaction(async _ => {
+            const { event, user } = req.body;
+            const newEvent = await prisma.event.create({
+                data: {
+                    title: event.title,
+                    body: event.body,
+                    type: event.type,
+                    startDate: event.startDate,
+                    endDate: event.endDate,
+                    authorId: user.id,
+                    choices: {
+                        create: event.choices
+                    }
+                },
+                include: {
+                    choices: true
                 }
-            },
-            include: {
-                choices: true
-            }
-        });
+            });
 
-        if (newEvent) {
-            res.status(200).json({ event: newEvent });
-        } else {
-            res.status(500).json({ message: "Internal server error" })
+            const pathExists =  await redisClient.json.type("events");
+
+            let appendedEvent;
+            if (pathExists) {
+                appendedEvent = await redisClient.json.arrAppend("events", "$", newEvent);
+            } else {
+                appendedEvent = await redisClient.json.set("events", "$", newEvent);
+            }
+
+            if (newEvent && appendedEvent) {
+                res.status(200).json({ event: newEvent });
+            } else {
+                res.status(500).json({ message: "Internal server error" });
+            }
+        try {
+        } catch (err: any) {
+            res.status(400).json({ message: "Bad request" });
         }
-    } catch (err: any) {
-        res.status(400).json({ message: "Bad request" });
-    }
+    });
 }
 
 export const update = async (req: Request, res: Response) => {
@@ -57,6 +69,7 @@ export const update = async (req: Request, res: Response) => {
 export const get = async (req: Request, res: Response) => {
     try {
         const { user } = req.body;
+
         const events = await prisma.event.findMany({
             where: {
                 authorId: user.id
@@ -69,7 +82,7 @@ export const get = async (req: Request, res: Response) => {
         if (events) {
             res.status(200).json({ events: events });
         } else {
-            res.status(500).json({ message: "Internal server error" })
+            res.status(500).json({ message: "Internal server error" });
         }
     } catch (err: any) {
         res.status(400).json({ message: "Bad request" });
@@ -78,16 +91,23 @@ export const get = async (req: Request, res: Response) => {
 
 export const getAll = async (req: Request, res: Response) => {
     try {
-        const events = await prisma.event.findMany({
-            include: {
-                choices: true
-            }
-        });
+        const cachedEvents = await redisClient.json.get("events");
 
-        if (events) {
-            res.status(200).json({ events: events });
+        if (cachedEvents) {
+            res.status(200).json({ fromCache: true, events: cachedEvents });
         } else {
-            res.status(500).json({ message: "Internal server error" })
+            const events = await prisma.event.findMany({
+                include: {
+                    choices: true
+                }
+            });
+
+            if (events) {
+                await redisClient.json.set("events", "$", events);
+                res.status(200).json({ fromCache: false, events: events });
+            } else {
+                res.status(500).json({ message: "Internal server error" });
+            }
         }
     } catch (err: any) {
         res.status(400).json({ message: "Bad request" });

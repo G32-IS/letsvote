@@ -4,6 +4,7 @@ import { hashPassword } from '../utils/bcrypt';
 export const prisma = new PrismaClient();
 
 export const setupPrisma = async () => {
+    console.log("Setting up prisma...");
     // TODO: Add constraint for SysAdmin to be unique
     const sysAdmin = await prisma.user.findFirst({
         where: {
@@ -34,4 +35,4 @@ export const setupPrisma = async () => {
             throw new Error("Could not create SysAdmin user");
         }
     }
-}
+};

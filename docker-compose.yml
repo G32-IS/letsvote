@@ -40,5 +40,14 @@ services:
     volumes:
       - mongodb_data:/data/db
 
+  redis:
+    container_name: redis
+    image: redis/redis-stack-server:latest
+    environment:
+      - REDIS_USERNAME=${REDIS_USERNAME}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+    ports:
+      - ${REDIS_PORT}:${REDIS_PORT}
+
 volumes:
     mongodb_data:

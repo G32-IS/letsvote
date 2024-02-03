@@ -21,6 +21,6 @@ eventRouter.get('/get',
     roles(UserRole.Admin),
     get);
 
-eventRouter.use('/get/all',
+eventRouter.get('/get/all',
     verify,
     getAll);

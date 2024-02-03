@@ -9,6 +9,7 @@ import { eventRouter } from "./routes/event.router";
 import { voteRouter } from "./routes/vote.router";
 import { requestRouter } from "./routes/request.router";
 import { setupPrisma } from "./prisma/prisma-client";
+import { setupRedis } from "./redis/redis-client";
 
 export const app = express();
 
@@ -32,12 +33,12 @@ app.use("/request", requestRouter);
 app.use("/event", eventRouter);
 app.use("/vote", voteRouter);
 
-// Setup prisma then listen
 setupPrisma()
+    .then(setupRedis)
     .then(() => {
         const port = process.env.BE_PORT || 9999;
         app.listen(port, () => console.log(`Server running http://localhost:${port}`));
     })
-    .catch((err: any) => {
-        console.log(err);
+    .catch((error: Error) => {
+        console.error(error.message)
     });
