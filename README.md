@@ -1,5 +1,7 @@
 <div align="center">
 
+![letsvote](./letsvote.svg)
+
 # `letsvote`
 
 <h4><code>letsvote</code> is an online voting platform  for italian elections</h4>
