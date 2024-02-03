@@ -32,8 +32,12 @@ app.use("/request", requestRouter);
 app.use("/event", eventRouter);
 app.use("/vote", voteRouter);
 
-// Setup prisma
-setupPrisma();
-
-const port = process.env.BE_PORT || 9999;
-app.listen(port, () => console.log(`Server running http://localhost:${port}`));
+// Setup prisma then listen
+setupPrisma()
+    .then(() => {
+        const port = process.env.BE_PORT || 9999;
+        app.listen(port, () => console.log(`Server running http://localhost:${port}`));
+    })
+    .catch((err: any) => {
+        console.log(err);
+    });

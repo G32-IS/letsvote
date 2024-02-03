@@ -1,4 +1,4 @@
-import express, {Request, Response} from 'express'
+import express from 'express'
 import { verify, createIfNew, login, logout } from '../controllers/auth.controller';
 
 export const authRouter = express.Router();

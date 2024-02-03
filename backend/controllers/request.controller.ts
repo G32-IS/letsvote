@@ -22,7 +22,7 @@ export const request = async (req: Request, res: Response) => {
     }
 }
 
-export const getAll = async (req: Request, res: Response) => {
+export const getAll = async (res: Response) => {
     try {
         const requests = await prisma.request.findMany({
             include: {
@@ -32,6 +32,23 @@ export const getAll = async (req: Request, res: Response) => {
         res.status(200).json({ requests: requests });
     } catch (err: any) {
         res.status(500).json({ message: "Internal server error" });
+    }
+}
+
+export const get = async (req: Request, res: Response) => {
+    try {
+        const request = await prisma.request.findUnique({
+            where: {
+                id: req.params.id
+            }
+        });
+        if (request) {
+            res.status(200).json({ request: request });
+        } else {
+            res.status(404).json({ message: "Request not found" });
+        }
+    } catch (err: any) {
+        res.status(400).json({ message: "Bad request" });
     }
 }
 
