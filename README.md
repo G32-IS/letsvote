@@ -1,28 +1,69 @@
-# letsvote
+<div align="center">
 
-## Build the project
+# `letsvote`
 
-1. Install Docker CE
-2. Run the following commands (in sudo mode)
+<h4><code>letsvote</code> is an online voting platform  for italian elections</h4>
 
-    ```bash
-    docker compose build
-    docker compose up -d
-    docker exec -it backend /bin/bash
-    ```
+</div>
 
-    wait few secs to let the db start and then:
+<br />
 
-    ```bash
-    npm run prisma
-    exit
-    ```
+This repository contains the implementation of the letsvote project for the software engineering course of UniTrento 2023/2024
 
-## docs
+# Building
 
-## test
+## Environment
 
-if you run locally
+A `.env` file should have this variables defined
 
--   [frontend tests](./frontend/coverage/lcov-report/index.html)
--   [backend tests](./backend/coverage/lcov-report/index.html)
+```text
+# Database
+MONGO_INITDB_ROOT_USERNAME=<db_username>
+MONGO_INITDB_ROOT_PASSWORD=<db_password>
+DB_PORT=27017
+MONGO_INITDB_DATABASE=letsvote
+DATABASE_URL="mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@db:${DB_PORT}/letsvote?authSource=admin&directConnection=true"
+INIT_WAIT_SEC=4
+
+# Backend
+BE_PORT=4000
+JWT_SECRET=<jwt_secret>
+SA_EMAIL=<sys_admin_email>
+SA_PASSWORD=<sys_admin_password>
+BE_DATABASE_URL="mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@localhost:${DB_PORT}/letsvote?authSource=admin"
+
+# Frontend
+FE_PORT=3000
+API_URL=http://localhost:${BE_PORT}
+```
+
+## Backend
+
+Create database container
+
+```bash
+docker compose db up
+```
+
+Push database schema
+
+```bash
+cd backend
+npm i
+npx prisma generate
+npx prisma db push
+```
+
+Run backend
+
+```bash
+npm run start
+```
+
+## Frontend
+
+```bash
+cd frontend
+npm i
+npm run start
+```
