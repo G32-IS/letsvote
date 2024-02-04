@@ -17,7 +17,6 @@ eventRouter.put('/update',
     update);
 
 eventRouter.get('/get/all',
-    verify,
     getAll);
 
 eventRouter.get('/get/mine',
