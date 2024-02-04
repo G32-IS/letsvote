@@ -62,19 +62,42 @@ export const createIfNew = async (req: Request, res: Response, next: NextFunctio
         });
 
         if (!user) {
-            const hashedPassword = await hashPassword(password);
-            const userData = {
-                email: email,
-                hashedPassword: hashedPassword,
-                role: UserRole.Voter,
-            };
-            const newUser = await prisma.user.create({
-                data: userData,
-            });
+            const pobData = {
+                region: "MI",
+                locality: "F205"
+            }
 
-            if (!newUser) {
-                res.status(400).json({ message: "Could not create user" });
-                return;
+            const pob = await prisma.placeOfBirth.findFirst({
+                where: pobData
+            })
+
+            if (pob) {
+                const hashedPassword = await hashPassword(password);
+                const newUser = await prisma.user.create({
+                    data: {
+                        email: email,
+                        hashedPassword: hashedPassword,
+                        role: UserRole.Voter,
+                        pobId: pob.id
+                    }
+                });
+
+                if (!newUser) {
+                    res.status(400).json({ message: "Could not create user" });
+                    return;
+                }
+            } else {
+                const hashedPassword = await hashPassword(password);
+                const newUser = await prisma.user.create({
+                    data: {
+                        email: email,
+                        hashedPassword: hashedPassword,
+                        role: UserRole.Voter,
+                        pob: {
+                            create: pobData
+                        }
+                    }
+                });
             }
         }
         next();

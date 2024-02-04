@@ -14,7 +14,3 @@ testRouter.get("/users", async (req: Request, res: Response) => {
     const countUsers = await prisma.user.count({});
     res.json({ count: countUsers });
 });
-
-// Test vote
-testRouter.get("/vote", async (req: Request, res: Response) => {
-});

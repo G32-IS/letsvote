@@ -1,11 +1,13 @@
 import { PrismaClient, UserRole } from '@prisma/client'
 import { hashPassword } from '../utils/bcrypt';
+import { users } from "../users.json"
 
 export const prisma = new PrismaClient();
 
 export const setupPrisma = async () => {
     console.log("Setting up prisma...");
-    // TODO: Add constraint for SysAdmin to be unique
+
+    // Create admin user
     const sysAdmin = await prisma.user.findFirst({
         where: {
             role: UserRole.SysAdmin
@@ -21,18 +23,69 @@ export const setupPrisma = async () => {
         }
 
         const hashedPassword = await hashPassword(password);
-        const userData = {
-            email: email,
-            hashedPassword: hashedPassword,
-            role: UserRole.SysAdmin
-        };
 
         const newUser = await prisma.user.create({
-            data: userData
+            data: {
+                email: email,
+                hashedPassword: hashedPassword,
+                role: UserRole.SysAdmin,
+                pob: {
+                    create: {
+                        region: "MI",
+                        locality: "F205"
+                    }
+                }
+            },
         });
 
         if (!newUser) {
             throw new Error("Could not create SysAdmin user");
         }
     }
+
+    // Create test users
+    users.forEach(async user => {
+        const oldUser = await prisma.user.findUnique({
+            where: {
+                email: user.email
+            }
+        });
+
+        if (oldUser) {
+            console.log(`User ${user.email} is already in the database`);
+        } else {
+            const oldPob = await prisma.placeOfBirth.findFirst({
+                where: user.pob.create
+            });
+
+            let newUser;
+            if (oldPob) {
+                newUser = await prisma.user.create({
+                    data: {
+                        email: user.email,
+                        hashedPassword: user.hashedPassword,
+                        name: user.name,
+                        role: UserRole[user.role as keyof typeof UserRole],
+                        pobId: oldPob.id
+                    }
+                });
+            } else {
+                newUser = await prisma.user.create({
+                    data: {
+                        email: user.email,
+                        hashedPassword: user.hashedPassword,
+                        name: user.name,
+                        role: UserRole[user.role as keyof typeof UserRole],
+                        pob: user.pob
+                    }
+                })
+            }
+
+            if (newUser) {
+                console.log(`User ${user.email} created successfully`);
+            } else {
+                throw new Error(`Could not create user ${user.email}`);
+            }
+        }
+    });
 };
