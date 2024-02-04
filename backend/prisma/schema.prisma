@@ -12,6 +12,7 @@ model PlaceOfBirth {
     region      String
     locality    String
     users       User[]
+    events      Event[]
     @@unique([region, locality])
 }
 
@@ -55,12 +56,14 @@ enum EventType {
 }
 
 model Event {
-    id              String      @id @default(auto()) @map("_id") @db.ObjectId
+    id              String          @id @default(auto()) @map("_id") @db.ObjectId
     title           String
     body            String?
     type            EventType
-    author          User        @relation(fields: [authorId], references: [id])
-    authorId        String      @db.ObjectId
+    author          User            @relation(fields: [authorId], references: [id])
+    authorId        String          @db.ObjectId
+    pob             PlaceOfBirth    @relation(fields: [pobId], references: [id])
+    pobId           String          @db.ObjectId
     startDate       DateTime
     endDate         DateTime
     choices         Choice[]

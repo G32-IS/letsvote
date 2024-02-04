@@ -1,5 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { prisma } from "../prisma/prisma-client";
+import { WatchError } from "redis";
+import { EventType } from "@prisma/client";
 
 export const vote = async (req: Request, res: Response) => {
     return prisma.$transaction(async _ => {
@@ -36,12 +38,14 @@ export const vote = async (req: Request, res: Response) => {
 }
 
 export const check = async (req: Request, res: Response, next: NextFunction) => {
-    try {
         const { vote, user } = req.body;
 
         const event = await prisma.event.findUnique({
             where: {
                 id: vote.eventId
+            },
+            include: {
+                pob: true
             }
         });
 
@@ -76,7 +80,60 @@ export const check = async (req: Request, res: Response, next: NextFunction) => 
             return;
         }
 
+        // Check if the place of birth is correct
+        const userPob = await prisma.user.findUnique({
+            where: {
+                id: user.id
+            },
+            include: {
+                pob: true
+            }
+        });
+
+        if (!userPob) {
+            res.status(500).json({ message: "User does did not provide a pob" });
+            return;
+        }
+
+        switch (event.type) {
+            case EventType.ElezioneComunale: {
+                if (event.pob != userPob.pob) {
+                    res.status(401).json({ message: "User pob does not match event" });
+                    return;
+                }
+            }
+            break;
+            case EventType.ElezioneProvinciale: {
+                if (event.pob.region != userPob.pob.region) {
+                    res.status(401).json({ message: "User region does not match the event" });
+                    return;
+                }
+            }
+            break;
+            case EventType.ElezioneRegionale: {
+                if (event.pob.region != userPob.pob.region) {
+                    res.status(401).json({ message: "User region does not match the event" });
+                    return;
+                }
+            }
+            break;
+            case EventType.ElezioneParlamentare: {
+            }
+            break;
+            case EventType.ReferendumRegionale: {
+                if (event.pob.region != userPob.pob.region) {
+                    res.status(401).json({ message: "User region does not match the event" });
+                    return;
+                }
+            }
+            break;
+            case EventType.ReferendumNazionale: {
+            }
+            break;
+        }
+
         next();
+    try {
 
     } catch (err: any) {
         res.status(400).json({ message: "Bad request" });

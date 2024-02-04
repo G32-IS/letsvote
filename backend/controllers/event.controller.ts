@@ -14,6 +14,7 @@ export const create = async (req: Request, res: Response) => {
                     startDate: event.startDate,
                     endDate: event.endDate,
                     authorId: user.id,
+                    pobId: user.pobId,
                     choices: {
                         create: event.choices
                     }
