@@ -3,9 +3,10 @@ import { prisma } from "../prisma/prisma-client";
 
 export const getUser = async (req: Request, res: Response) => {
     try {
+        const { user } = req.body;
         const userData = await prisma.user.findUnique({
             where: {
-                id: req.params.id
+                id: user.id
             }, include: {
                 events: true,
                 participations: true,

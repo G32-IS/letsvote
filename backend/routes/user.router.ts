@@ -5,5 +5,5 @@ import { getUser, updateUser } from '../controllers/user.controller';
 export const userRouter = express.Router();
 userRouter.use(express.json());
 
-userRouter.get('/profile/:id', verifyToken, getUser);
+userRouter.get('/profile', verifyToken, getUser);
 userRouter.put('/update', verifyToken, updateUser);
