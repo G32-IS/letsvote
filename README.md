@@ -16,13 +16,13 @@ This repository contains the implementation of the letsvote project for the soft
 
 Running the containers
 
-```bash
+```
 docker compose up
 ```
 
-Generating database schema
+Pushing database schema
 
-```bash
+```
 cd backend
 npm install
 npx prisma generate
@@ -33,7 +33,7 @@ npx prisma db push
 
 A `.env` file should have these variables defined
 
-```text
+```
 # Database
 MONGO_INITDB_ROOT_USERNAME=<db_username>
 MONGO_INITDB_ROOT_PASSWORD=<db_password>
