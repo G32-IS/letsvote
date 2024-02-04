@@ -29,7 +29,7 @@ npx prisma generate
 npx prisma db push
 ```
 
-## Environment
+# Environment
 
 A `.env` file should have these variables defined
 
