@@ -26,6 +26,7 @@ export const verify = async (req: Request, res: Response, next: NextFunction) =>
                     req.body.user = userInfo;
                     next();
                 } else {
+                    res.clearCookie("token");
                     res.status(404).json({ message: `User ${user.id} does not exist` });
                 }
             } catch (err: any) {

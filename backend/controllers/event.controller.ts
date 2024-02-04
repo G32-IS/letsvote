@@ -118,7 +118,6 @@ export const getSingle = async (req: Request, res: Response) => {
         const eventId = req.params.id;
         const cachedEvent = await redisClient.json.get(`events:${eventId}`);
 
-        console.log(cachedEvent)
         if (cachedEvent) {
             res.status(200).json({ fromCache: true, event: cachedEvent });
         } else {
