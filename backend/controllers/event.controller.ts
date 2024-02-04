@@ -112,6 +112,33 @@ export const getAll = async (req: Request, res: Response) => {
     }
 }
 
+export const getSingle = async (req: Request, res: Response) => {
+    try {
+        const eventId = req.params.id;
+        const cachedEvent = redisClient.json.get(`events:${eventId}`);
+
+        if (cachedEvent) {
+            res.status(200).json({ fromCache: true, event: cachedEvent });
+        } else {
+            const event = await prisma.event.findUnique({
+                where: {
+                    id: eventId
+                }
+            });
+
+            if (event) {
+                await redisClient.json.set(`events:${eventId}`, "$", event);
+                await redisClient.expire(`events:${eventId}`, 10);
+                res.status(200).json({ fromCache: false, event: event });
+            } else {
+                res.status(500).json({ message: "Could not find event" });
+            }
+        }
+    } catch (err: any) {
+        res.status(400).json({ message: "Bad request" });
+    }
+}
+
 export const getVotes = async (req: Request, res: Response) => {
     try {
         const eventId = req.params.id;
