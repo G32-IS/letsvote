@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { prisma } from "../prisma/prisma-client";
 import { redisClient } from "../redis/redis-client";
 
-export const create = async (req: Request, res: Response) => {
+export const createEvent = async (req: Request, res: Response) => {
     return prisma.$transaction(async _ => {
         try {
             const { event, user } = req.body;
@@ -33,15 +33,15 @@ export const create = async (req: Request, res: Response) => {
             if (newEvent) {
                 res.status(200).json({ event: newEvent });
             } else {
-                res.status(500).json({ message: "Internal server error" });
+                res.status(500).json({ message: "Could not create event" });
             }
         } catch (err: any) {
-            res.status(400).json({ message: "Bad request" });
+            res.status(500).json({ message: "Internal server error" });
         }
     });
 }
 
-export const update = async (req: Request, res: Response) => {
+export const updateEvent = async (req: Request, res: Response) => {
     try {
         const { event } = req.body
         const updatedEvent = await prisma.event.update({
@@ -57,14 +57,14 @@ export const update = async (req: Request, res: Response) => {
         if (updatedEvent) {
             res.status(200).json({ event: updatedEvent });
         } else {
-            res.status(500).json({ message: "Internal server error" })
+            res.status(500).json({ message: "Could not update event" })
         }
     } catch (err: any) {
-        res.status(400).json({ message: "Bad request" });
+        res.status(500).json({ message: "Internal server error" });
     }
 }
 
-export const getMine = async (req: Request, res: Response) => {
+export const getMyEvents = async (req: Request, res: Response) => {
     try {
         const { user } = req.body;
 
@@ -77,17 +77,13 @@ export const getMine = async (req: Request, res: Response) => {
             }
         });
 
-        if (events) {
-            res.status(200).json({ events: events });
-        } else {
-            res.status(500).json({ message: "Internal server error" });
-        }
+        res.status(200).json({ events: events });
     } catch (err: any) {
-        res.status(400).json({ message: "Bad request" });
+        res.status(500).json({ message: "Internal server error" });
     }
 }
 
-export const getAll = async (req: Request, res: Response) => {
+export const getAllEvents = async (req: Request, res: Response) => {
     try {
         const cachedEvents = await redisClient.json.get("events");
 
@@ -103,17 +99,15 @@ export const getAll = async (req: Request, res: Response) => {
             if (events) {
                 await redisClient.json.set("events", "$", events);
                 await redisClient.expire("events", 10);
-                res.status(200).json({ fromCache: false, events: events });
-            } else {
-                res.status(500).json({ message: "Internal server error" });
             }
+            res.status(200).json({ fromCache: false, events: events });
         }
     } catch (err: any) {
-        res.status(400).json({ message: "Bad request" });
+        res.status(500).json({ message: "Internal server error" });
     }
 }
 
-export const getSingle = async (req: Request, res: Response) => {
+export const getEvent = async (req: Request, res: Response) => {
     try {
         const eventId = req.params.id;
         const cachedEvent = await redisClient.json.get(`events:${eventId}`);
@@ -135,15 +129,15 @@ export const getSingle = async (req: Request, res: Response) => {
                 await redisClient.expire(`events:${eventId}`, 10);
                 res.status(200).json({ fromCache: false, event: event });
             } else {
-                res.status(500).json({ message: "Could not find event" });
+                res.status(404).json({ message: "Event not found" });
             }
         }
     } catch (err: any) {
-        res.status(400).json({ message: "Bad request" });
+        res.status(500).json({ message: "Internal server error" });
     }
 }
 
-export const getVotes = async (req: Request, res: Response) => {
+export const getEventVotes = async (req: Request, res: Response) => {
     try {
         const eventId = req.params.id;
         const cachedVotes = await redisClient.json.get(`votes:${eventId}`);
@@ -160,17 +154,15 @@ export const getVotes = async (req: Request, res: Response) => {
             if (votes) {
                 await redisClient.json.set(`votes:${eventId}`, "$", votes);
                 await redisClient.expire(`votes:${eventId}`, 10);
-                res.status(200).json({ fromCache: false, votes: votes })
-            } else {
-                res.status(404).json({ message: "No votes found" });
             }
+            res.status(200).json({ fromCache: false, votes: votes })
         }
     } catch (err: any) {
-        res.status(400).json({ message: "Bad request" });
+        res.status(500).json({ message: "Internal server error" });
     }
 }
 
-export const getParticipations = async (req: Request, res: Response) => {
+export const getEventParticipations = async (req: Request, res: Response) => {
     try {
         const eventId = req.params.id;
         const cachedParticipation = await redisClient.get(`participations:${eventId}`);
@@ -187,12 +179,10 @@ export const getParticipations = async (req: Request, res: Response) => {
             if (participations) {
                 await redisClient.json.set(`votes:${eventId}`, "$", participations);
                 await redisClient.expire(`votes:${eventId}`, 10);
-                res.status(200).json({ fromCache: false, votes: participations})
-            } else {
-                res.status(404).json({ message: "No participations not found" });
             }
+            res.status(200).json({ fromCache: false, votes: participations })
         }
     } catch (err: any) {
-        res.status(400).json({ message: "Bad request" });
+        res.status(500).json({ message: "Internal server error" });
     }
 }

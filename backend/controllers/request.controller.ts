@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { prisma } from "../prisma/prisma-client";
 import { RequestState, UserRole } from "@prisma/client";
 
-export const request = async (req: Request, res: Response) => {
+export const createRequest = async (req: Request, res: Response) => {
     try {
         const { user } = req.body;
 
@@ -14,7 +14,7 @@ export const request = async (req: Request, res: Response) => {
         });;
 
         if (oldRequest) {
-            res.status(409).json({ message: "User already has a pending request" });
+            res.status(422).json({ message: "User already has a pending request" });
             return;
         }
 
@@ -25,16 +25,16 @@ export const request = async (req: Request, res: Response) => {
         });
 
         if (newRequest) {
-            res.status(200).json({ message: "Request created successfully "});
+            res.status(200).json({ message: "Request created successfully" });
         } else {
-            res.status(400).json({ message: "Could not create request"});
+            res.status(500).json({ message: "Could not create request"});
         }
     } catch (err: any) {
         res.status(400).json({ message: "Bad request" });
     }
 }
 
-export const getAll = async (req: Request, res: Response) => {
+export const getAllRequests = async (req: Request, res: Response) => {
     try {
         const requests = await prisma.request.findMany({
             include: {
@@ -43,11 +43,11 @@ export const getAll = async (req: Request, res: Response) => {
         });
         res.status(200).json({ requests: requests });
     } catch (err: any) {
-        res.status(500).json({ message: "Bad request" });
+        res.status(500).json({ message: "Internal server error" });
     }
 }
 
-export const get = async (req: Request, res: Response) => {
+export const getRequest = async (req: Request, res: Response) => {
     try {
         const request = await prisma.request.findUnique({
             where: {
@@ -60,11 +60,11 @@ export const get = async (req: Request, res: Response) => {
             res.status(404).json({ message: "Request not found" });
         }
     } catch (err: any) {
-        res.status(400).json({ message: "Bad request" });
+        res.status(500).json({ message: "Internal server error" });
     }
 }
 
-export const handle = async (req: Request, res: Response) => {
+export const handleRequest = async (req: Request, res: Response) => {
     return prisma.$transaction(async _ => {
         try {
             const { request } = req.body;
@@ -101,7 +101,7 @@ export const handle = async (req: Request, res: Response) => {
                 res.status(200).json({ request: newRequest });
             }
         } catch (err: any) {
-            res.status(400).json({ message: "Bad request" });
+            res.status(500).json({ message: "Internal server error" });
             return;
         }
     });

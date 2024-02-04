@@ -4,17 +4,17 @@ import { hashPassword, passwordMatches } from "../utils/bcrypt";
 import jwt from "jsonwebtoken";
 import { prisma } from "../prisma/prisma-client";
 
-export const verify = async (req: Request, res: Response, next: NextFunction) => {
+export const verifyToken = async (req: Request, res: Response, next: NextFunction) => {
     const token = req.cookies.token;
     if (!token) {
-        res.status(401).json({ message: "Unauthorized" });
+        res.status(401).json({ message: "User token was not provided" });
         return;
     }
 
     const key = process.env.JWT_SECRET!;
     jwt.verify(token, key, async (err: any, user: any) => {
         if (err) {
-            res.status(401).json({ message: "Unauthorized" });
+            res.status(401).json({ message: "User token was not correct" });
         } else {
             try {
                 const userInfo = await prisma.user.findUnique({
@@ -27,11 +27,11 @@ export const verify = async (req: Request, res: Response, next: NextFunction) =>
                     next();
                 } else {
                     res.clearCookie("token");
-                    res.status(404).json({ message: `User ${user.id} does not exist` });
+                    res.status(404).json({ message: `User ${user.id} not found` });
                 }
             } catch (err: any) {
                 res.status(500).json({
-                    message: "Could not find user for the passed token"
+                    message: "Internal server error"
                 });
             }
         }
@@ -45,7 +45,7 @@ export const roles = (...args: UserRole[]) => {
         if (args.some((role) => user?.role == role)) {
             next();
         } else {
-            res.status(401).json({ message: "Unauthorized" });
+            res.status(401).json({ message: "User role does not allow this operation" });
             return;
         }
     };
@@ -55,8 +55,13 @@ export const createIfNew = async (req: Request, res: Response, next: NextFunctio
     try {
         const { email, password } = req.body.user;
 
-        if (!email || !password) {
-            res.status(400).json({ message: "Bad request" });
+        if (!email) {
+            res.status(400).json({ message: "Email was not provided" });
+            return;
+        }
+
+        if (!password) {
+            res.status(400).json({ message: "Password was not provided" });
             return;
         }
 
@@ -107,9 +112,8 @@ export const createIfNew = async (req: Request, res: Response, next: NextFunctio
         }
         next();
     } catch (err: any) {
-        res.status(400).json({ message: "Bad request" });
+        res.status(500).json({ message: "Internal server error" });
     }
-
 };
 
 export const login = async (req: Request, res: Response) => {
@@ -147,7 +151,7 @@ export const login = async (req: Request, res: Response) => {
 
         res.status(200).json({ user: user });
     } catch (err: any) {
-        res.status(400).json({ message: "Bad request" });
+        res.status(500).json({ message: "Internal server error" });
     }
 };
 

@@ -1,12 +1,12 @@
 import express, { Request, Response } from "express";
-import { roles, verify } from "../controllers/auth.controller";
+import { roles, verifyToken } from "../controllers/auth.controller";
 import { UserRole } from "@prisma/client";
-import { get, getAll, handle, request } from "../controllers/request.controller";
+import { getRequest, getAllRequests, handleRequest, createRequest } from "../controllers/request.controller";
 
 export const requestRouter = express();
 requestRouter.use(express.json());
 
-requestRouter.post("/create", verify, roles(UserRole.Voter), request);
-requestRouter.put("/handle", verify, roles(UserRole.SysAdmin), handle);
-requestRouter.get("/get", verify, roles(UserRole.SysAdmin), getAll);
-requestRouter.get("/get/:id", verify, roles(UserRole.SysAdmin), get);
+requestRouter.post("/create", verifyToken, roles(UserRole.Voter), createRequest);
+requestRouter.put("/handle", verifyToken, roles(UserRole.SysAdmin), handleRequest);
+requestRouter.get("/get", verifyToken, roles(UserRole.SysAdmin), getAllRequests);
+requestRouter.get("/get/:id", verifyToken, roles(UserRole.SysAdmin), getRequest);

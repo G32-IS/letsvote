@@ -1,11 +1,11 @@
 import express from "express"
-import { roles, verify } from "../controllers/auth.controller";
-import { check, vote } from "../controllers/vote.controller";
+import { roles, verifyToken } from "../controllers/auth.controller";
+import { checkPrerequisites, createVote } from "../controllers/vote.controller";
 
 export const voteRouter = express.Router();
 voteRouter.use(express.json());
 
 voteRouter.post("/create",
-    verify,
-    check,
-    vote);
+    verifyToken,
+    checkPrerequisites,
+    createVote);

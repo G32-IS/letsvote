@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { prisma } from "../prisma/prisma-client";
 import { EventType } from "@prisma/client";
 
-export const vote = async (req: Request, res: Response) => {
+export const createVote = async (req: Request, res: Response) => {
     return prisma.$transaction(async _ => {
         try {
             const { vote, user } = req.body;
@@ -28,15 +28,16 @@ export const vote = async (req: Request, res: Response) => {
             if (newParticipation) {
                 res.status(200).json({ participation: newParticipation });
             } else {
-                res.status(400).json({ message: "Could not create participation"});
+                res.status(500).json({ message: "Could not create participation"});
             }
         } catch (err: any) {
-            res.status(400).json({ message: "Bad request" });
+            res.status(500).json({ message: "Internal server error" });
         }
     });
 }
 
-export const check = async (req: Request, res: Response, next: NextFunction) => {
+export const checkPrerequisites = async (req: Request, res: Response, next: NextFunction) => {
+    try {
         const { vote, user } = req.body;
 
         const event = await prisma.event.findUnique({
@@ -75,7 +76,7 @@ export const check = async (req: Request, res: Response, next: NextFunction) => 
         });
 
         if (participation) {
-            res.status(409).json({ message: "User already partecipated to this event" });
+            res.status(422).json({ message: "User has already partecipated in this event" });
             return;
         }
 
@@ -90,28 +91,28 @@ export const check = async (req: Request, res: Response, next: NextFunction) => 
         });
 
         if (!userPob) {
-            res.status(500).json({ message: "User does did not provide a pob" });
+            res.status(500).json({ message: "User did not provide a valid place of birth" });
             return;
         }
 
         switch (event.type) {
             case EventType.ElezioneComunale: {
                 if (event.pob != userPob.pob) {
-                    res.status(401).json({ message: "User pob does not match event" });
+                    res.status(401).json({ message: "User place of birth does not match the event's" });
                     return;
                 }
             }
             break;
             case EventType.ElezioneProvinciale: {
                 if (event.pob.region != userPob.pob.region) {
-                    res.status(401).json({ message: "User region does not match the event" });
+                    res.status(401).json({ message: "User region does not match the event's" });
                     return;
                 }
             }
             break;
             case EventType.ElezioneRegionale: {
                 if (event.pob.region != userPob.pob.region) {
-                    res.status(401).json({ message: "User region does not match the event" });
+                    res.status(401).json({ message: "User region does not match the event's" });
                     return;
                 }
             }
@@ -121,7 +122,7 @@ export const check = async (req: Request, res: Response, next: NextFunction) => 
             break;
             case EventType.ReferendumRegionale: {
                 if (event.pob.region != userPob.pob.region) {
-                    res.status(401).json({ message: "User region does not match the event" });
+                    res.status(401).json({ message: "User region does not match the event's" });
                     return;
                 }
             }
@@ -132,9 +133,8 @@ export const check = async (req: Request, res: Response, next: NextFunction) => 
         }
 
         next();
-    try {
 
     } catch (err: any) {
-        res.status(400).json({ message: "Bad request" });
+        res.status(500).json({ message: "Internal server error" });
     }
 }
