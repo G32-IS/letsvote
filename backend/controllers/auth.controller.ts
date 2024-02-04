@@ -22,8 +22,12 @@ export const verify = async (req: Request, res: Response, next: NextFunction) =>
                         id: user.id
                     }
                 });
-                req.body.user = userInfo;
-                next();
+                if (userInfo) {
+                    req.body.user = userInfo;
+                    next();
+                } else {
+                    res.status(404).json({ message: `User ${user.id} does not exist` });
+                }
             } catch (err: any) {
                 res.status(500).json({
                     message: "Could not find user for the passed token"
