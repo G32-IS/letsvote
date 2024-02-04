@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from "express";
 import { prisma } from "../prisma/prisma-client";
-import { WatchError } from "redis";
 import { EventType } from "@prisma/client";
 
 export const vote = async (req: Request, res: Response) => {

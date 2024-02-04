@@ -124,6 +124,9 @@ export const getSingle = async (req: Request, res: Response) => {
             const event = await prisma.event.findUnique({
                 where: {
                     id: eventId
+                },
+                include: {
+                    choices: true
                 }
             });
 
