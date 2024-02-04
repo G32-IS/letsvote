@@ -43,10 +43,11 @@ export const createEvent = async (req: Request, res: Response) => {
 
 export const updateEvent = async (req: Request, res: Response) => {
     try {
-        const { event } = req.body
+        const { event, user } = req.body
         const updatedEvent = await prisma.event.update({
             where: {
-                id: event.id
+                id: event.id,
+                authorId: user.id
             },
             data: event,
             include: {
@@ -58,6 +59,26 @@ export const updateEvent = async (req: Request, res: Response) => {
             res.status(200).json({ event: updatedEvent });
         } else {
             res.status(500).json({ message: "Could not update event" })
+        }
+    } catch (err: any) {
+        res.status(500).json({ message: "Internal server error" });
+    }
+}
+
+export const deleteEvent = async (req: Request, res: Response) => {
+    try {
+        const { event, user } = req.body;
+        const deletedEvent = await prisma.event.delete({
+            where: {
+                id: event.id,
+                authorId: user.id
+            }
+        });
+
+        if (deletedEvent) {
+            res.status(200).json({ message: "Event deleted sccessfully" });
+        } else {
+            res.status(404).json({ message: "Event not found" });
         }
     } catch (err: any) {
         res.status(500).json({ message: "Internal server error" });

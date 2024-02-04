@@ -1,7 +1,7 @@
 import express from 'express'
 import { roles, verifyToken } from '../controllers/auth.controller';
 import { UserRole } from '@prisma/client';
-import { createEvent, getAllEvents, getMyEvents, getEventParticipations, getEvent, getEventVotes, updateEvent } from '../controllers/event.controller';
+import { createEvent, getAllEvents, getMyEvents, getEventParticipations, getEvent, getEventVotes, updateEvent, deleteEvent } from '../controllers/event.controller';
 
 export const eventRouter = express.Router();
 eventRouter.use(express.json());
@@ -15,6 +15,11 @@ eventRouter.put('/update',
     verifyToken,
     roles(UserRole.Admin),
     updateEvent);
+
+eventRouter.delete('/delete',
+    verifyToken,
+    roles(UserRole.Admin),
+    deleteEvent);
 
 eventRouter.get('/get/all',
     getAllEvents);
