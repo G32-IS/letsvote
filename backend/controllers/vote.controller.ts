@@ -63,7 +63,7 @@ export const check = async (req: Request, res: Response, next: NextFunction) => 
             return;
         }
 
-        // Check if the user already partecipated
+        // Check if the user has already partecipated
         const partecipation = await prisma.partecipation.findFirst({
             where: {
                 userId: user.id,
