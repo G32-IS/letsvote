@@ -25,7 +25,7 @@ eventRouter.get('/get/mine',
     roles(UserRole.Admin),
     getMine);
 
-eventRouter.get("get/single/:id",
+eventRouter.get("/get/single/:id",
     verify,
     getSingle);
 
