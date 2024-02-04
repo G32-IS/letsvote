@@ -167,26 +167,26 @@ export const getVotes = async (req: Request, res: Response) => {
     }
 }
 
-export const getPartecipations = async (req: Request, res: Response) => {
+export const getParticipations = async (req: Request, res: Response) => {
     try {
         const eventId = req.params.id;
-        const cachedPartecipation = await redisClient.get(`partecipations:${eventId}`);
+        const cachedParticipation = await redisClient.get(`participations:${eventId}`);
 
-        if (cachedPartecipation) {
-            res.status(200).json({ fromCache: true, partecipations: cachedPartecipation });
+        if (cachedParticipation) {
+            res.status(200).json({ fromCache: true, participations: cachedParticipation });
         } else {
-            const partecipations = await prisma.partecipation.findMany({
+            const participations = await prisma.participation.findMany({
                 where: {
                     eventId: eventId
                 },
             });
 
-            if (partecipations) {
-                await redisClient.json.set(`votes:${eventId}`, "$", partecipations);
+            if (participations) {
+                await redisClient.json.set(`votes:${eventId}`, "$", participations);
                 await redisClient.expire(`votes:${eventId}`, 10);
-                res.status(200).json({ fromCache: false, votes: partecipations})
+                res.status(200).json({ fromCache: false, votes: participations})
             } else {
-                res.status(404).json({ message: "No partecipations not found" });
+                res.status(404).json({ message: "No participations not found" });
             }
         }
     } catch (err: any) {

@@ -18,18 +18,18 @@ export const vote = async (req: Request, res: Response) => {
                 return;
             }
 
-            // Create partecipation
-            const newPartecipation = await prisma.partecipation.create({
+            // Create participation
+            const newParticipation = await prisma.participation.create({
                 data: {
                     userId: user.id,
                     eventId: newVote.eventId
                 }
             });
 
-            if (newPartecipation) {
-                res.status(200).json({ partecipation: newPartecipation });
+            if (newParticipation) {
+                res.status(200).json({ participation: newParticipation });
             } else {
-                res.status(400).json({ message: "Could not create partecipation"});
+                res.status(400).json({ message: "Could not create participation"});
             }
         } catch (err: any) {
             res.status(400).json({ message: "Bad request" });
@@ -68,14 +68,14 @@ export const check = async (req: Request, res: Response, next: NextFunction) => 
         }
 
         // Check if the user has already partecipated
-        const partecipation = await prisma.partecipation.findFirst({
+        const participation = await prisma.participation.findFirst({
             where: {
                 userId: user.id,
                 eventId: event.id
             }
         });
 
-        if (partecipation) {
+        if (participation) {
             res.status(409).json({ message: "User already partecipated to this event" });
             return;
         }

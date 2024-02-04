@@ -8,7 +8,7 @@ export const profile = async (req: Request, res: Response) => {
             id: user.id
         }, include: {
             events: true,
-            partecipations: true,
+            participations: true,
             requests: true
         }
     });

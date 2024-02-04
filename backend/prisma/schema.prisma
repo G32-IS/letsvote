@@ -33,7 +33,7 @@ model User {
     pobId           String          @db.ObjectId
     role            UserRole
     events          Event[]
-    partecipations  Partecipation[]
+    participations  Participation[]
     requests        Request[]
 }
 
@@ -68,10 +68,10 @@ model Event {
     endDate         DateTime
     choices         Choice[]
     votes           Vote[]
-    partecipations  Partecipation[]
+    participations  Participation[]
 }
 
-model Partecipation {
+model Participation {
     id          String      @id @default(auto()) @map("_id") @db.ObjectId
     date        DateTime    @default(now())
     user        User        @relation(fields: [userId], references: [id])
