@@ -1,13 +1,11 @@
 "use client";
 import { useState } from 'react';
-import { Stack, Button, Text } from '@mantine/core';
+import { Stack, Button, Text, TextInput } from '@mantine/core';
 import { TagsInput } from '@mantine/core';
-
 
 import { FileWithPath } from '@mantine/dropzone';
 import { DateValue } from '@mantine/dates';
 import { DateTimePicker } from '@mantine/dates';
-
 
 import RadioCustomGroup from '@/app/components/RadioCustomGroup';
 import ImageDropZone from '@/app/components/ImageDropZone';
@@ -15,17 +13,15 @@ import ContentTitle from '@/app/components/ContentTitle';
 
 import TextEditor from '@/app/components/TextEditor';
 
+import { Choice, EventType, EventInterface } from '@/app/types';
+
+import { useAddEvent } from '@/app/hooks/useAddEvent';
+
 export type Props = {}
 
-export enum EventType {
-    ReferendumNazionale = "Referendum nazionale",
-    ReferendumRegionale = "Referendum regionale",
-    ElezioneParlamentare = "Elezione parlamentare",
-    ElezioneRegionale = "Elezione regionale",
-    ElezioneProvinciale = "Elezione provinciale",
-    ElezioneComunale = "Elezione comunale"
-}
-const keys = Object.keys(EventType)
+const keys = Object.keys(EventType).filter((item) => {
+    return isNaN(Number(item));
+});
 
 const publishType = [
     "Non permettere la visualizzazione in tempo reale dei risultati",
@@ -36,12 +32,35 @@ const publishType = [
 export const page = (props: Props) => {
     const [createState, setCreateState] = useState<number>(0);
 
-    const [event, setEvent] = useState<EventType | string>();
+    const [title, setTitle] = useState<string>("");
+    const [eventType, setEventType] = useState<number>(EventType.ElezioneComunale);
     const [files, setFiles] = useState<FileWithPath[]>([]);
     const [startDate, setStartDate] = useState<DateValue>();
     const [endDate, setEndDate] = useState<DateValue>();
     const [publish, setPublish] = useState<string>();
     const [options, setOptions] = useState<string[]>([]);
+
+    const { addEvent } = useAddEvent();
+
+    const handleSubmit = (e: any) => {
+        e.preventDefault();
+        const choices: Choice[] = options.map((val) => {
+            return { title: val, body: "" }
+        })
+
+        if (startDate && endDate) {
+            const eventObj: EventInterface = {
+                title: title,
+                type: eventType,
+                body: "",
+                startDate: startDate,
+                endDate: endDate,
+                choices: choices
+            }
+
+            addEvent(eventObj);
+        }
+    }
 
     return (
         <>
@@ -53,9 +72,19 @@ export const page = (props: Props) => {
 
                 {createState == 0 ?
                     (<>
+                        <TextInput
+                            label="Titolo votazione"
+                            value={title}
+                            onChange={(val) => { setTitle(val.currentTarget.value) }}
+                            required
+                            withAsterisk
+                            placeholder='Referendum costituzionale n. 0123'
+                            size='md'
+                        />
+
                         <RadioCustomGroup
-                            state={event}
-                            setState={setEvent}
+                            state={eventType}
+                            setState={setEventType}
                             values={keys}
                             name="electionType"
                             label="Seleziona il tipo di votazione"
@@ -66,7 +95,7 @@ export const page = (props: Props) => {
                         <Stack gap="md" w="100%">
                             <DateTimePicker
                                 label="Seleziona la data di inizio"
-                                description="Piselli grossi e venosi"
+                                description="Cliccare sul campo per la visualizzazione del selettore"
                                 placeholder="Data di inizio"
                                 value={startDate}
                                 onChange={setStartDate}
@@ -74,7 +103,7 @@ export const page = (props: Props) => {
                             />
                             <DateTimePicker
                                 label="Seleziona la data di fine"
-                                description="Piselli grossi e venosi"
+                                description="Cliccare sul campo per la visualizzazione del selettore"
                                 placeholder="Data di fine"
                                 value={endDate}
                                 onChange={setEndDate}
@@ -94,7 +123,7 @@ export const page = (props: Props) => {
                             variant='filled'
                             mb={30}
                             disabled={
-                                !(event && files.length > 0 && startDate && endDate && publish)
+                                !(eventType && files.length > 0 && startDate && endDate && publish)
                             }
                             onClick={() => setCreateState(1)}
                         >Continua</Button>
@@ -119,6 +148,7 @@ export const page = (props: Props) => {
                         <Button
                             variant='filled'
                             mb={30}
+                            onClick={e => handleSubmit(e)}
                         >Crea votazione</Button>
                     </>)
                 }

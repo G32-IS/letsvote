@@ -1,5 +1,6 @@
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { QUERY_KEY } from "../react-query/client";
+import { useRouter } from "next/router";
 
 const logoutFn = async () => {
     const response = await fetch(`${process.env.API_URL}/auth/logout`, {

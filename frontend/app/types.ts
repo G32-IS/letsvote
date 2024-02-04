@@ -3,13 +3,13 @@ export interface Credentials {
     password: string;
 }
 
-enum EventType {
-    ReferendumNazionale,
-    ReferendumRegionale,
-    ElezioneParlamentare,
-    ElezioneRegionale,
-    ElezioneProvinciale,
-    ElezioneComunale
+export enum EventType {
+    ReferendumNazionale=0,
+    ReferendumRegionale=1,
+    ElezioneParlamentare=2,
+    ElezioneRegionale=3,
+    ElezioneProvinciale=4,
+    ElezioneComunale=5
 }
 
 export interface Choice {
@@ -17,7 +17,18 @@ export interface Choice {
     body: string;
 }
 
-export interface Event {
+export interface EventInterface {
+    title:string;
+    type:EventType,
+    body:string,
+    choices:Choice[];
+    startDate:Date;
+    endDate:Date;
+}
+
+export interface EventFromDb {
+    authorId: string;
+    id:string;
     title:string;
     type:EventType,
     body:string,

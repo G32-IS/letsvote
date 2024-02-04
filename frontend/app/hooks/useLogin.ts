@@ -9,7 +9,7 @@ const loginFn = async ({email, password}: Credentials): Promise<Credentials> => 
         headers: {
             "Content-Type": "application/json"
         }, 
-        body: JSON.stringify({email, password})
+        body: JSON.stringify({user:{email, password}})
     }) 
     
     const result = await response.json();
