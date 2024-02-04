@@ -14,9 +14,24 @@ This repository contains the implementation of the letsvote project for the soft
 
 # Building
 
-## Environment
+Running the containers
 
-A `.env` file should have this variables defined
+```bash
+docker compose up
+```
+
+Generating database schema
+
+```bash
+cd backend
+npm install
+npx prisma generate
+npx prisma db push
+```
+
+# Environment
+
+A `.env` file should have these variables defined
 
 ```text
 # Database
@@ -42,35 +57,4 @@ BE_DATABASE_URL="mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PAS
 # Frontend
 FE_PORT=3000
 API_URL=http://localhost:${BE_PORT}
-```
-
-## Backend
-
-Create database container
-
-```bash
-docker compose db up
-```
-
-Push database schema
-
-```bash
-cd backend
-npm i
-npx prisma generate
-npx prisma db push
-```
-
-Run backend
-
-```bash
-npm run start
-```
-
-## Frontend
-
-```bash
-cd frontend
-npm i
-npm run start
 ```
