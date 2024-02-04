@@ -6,6 +6,18 @@ export const request = async (req: Request, res: Response) => {
     try {
         const { user } = req.body;
 
+        const oldRequest = await prisma.request.findFirst({
+            where: {
+                userId: user.id,
+                state: RequestState.Pending
+            }
+        });;
+
+        if (oldRequest) {
+            res.status(409).json({ message: "User already has a pending request" });
+            return;
+        }
+
         const newRequest = await prisma.request.create({
             data: {
                 userId: user.id

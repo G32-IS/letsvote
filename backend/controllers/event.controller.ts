@@ -101,6 +101,7 @@ export const getAll = async (req: Request, res: Response) => {
 
             if (events) {
                 await redisClient.json.set("events", "$", events);
+                await redisClient.expire("events", 10);
                 res.status(200).json({ fromCache: false, events: events });
             } else {
                 res.status(500).json({ message: "Internal server error" });

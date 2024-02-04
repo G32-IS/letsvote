@@ -72,7 +72,7 @@ export const check = async (req: Request, res: Response, next: NextFunction) => 
         });
 
         if (partecipation) {
-            res.status(401).json({ message: "User already partecipated to this event" });
+            res.status(409).json({ message: "User already partecipated to this event" });
             return;
         }
 
