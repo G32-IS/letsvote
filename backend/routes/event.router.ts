@@ -16,7 +16,7 @@ eventRouter.put('/update',
     roles(UserRole.Admin),
     updateEvent);
 
-eventRouter.delete('/delete',
+eventRouter.delete('/delete/:id',
     verifyToken,
     roles(UserRole.Admin),
     deleteEvent);

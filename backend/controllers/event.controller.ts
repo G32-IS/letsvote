@@ -67,10 +67,10 @@ export const updateEvent = async (req: Request, res: Response) => {
 
 export const deleteEvent = async (req: Request, res: Response) => {
     try {
-        const { event, user } = req.body;
+        const { user } = req.body;
         const deletedEvent = await prisma.event.delete({
             where: {
-                id: event.id,
+                id: req.params.id,
                 authorId: user.id
             }
         });

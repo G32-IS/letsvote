@@ -1,0 +1,719 @@
+openapi: 3.0.0
+
+info:
+  description: |
+    This is a sample Petstore server.  You can find
+    out more about Swagger at
+    [http://swagger.io](http://swagger.io) or on
+    [irc.freenode.net, #swagger](http://swagger.io/irc/).
+  version: "1.0.0"
+  title: Swagger Petstore
+  termsOfService: 'http://swagger.io/terms/'
+  contact:
+    email: apiteam@swagger.io
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/Giovanni Maria Zanchetta/letsvote/1.0.0
+  - url: 'https://petstore.swagger.io/v2'
+
+tags:
+  - name: auth
+    description: Handle user authentication
+    externalDocs:
+      description: Find out more
+      url: 'http://swagger.io'
+  - name: event
+    description: Operations about events
+  - name: request
+    description: Operations about requests for the role of event administrator
+    externalDocs:
+      description: Find out more about our store
+      url: 'http://swagger.io'
+  - name: test
+    description: Test the api connection and database connection
+  - name: user
+    description: Operations about users
+  - name: vote
+    description: Handle the creation of votes
+
+paths:
+  /auth/login:
+    post:
+      tags:
+        - auth
+      summary: User login
+      operationId: login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/userCreate'
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/message'
+
+  /auth/logout:
+    post:
+      tags:
+        - auth
+      summary: User logout
+      operationId: logout
+      responses:
+        '200':
+          description: Logout successful
+
+  /event/create:
+    post:
+      tags:
+        - event
+      summary: Create an event
+      operationId: createEvent
+      requestBody:
+        content:
+          application/json:
+            schema:
+                $ref: '#/components/schemas/eventCreate'
+      responses:
+        '200':
+          description: Event created correctly
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/event'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/message'
+
+  /event/update:
+    put:
+      tags:
+        - event
+      summary: Update an event
+      operationId: updateEvent
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/event'
+      responses:
+        '200':
+          description: Event updated correctly
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/event'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/message'
+
+  /event/delete/{id}:
+    delete:
+      tags:
+        - event
+      summary: Delete an event
+      operationId: deleteEvent
+      parameters: 
+        - name: id
+          in: path
+          description: Id of the event to delete
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Event deleted correctly
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/event'
+        '404':
+          description: Event not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/message'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/message'
+
+  /event/get/all:
+    get:
+      tags:
+        - event
+      summary: Get all events
+      operationId: getAllEvents
+      responses:
+        '200':
+          description: Operation successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/event'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/message'
+
+  /event/get/mine:
+    get:
+      tags:
+        - event
+      summary: Get events created by the user
+      operationId: getMyEvents
+      responses:
+        '200':
+          description: Operation successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/event'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/message'
+
+  /event/get/single/{id}:
+    get:
+      tags:
+        - event
+      summary: Get single event
+      operationId: getEvent
+      parameters: 
+        - name: id
+          in: path
+          description: Id of the event to retreive
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Operation successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/event'
+        '404':
+          description: Event not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/message'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/message'
+
+  /event/get/votes/{id}:
+    get:
+      tags:
+        - event
+      summary: Get votes relative to an event
+      operationId: getEventVotes
+      parameters: 
+        - name: id
+          in: path
+          description: Id of the event of the votes
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Operation successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/vote'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/message'
+
+  /event/get/participations/{id}:
+    get:
+      tags:
+        - event
+      summary: Get participations relative to an event
+      operationId: getEventParticipations
+      parameters: 
+        - name: id
+          in: path
+          description: Id of the event of the participations
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Operation successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/vote'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/message'
+
+  /request/create:
+    post:
+      tags:
+        - request
+      summary: Create request for the role of administrator
+      operationId: createRequest
+      responses:
+        '200':
+          description: Request created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/message'
+        '422':
+          description: User already has a pending request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/message'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/message'
+
+  /request/handle:
+    put:
+      tags:
+        - request
+      summary: Handle request for the role of administrator
+      operationId: handleRequest
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/request'
+      responses:
+        '200':
+          description: Request created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/message'
+        '404':
+          description: Request not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/message'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/message'
+
+  /request/get/all:
+    get:
+      tags:
+        - request
+      summary: Get all requests
+      operationId: getAllRequests
+      responses:
+        '200':
+          description: Operation successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/request'
+        '404':
+          description: Request not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/message'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                  $ref: '#/components/schemas/message'
+
+  /request/get/single/{id}:
+    get:
+      tags:
+        - request
+      summary: Get single request
+      operationId: getRequest
+      parameters: 
+        - name: id
+          in: path
+          description: Id of the request
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Operation successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/request'
+        '404':
+          description: Request not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/message'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                  $ref: '#/components/schemas/message'
+
+  /test:
+    get:
+      tags:
+        - test
+      summary: Test api connection
+      operationId: test
+      responses:
+        '200':
+          description: Operation successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/message'
+
+  /test/users:
+    get:
+      tags:
+        - test
+      summary: Test database connection
+      operationId: testUsers
+      responses:
+        '200':
+          description: Operation successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+
+  /user/profile:
+    get:
+      tags:
+        - user 
+      summary: Get user profile
+      operationId: getUser
+      responses:
+        '200':
+          description: Operation successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/message'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                  $ref: '#/components/schemas/message'
+
+  /user/update:
+    put:
+      tags:
+        - user
+      summary: Update user profile
+      operationId: updateUser
+      responses:
+        '200':
+          description: Operation successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/message'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                  $ref: '#/components/schemas/message'
+
+  /vote/create:
+    post:
+      tags:
+        - vote
+      summary: Create vote
+      operationId: createVote
+      responses:
+        '200':
+          description: Operation successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/participation'
+        '400':
+          description: Could not create vote
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+        '401':
+          description: Event prerequisites do not match user's
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/message'
+        '404':
+          description: Event not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/message'
+        '422':
+          description: User has already partecipated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/message'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                  $ref: '#/components/schemas/message'
+
+components:
+  schemas:
+
+    message:
+      type: object
+      properties:
+        message:
+          type: string
+
+    userCreate:
+      type: object
+      properties:
+        user:
+          type: object
+          properties:
+            email:
+              type: string
+              format: email
+            password:
+              type: string
+              format: password
+
+    user:
+      type: object
+      properties:
+        user:
+          type: object
+          properties:
+            id:
+              type: string
+            createdAt:
+              type: string
+              format: date-time
+            updatedAt:
+              type: string
+              format: date-time
+            email:
+              type: string
+              format: email
+            hashedPassword:
+              type: string
+            name:
+              type: string
+              format: name
+            pobId:
+              type: string
+            role:
+              type: string
+              enum:
+                - SysAdmin
+                - Admin
+                - Voter
+
+    choice:
+      type: object
+      properties:
+        title:
+          type: string
+        body:
+          type: string
+
+    eventCreate:
+      type: object
+      properties:
+        event:
+          properties:
+            title:
+              type: string
+            startDate:
+              type: string
+              format: date-time
+            endDate:
+              type: string
+              format: date-time
+            type:
+              type: string
+              enum:
+                - ReferendumNazionale
+                - ReferendumRegionale
+                - ElezioneParlamentare
+                - ElezioneRegionale
+                - ElezioneProvinciale
+                - ElezioneComunale
+            choices: 
+              type: array
+              items:
+                $ref: "#/components/schemas/choice"
+
+    event:
+      type: object
+      properties:
+        event:
+          properties:
+            id:
+              type: string
+            title:
+              type: string
+            startDate:
+              type: string
+              format: date-time
+            endDate:
+              type: string
+              format: date-time
+            type:
+              type: string
+              enum:
+                - ReferendumNazionale
+                - ReferendumRegionale
+                - ElezioneParlamentare
+                - ElezioneRegionale
+                - ElezioneProvinciale
+                - ElezioneComunale
+            authorId:
+              type: string
+            choices: 
+              type: array
+              items:
+                $ref: "#/components/schemas/choice"
+
+    voteCreate:
+      type: object
+      properties:
+        vote:
+          properties:
+            choiceId:
+              type: string
+            eventId:
+              type: string
+
+    vote:
+      type: object
+      properties:
+        vote:
+          properties:
+            id:
+              type: string
+            choiceId:
+              type: string
+            eventId:
+              type: string
+
+    request:
+      type: object
+      properties:
+        request:
+          properties:
+            id:
+              type: string
+            userId:
+              type: string
+            date:
+              type: string
+              format: date-time
+            state:
+              type: string
+              default: Pending
+              enum:
+                - Pending
+                - Accepted
+                - Declined
+
+    participation:
+      type: object
+      properties:
+        participation:
+          properties:
+            id:
+              type: string
+            date:
+              type: string
+              format: date-time
+            userId:
+              type: string
+            eventId:
+              type: string

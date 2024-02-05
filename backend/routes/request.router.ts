@@ -8,5 +8,5 @@ requestRouter.use(express.json());
 
 requestRouter.post("/create", verifyToken, roles(UserRole.Voter), createRequest);
 requestRouter.put("/handle", verifyToken, roles(UserRole.SysAdmin), handleRequest);
-requestRouter.get("/get", verifyToken, roles(UserRole.SysAdmin), getAllRequests);
-requestRouter.get("/get/:id", verifyToken, roles(UserRole.SysAdmin), getRequest);
+requestRouter.get("/get/all", verifyToken, roles(UserRole.SysAdmin), getAllRequests);
+requestRouter.get("/get/single/:id", verifyToken, roles(UserRole.SysAdmin), getRequest);

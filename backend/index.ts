@@ -2,6 +2,7 @@ import { Request, Response } from "express";;
 import express from "express";
 import cookieParser from "cookie-parser";
 import swaggerUi from "swagger-ui-express";
+import YAML from "yamljs";
 
 import { authRouter } from "./routes/auth.router";
 import { userRouter } from "./routes/user.router";
@@ -11,7 +12,6 @@ import { voteRouter } from "./routes/vote.router";
 import { requestRouter } from "./routes/request.router";
 import { setupPrisma } from "./prisma/prisma-client";
 import { setupRedis } from "./redis/redis-client";
-import swaggerDocument from "./swagger.json";
 
 export const app = express();
 
@@ -34,6 +34,8 @@ app.use("/user", userRouter);
 app.use("/request", requestRouter);
 app.use("/event", eventRouter);
 app.use("/vote", voteRouter);
+
+const swaggerDocument = YAML.load("./swagger.yaml");
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 setupPrisma()
