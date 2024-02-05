@@ -6,7 +6,7 @@ testRouter.use(express.json());
 
 // Test server connection
 testRouter.get("/", (req: Request, res: Response) => {
-    res.json({ message: "Connection succesful" });
+    res.json({ message: "Connection successful" });
 });
 
 // Test db connection
