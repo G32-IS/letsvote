@@ -24,11 +24,11 @@ export default function Page() {
     //     fetchData();
     // }, []); // Empty dependency array ensures this runs once on component mount
 
-    return (
-        <>
-            <h1 className="sr-only">letsvote API documentation</h1>
-            <SwaggerUI spec={letsvoteapiData} />
-            {/* <SwaggerUI url="https://app.swaggerhub.com/apis/ALESSANDROTAMBELLINI/letsvote-open_api_3_0/1.0.0"></SwaggerUI> */}
-        </>
-    );
+    // return (
+    //     <>
+    //         <h1 className="sr-only">letsvote API documentation</h1>
+    //         <SwaggerUI spec={letsvoteapiData} />
+    //         {/* <SwaggerUI url="https://app.swaggerhub.com/apis/ALESSANDROTAMBELLINI/letsvote-open_api_3_0/1.0.0"></SwaggerUI> */}
+    //     </>
+    // );
 }
