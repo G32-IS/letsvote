@@ -4,8 +4,12 @@ import { hashPassword, passwordMatches } from "../utils/bcrypt";
 import jwt from "jsonwebtoken";
 import { prisma } from "../prisma/prisma-client";
 
-export const verifyToken = async (req: Request, res: Response, next: NextFunction) => {
-    const token = req.cookies.token;
+export const verifyToken = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    const token = req.cookies?.token;
     if (!token) {
         res.status(401).json({ message: "User token was not provided" });
         return;
@@ -19,24 +23,26 @@ export const verifyToken = async (req: Request, res: Response, next: NextFunctio
             try {
                 const userInfo = await prisma.user.findUnique({
                     where: {
-                        id: user.id
-                    }
+                        id: user.id,
+                    },
                 });
                 if (userInfo) {
                     req.body.user = userInfo;
                     next();
                 } else {
                     res.clearCookie("token");
-                    res.status(404).json({ message: `User ${user.id} not found` });
+                    res.status(404).json({
+                        message: `User ${user.id} not found`,
+                    });
                 }
             } catch (err: any) {
                 res.status(500).json({
-                    message: "Internal server error"
+                    message: "Internal server error",
                 });
             }
         }
     });
-}
+};
 
 export const roles = (...args: UserRole[]) => {
     return async (req: Request, res: Response, next: NextFunction) => {
@@ -45,13 +51,19 @@ export const roles = (...args: UserRole[]) => {
         if (args.some((role) => user?.role == role)) {
             next();
         } else {
-            res.status(401).json({ message: "User role does not allow this operation" });
+            res.status(401).json({
+                message: "User role does not allow this operation",
+            });
             return;
         }
     };
 };
 
-export const createIfNew = async (req: Request, res: Response, next: NextFunction) => {
+export const createIfNew = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
     try {
         const { email, password } = req.body.user;
 
@@ -74,12 +86,12 @@ export const createIfNew = async (req: Request, res: Response, next: NextFunctio
         if (!user) {
             const pobData = {
                 region: "MI",
-                locality: "F205"
-            }
+                locality: "F205",
+            };
 
             const pob = await prisma.placeOfBirth.findFirst({
-                where: pobData
-            })
+                where: pobData,
+            });
 
             if (pob) {
                 const hashedPassword = await hashPassword(password);
@@ -88,8 +100,8 @@ export const createIfNew = async (req: Request, res: Response, next: NextFunctio
                         email: email,
                         hashedPassword: hashedPassword,
                         role: UserRole.Voter,
-                        pobId: pob.id
-                    }
+                        pobId: pob.id,
+                    },
                 });
 
                 if (!newUser) {
@@ -104,9 +116,9 @@ export const createIfNew = async (req: Request, res: Response, next: NextFunctio
                         hashedPassword: hashedPassword,
                         role: UserRole.Voter,
                         pob: {
-                            create: pobData
-                        }
-                    }
+                            create: pobData,
+                        },
+                    },
                 });
             }
         }
@@ -119,7 +131,9 @@ export const createIfNew = async (req: Request, res: Response, next: NextFunctio
 export const login = async (req: Request, res: Response) => {
     try {
         // Check user
-        const { user: { email, password }} = req.body;
+        const {
+            user: { email, password },
+        } = req.body;
         const user = await prisma.user.findUnique({
             where: {
                 email,
@@ -132,7 +146,10 @@ export const login = async (req: Request, res: Response) => {
         }
 
         // Check password
-        const validPassword = await passwordMatches(password, user.hashedPassword);
+        const validPassword = await passwordMatches(
+            password,
+            user.hashedPassword
+        );
         if (!validPassword) {
             res.status(401).json({ message: "Invalid password" });
             return;
@@ -147,7 +164,7 @@ export const login = async (req: Request, res: Response) => {
         const token = jwt.sign({ id: user.id }, key, {
             expiresIn: "7d",
         });
-        res.cookie("token", token, { httpOnly: true, secure: true, path: "/" })
+        res.cookie("token", token, { httpOnly: true, secure: true, path: "/" });
 
         res.status(200).json({ user: user });
     } catch (err: any) {
@@ -158,4 +175,4 @@ export const login = async (req: Request, res: Response) => {
 export const logout = async (req: Request, res: Response) => {
     res.clearCookie("token");
     res.status(200).end();
-}
+};

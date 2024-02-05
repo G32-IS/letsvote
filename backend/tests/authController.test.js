@@ -20,8 +20,6 @@ app.use("/auth", authRouter);
 
 const req = supertest(app);
 
-// come creare il mock di prisma
-
 describe("auth.router (/auth)", () => {
     describe("POST /login", () => {
         test("It should return 404 when user does not exist", async () => {
@@ -99,11 +97,15 @@ describe("auth.router (/auth)", () => {
             expect(res.body.message).toEqual("User token was not provided");
         });
 
+        const token = jwt.sign({ id: "65c0bea5959e924eaf699c67" }, key, {
+            expiresIn: "7d",
+        });
+
         // TODO: Non so come passare il token. mi dà sempre errore
         test("It should return 401 because of wrong token", async () => {
             const res = await req
                 .post("/auth/logout")
-                .set("Cookie", ["token=mocked_fake_token"])
+                .set("x-access-token", token)
                 .send({
                     user: {},
                 });
