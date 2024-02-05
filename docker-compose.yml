@@ -24,6 +24,7 @@ services:
       - JWT_SECRET=${JWT_SECRET}
       - SA_EMAIL=${SA_EMAIL}
       - SA_PASSWORD=${SA_PASSWORD}
+      - REDIS_PORT=${REDIS_PORT}
     ports: 
       - ${BE_PORT}:${BE_PORT}
 
