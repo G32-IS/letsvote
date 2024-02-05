@@ -1,5 +1,5 @@
 "use client";
-import { useState } from 'react';
+import { useState, FC } from 'react';
 
 // import { FileWithPath } from '@mantine/dropzone';
 import { Stack, Button, Text, TextInput, Group, Tooltip } from '@mantine/core';
@@ -33,7 +33,7 @@ const publishType = [
     "I risultati sono accessibili in tempo reale nella pagina della votazione"
 ]
 
-export const page = (props: Props) => {
+const CreatePage: FC = (props: Props) => {
     const { events } = useEvents()
 
     const router = useRouter()
@@ -201,4 +201,4 @@ export const page = (props: Props) => {
     );
 };
 
-export default page
+export default CreatePage

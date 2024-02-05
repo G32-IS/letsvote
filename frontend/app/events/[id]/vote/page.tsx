@@ -22,7 +22,7 @@ type Props = {
     params: { id: string }
 }
 
-const page = ({ params }: Props) => {
+const VotePage = ({ params }: Props) => {
     const router = useRouter();
 
     const [voted, setVoted] = useState<boolean>(false);
@@ -91,8 +91,8 @@ const page = ({ params }: Props) => {
                                                 <Text size="xs">Lista candidati</Text>
                                                 <Stack gap="0px" align="flex-start">
                                                     {
-                                                        candidates.map((val) => {
-                                                            return <Text>{val}</Text>
+                                                        candidates.map((val,index) => {
+                                                            return <Text key={index}>{val}</Text>
                                                         })
                                                     }
                                                 </Stack>
@@ -123,4 +123,4 @@ const page = ({ params }: Props) => {
     )
 }
 
-export default page
+export default VotePage

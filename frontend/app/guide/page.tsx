@@ -48,7 +48,7 @@ export default function Page() {
                         <h2>Andamento votazioni</h2>
                         <p>
                             Per ogni votazione è possibile osservarne
-                            l'andamento in tempo reale
+                            l&apos andamento in tempo reale
                         </p>
                     </section>
                     <section
@@ -88,7 +88,7 @@ export default function Page() {
                     >
                         <h2>Storico votazioni</h2>
                         <p>
-                            Nell' <Link href="#">Area Personale</Link> puoi
+                            Nell&apos <Link href="#">Area Personale</Link> puoi
                             visualizzare lo storico delle votazione a cui hai
                             partecipato
                         </p>

@@ -14,12 +14,12 @@ const content =
     <p>Questo testo non è obbligatorio</p>`;
 
 const controls = [
-    [<RichTextEditor.Bold />, <RichTextEditor.Italic />, <RichTextEditor.Underline />, <RichTextEditor.Strikethrough />, <RichTextEditor.ClearFormatting />, <RichTextEditor.Highlight />, <RichTextEditor.Code />],
-    [<RichTextEditor.H1 />, <RichTextEditor.H2 />, <RichTextEditor.H3 />, <RichTextEditor.H4 />],
-    [<RichTextEditor.Blockquote />, <RichTextEditor.Hr />, <RichTextEditor.BulletList />, <RichTextEditor.OrderedList />, <RichTextEditor.Subscript />, <RichTextEditor.Superscript />],
-    [<RichTextEditor.Link />, <RichTextEditor.Unlink />],
-    [<RichTextEditor.AlignLeft />, <RichTextEditor.AlignCenter />, <RichTextEditor.AlignJustify />, <RichTextEditor.AlignRight />],
-    [<RichTextEditor.Undo />, <RichTextEditor.Redo />],
+    [<RichTextEditor.Bold key={1}/>, <RichTextEditor.Italic key={2}/>, <RichTextEditor.Underline key={3}/>, <RichTextEditor.Strikethrough key={4}/>, <RichTextEditor.ClearFormatting key={5}/>, <RichTextEditor.Highlight key={6}/>, <RichTextEditor.Code key={7}/>],
+    [<RichTextEditor.H1 key={8}/>, <RichTextEditor.H2 key={9}/>, <RichTextEditor.H3 key={10}/>, <RichTextEditor.H4 key={11}/>],
+    [<RichTextEditor.Blockquote key={12}/>, <RichTextEditor.Hr key={13}/>, <RichTextEditor.BulletList key={14}/>, <RichTextEditor.OrderedList key={15}/>, <RichTextEditor.Subscript key={16}/>, <RichTextEditor.Superscript key={17}/>],
+    [<RichTextEditor.Link key={18}/>, <RichTextEditor.Unlink key={19}/>],
+    [<RichTextEditor.AlignLeft key={20}/>, <RichTextEditor.AlignCenter key={2}/>, <RichTextEditor.AlignJustify key={21}/>, <RichTextEditor.AlignRight key={22}/>],
+    [<RichTextEditor.Undo key={23}/>, <RichTextEditor.Redo key={24}/>],
 ]
 
 type Props = {

@@ -5,8 +5,8 @@ import { ColorSchemeScript } from '@mantine/core';
 import Provider from './provider';
 import Shell from "./components/shell";
 
-import { Inter } from "next/font/google";
-const inter = Inter({ subsets: ["latin"] });
+// import { Inter } from "next/font/google";
+// const inter = Inter({ subsets: ["latin"] });
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -24,7 +24,7 @@ export default function RootLayout({
       <head>
         <ColorSchemeScript />
       </head>
-      <body className={inter.className}>
+      <body>
         <Provider>
           <Shell>{children}</Shell>
         </Provider>
