@@ -26,6 +26,12 @@ export interface EventInterface {
     endDate:Date;
 }
 
+export interface Pob {
+    id:string;
+    locality:string;
+    region:string;
+}
+
 export interface EventFromDb {
     authorId: string;
     id:string;
@@ -35,4 +41,9 @@ export interface EventFromDb {
     choices:Choice[];
     startDate:Date;
     endDate:Date;
+    pob: Pob;
+}
+
+export interface OptionDesc {
+    [key: string]: string[]
 }

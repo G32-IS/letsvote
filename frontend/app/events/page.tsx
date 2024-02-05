@@ -2,23 +2,51 @@
 
 import { useEvents } from "../hooks/useEvents";
 import Loading from "../components/loading";
-
-import { Autocomplete, NumberInput, Table } from '@mantine/core';
 import { EventFromDb } from "../types";
 
-import { Group, Stack, TextInput } from "@mantine/core";
+import { Stack } from "@mantine/core";
+
 import ContentTitle from "../components/ContentTitle";
-import Link from "next/link";
-import { useState } from "react";
-import EventsTable from "../components/EventsTable";
+
+import { useEffect, useState } from "react";
+import { useProfile } from "../hooks/useProfile";
+import EventsDisplay from "../components/EventsDisplay";
 
 export default function Page() {
-    const { events, isLoading, error } = useEvents();
+    const { events, isLoading: isLoadingEvents, error: eventsError } = useEvents();
+    const { user, isLoading: isLoadingProfile, error: profileError } = useProfile();
+
+    const [activeEvents, setActiveEvents] = useState<EventFromDb[]>([]);
+    const [inactiveEvents, setInactiveEvents] = useState<EventFromDb[]>([]);
+
     const [activeNumber, setActiveNumber] = useState<number>(10);
     const [inactiveNumber, setInactiveNumber] = useState<number>(10);
 
-    if (isLoading) return <Loading />;
-    if (error)
+    console.log(events)
+
+    useEffect(() => {
+        if (!isLoadingEvents && !isLoadingProfile && !eventsError) {
+            const now = new Date();
+            const { activeEvents, inactiveEvents } = events.reduce(
+                (acc: { activeEvents: EventFromDb[]; inactiveEvents: EventFromDb[]; }, evnt: EventFromDb) => {
+                    const endDate = new Date(evnt.endDate);
+                    if (endDate > now) {
+                        acc.activeEvents.push(evnt);
+                    } else {
+                        acc.inactiveEvents.push(evnt);
+                    }
+                    return acc;
+                },
+                { activeEvents: [], inactiveEvents: [] }
+            );
+
+            setActiveEvents(activeEvents);
+            setInactiveEvents(inactiveEvents);
+        }
+    }, [events, isLoadingEvents, isLoadingProfile, eventsError]);
+
+    if (isLoadingEvents || isLoadingProfile) return <Loading />;
+    if (eventsError)
         return (
             <>
                 <h1>Error</h1>
@@ -26,58 +54,57 @@ export default function Page() {
             </>
         );
 
-    const now = new Date();
-
-    const { activeEvents, inactiveEvents } = events.reduce((acc, evnt: EventFromDb) => {
-        const endDate = new Date(evnt.endDate);
-        if (endDate > now) {
-            acc.activeEvents.push(evnt);
-        } else {
-            acc.inactiveEvents.push(evnt);
+    interface Content {
+        title: string,
+        subtitle: string,
+        events: EventFromDb[],
+        setStateFn: (val: number) => void,
+        renderNumber: number,
+        isVotable: boolean
+    }
+    const contents: Content[] = [
+        {
+            title: "Votazioni attive",
+            subtitle: "Lista delle votazioni attive",
+            events: activeEvents,
+            setStateFn: setActiveNumber,
+            renderNumber: activeNumber,
+            isVotable: true
+        },
+        {
+            title: "Votazioni concluse",
+            subtitle: "Lista delle votazioni concluse",
+            events: inactiveEvents,
+            setStateFn: setInactiveNumber,
+            renderNumber: inactiveNumber,
+            isVotable: false
         }
-        return acc;
-    }, { activeEvents: [], inactiveEvents: [] });
-
+    ]
 
     return (
-        <>
-            <Stack gap="xl" w="100%">
-                <Group justify="space-between" align="flex-start">
-                    <ContentTitle title="Votazioni attive" subtitle="Lista delle votazioni attive" />
-                    <Group>
-                        <NumberInput
-                            label="Mostra"
-                            description="Il numero di votazioni che verranno mostrate"
-                            placeholder="5"
-                            value={activeNumber}
-                            onChange={(val) => {
-                                setActiveNumber(Number(val))
-                            }}
-                        />
-                    </Group>
-                </Group>
+        <Stack gap="xl" w="100%">
+            {contents.map((val: Content, index: number) => {
+                return <Stack gap="xl" w="100%" key={index}>
+                    {
+                        val.events.length > 0 ?
+                            <EventsDisplay
+                                title={val.title}
+                                subtitle={val.subtitle}
+                                events={activeEvents}
+                                setRenderNumber={val.setStateFn}
+                                renderNumber={val.renderNumber}
+                                error={profileError}
+                                isVotable={val.isVotable}
+                                user={user}
+                            />
+                            :
+                            <>
+                                <ContentTitle title={val.title} subtitle={"Non sono state trovate votazioni " + val.title.toLowerCase()} align={false}/>
+                            </>
+                    }
+                </Stack>
+            })}
+        </Stack>
 
-                <EventsTable events={activeEvents} renderNumber={activeNumber} isVotable={true} />
-            </Stack>
-
-            <Stack gap="xl" w="100%">
-                <Group justify="space-between" align="flex-start">
-                    <ContentTitle title="Votazioni concluse" subtitle="Lista delle votazioni concluse" />
-                    <Group>
-                        <NumberInput
-                            label="Mostra"
-                            description="Il numero di votazioni che verranno mostrate"
-                            placeholder="5"
-                            value={inactiveNumber}
-                            onChange={(val) => {
-                                setInactiveNumber(Number(val))
-                            }}
-                        />
-                    </Group>
-                </Group>
-
-                <EventsTable events={inactiveEvents} renderNumber={inactiveNumber} isVotable={false} />
-            </Stack>
-        </>
     );
 }

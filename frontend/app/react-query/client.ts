@@ -5,5 +5,6 @@ export const queryClient = new QueryClient();
 export const QUERY_KEY = {
     profile: 'profile',
     adminEvents: 'adminEvents',
-    events: 'events'
+    events: 'events',
+    singleEvent: 'singleEvent/'
 };

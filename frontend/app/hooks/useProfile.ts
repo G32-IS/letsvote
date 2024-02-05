@@ -24,7 +24,8 @@ export const useProfile = () => {
         queryFn: fetchProfile,
         retry: false,
         refetchOnWindowFocus: false,
-        refetchOnMount: false
+        refetchOnMount: false,
+        staleTime: Infinity,
     });
 
     return { user, isLoading, error };

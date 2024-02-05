@@ -80,10 +80,10 @@ select {
     border: 0;
 }
 
-p {
+/* p {
     max-width: 60ch;
     text-wrap: wrap;
-}
+} */
 
 header,
 footer,

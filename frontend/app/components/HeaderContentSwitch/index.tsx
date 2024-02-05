@@ -16,10 +16,7 @@ const HeaderContentSwitch = ({ role }: Props) => {
 
             case "Admin":
                 return (<>
-                    <Link href="#">Le tue votazioni</Link>
-                    <Link href="/create">
-                        Crea una votazione
-                    </Link>
+                    <Link href="/create">Crea una votazione</Link>
                 </>)
                 break;
 

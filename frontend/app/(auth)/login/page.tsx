@@ -34,7 +34,7 @@ export default function Page() {
 
     return (
         <Stack gap="xl">
-            <ContentTitle title="Accedi al tuo profilo" subtitle='Per usufruire dei servizi accedi con le tue credenziali'/>
+            <ContentTitle title="Accedi al tuo profilo" subtitle='Per usufruire dei servizi accedi con le tue credenziali' align={false}/>
             <form onSubmit={form.onSubmit(values => handleLogin(values))}>
                 <Stack gap="xs">
                     <TextInput

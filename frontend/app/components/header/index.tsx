@@ -19,7 +19,7 @@ export default function Header() {
     const logoutHandle = (e: any) => {
         e.preventDefault();
         logout();
-        
+
         router.push("/")
     };
 
@@ -34,9 +34,10 @@ export default function Header() {
                         <Link href="/events">Votazioni</Link>
 
                         {error ? (
-                            <Link href="/login" className={styles.loginBtn}>
-                                Accedi
-                            </Link>
+                            <>
+                                <Link href="/guide">Guida introduttiva</Link>
+                                <Link href="/login" className={styles.loginBtn}>Accedi</Link>
+                            </>
                         ) : (
                             <>
                                 {<HeaderContentSwitch role={user.role} />}

@@ -1,28 +1,60 @@
-import { EventFromDb } from '@/app/types'
-import { Table } from '@mantine/core'
-import Link from 'next/link'
+"use client"
+
+import { EventFromDb, EventType } from '@/app/types'
+import { Table, Button, Text } from '@mantine/core'
+
+import { MdHowToVote, MdDelete } from "react-icons/md";
+import { IoEye } from "react-icons/io5";
+
 import React from 'react'
+import { getDate } from '@/app/utils/date';
+import { useRouter } from 'next/navigation';
+import { fromCamelCase } from '@/app/utils/stringManipulation';
+import { useProfile } from '@/app/hooks/useProfile';
 
 type Props = {
     events: EventFromDb[],
     renderNumber: number,
-    isVotable: boolean
+    isVotable: boolean,
+    user: any
 }
 
-const EventsTable = ({ events, renderNumber, isVotable }: Props) => {
+const EventsTable = ({ events, renderNumber, isVotable, user }: Props) => {
+    const router = useRouter();
+
+    // const { user, error, isLoading } = useProfile();
+
+    // if (isLoading) return <Text>Loading</Text>
+
+
     const rows = events.map((evnt: EventFromDb, index: number) => {
         if (index >= renderNumber) return <></>;
 
-        const evntDate = new Date(evnt.endDate);
-
+        const { year, month, day, hour, minute } = getDate(new Date(evnt.endDate))
         return (
-            <Table.Tr key={index}>
+            <Table.Tr key={evnt.id}>
                 <Table.Td>{evnt.title}</Table.Td>
-                <Table.Td>{evnt.type}</Table.Td>
-                <Table.Td>{evntDate.toUTCString()}</Table.Td>
-                <Table.Td>{"dove???"}</Table.Td>
-                {isVotable ? <Table.Td><Link href="">Vota</Link></Table.Td> : <></>}
-                <Table.Td><Link href="">Visualizza andamento</Link></Table.Td>
+                <Table.Td>{fromCamelCase(String(evnt.type))}</Table.Td>
+                <Table.Td>{day + " " + month + " " + year + ", " + hour + ":" + minute}</Table.Td>
+                <Table.Td>{evnt.type == EventType.ElezioneParlamentare || evnt.type || EventType.ReferendumNazionale ?
+                    "Nazionale"
+                    :
+                    evnt.pob.locality + " " + evnt.pob.region
+                }</Table.Td>
+                {isVotable ? <Table.Td>
+                    <Button leftSection={<MdHowToVote />} onClick={() => {
+                        router.push(`/events/${evnt.id}/vote`)
+                    }}>Vota</Button>
+                </Table.Td> : <></>}
+                <Table.Td>
+                    <Button variant='default' leftSection={<IoEye />}>Visualizza andamento</Button>
+                </Table.Td>
+                {
+                    user && user.role == "Admin" ?
+                        <Table.Td>
+                            <Button color='red' leftSection={<MdDelete />} disabled={user.id != evnt.authorId}>Rimuovi</Button>
+                        </Table.Td> : <></>
+                }
             </Table.Tr>
         )
     });
@@ -32,9 +64,10 @@ const EventsTable = ({ events, renderNumber, isVotable }: Props) => {
             <Table.Th>Nome</Table.Th>
             <Table.Th>Tipo</Table.Th>
             <Table.Th>Data fine</Table.Th>
-            <Table.Th>Luogo</Table.Th>
+            <Table.Th>Territorio</Table.Th>
             <Table.Th></Table.Th>
             <Table.Th></Table.Th>
+            {user && user.role == "Admin" ? <Table.Th></Table.Th> : <></>}
         </Table.Tr>
     );
     return (

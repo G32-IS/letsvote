@@ -10,7 +10,8 @@ import SubScript from '@tiptap/extension-subscript';
 import styles from "./textEditor.module.css"
 
 const content =
-    '<h2 style="text-align: center;">Inserisci qui il testo</h2><p>testo di prova</p>';
+    `<h2>Inserisci qui il testo che apparirà nella schermata di votazione</h2>
+    <p>Questo testo non è obbligatorio</p>`;
 
 const controls = [
     [<RichTextEditor.Bold />, <RichTextEditor.Italic />, <RichTextEditor.Underline />, <RichTextEditor.Strikethrough />, <RichTextEditor.ClearFormatting />, <RichTextEditor.Highlight />, <RichTextEditor.Code />],
@@ -21,7 +22,13 @@ const controls = [
     [<RichTextEditor.Undo />, <RichTextEditor.Redo />],
 ]
 
-const TextEditor = () => {
+type Props = {
+    body: string | undefined,
+    setBody: (val: string | undefined) => void
+}
+
+const TextEditor = ({ body, setBody }: Props) => {
+    
     const editor = useEditor({
         extensions: [
             StarterKit,
@@ -33,6 +40,7 @@ const TextEditor = () => {
             TextAlign.configure({ types: ['heading', 'paragraph'] }),
         ],
         content,
+        onUpdate: ({ editor }) => { setBody(editor.getHTML()); }
     });
 
     return (

@@ -20,7 +20,7 @@ export const useEvents = () => {
         data: events,
     } = useQuery({
         queryKey: [QUERY_KEY.events],
-        queryFn: fetchEvents,
+        queryFn: fetchEvents
     });
 
     return { events, isLoading, error };

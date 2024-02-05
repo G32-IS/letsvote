@@ -2,14 +2,15 @@ import { Title, Text, Stack } from "@mantine/core"
 
 type Props = {
     title: string,
-    subtitle: string
+    subtitle: string,
+    align: boolean
 }
 
-const ContentTitle = (props: Props) => {
+const ContentTitle = ({title,subtitle,align = false}: Props) => {
     return (
-        <Stack gap="0">
-            <Title order={1}>{props.title}</Title>
-            <Text>{props.subtitle}</Text>
+        <Stack gap="0" align={align ? "center" : "flex-start"}>
+            <Title order={1}>{title}</Title>
+            <Text>{subtitle}</Text>
         </Stack>
     )
 }

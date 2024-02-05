@@ -4,8 +4,6 @@ import { EventInterface } from "../types"
 
 
 const postEvent = async (Event: EventInterface): Promise<EventInterface> => {
-    console.log(Event);
-
     const response = await fetch(`${process.env.API_URL}/event/create`, {
         method: "POST",
         headers: {
@@ -26,12 +24,12 @@ const postEvent = async (Event: EventInterface): Promise<EventInterface> => {
 export const useAddEvent = () => {
     const client = useQueryClient();
  
-    const { mutate: addEvent } = useMutation({
+    const { mutate: addEvent, error, isPending: isLoading } = useMutation({
         mutationFn: postEvent,
         onSuccess: () => {
-            client.invalidateQueries({queryKey: [QUERY_KEY.adminEvents]});
-        }
+            client.invalidateQueries({queryKey: [QUERY_KEY.events]});
+        },
     });
 
-    return { addEvent };
+    return { addEvent, error, isLoading };
 }
