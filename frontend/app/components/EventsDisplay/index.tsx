@@ -53,7 +53,7 @@ const EventsDisplay = ({ title, subtitle, user, error, isVotable, events, render
                     break;
             }
         });
-    }, [adminFilter, events, filter, user.id])
+    }, [adminFilter, events, filter, user?.id])
 
     return (
         <>

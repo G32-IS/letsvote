@@ -9,7 +9,7 @@ type Props = {
 
 const Error = ({message}: Props) => {
   return (
-    <ContentTitle title='Error' subtitle={message} align={true}/>
+    <ContentTitle title={`Ooops c'è stato un errore...`} subtitle={message} align={true}/>
   )
 }
 

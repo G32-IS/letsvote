@@ -45,7 +45,7 @@ export default function Page() {
     }, [events, isLoadingEvents, isLoadingProfile, eventsError]);
 
     if (isLoadingEvents || isLoadingProfile) return <Loading />;
-    if (eventsError) return (<Error message={eventsError.message}/>);
+    if (eventsError) return (<Error message={eventsError.message} />);
 
     interface Content {
         title: string,
@@ -76,27 +76,30 @@ export default function Page() {
 
     return (
         <Stack gap="xl" w="100%">
-            {contents.map((val: Content, index: number) => {
-                return <Stack gap="xl" w="100%" key={index}>
-                    {
-                        val.events.length > 0 ?
-                            <EventsDisplay
-                                title={val.title}
-                                subtitle={val.subtitle}
-                                events={activeEvents}
-                                setRenderNumber={val.setStateFn}
-                                renderNumber={val.renderNumber}
-                                error={profileError}
-                                isVotable={val.isVotable}
-                                user={user}
-                            />
-                            :
-                            <>
-                                <ContentTitle title={val.title} subtitle={"Non sono state trovate votazioni " + val.title.toLowerCase()} align={false}/>
-                            </>
-                    }
-                </Stack>
-            })}
+            {activeEvents.length == 0 && inactiveEvents.length == 0 ?
+                <ContentTitle title="Non sono state trovate votazioni" subtitle="Non sono presenti votazioni, se pensi che sia un errore contattaci." align={true}/>
+                :
+                contents.map((val: Content, index: number) => {
+                    return <Stack gap="xl" w="100%" key={index}>
+                        {
+                            val.events.length > 0 ?
+                                <EventsDisplay
+                                    title={val.title}
+                                    subtitle={val.subtitle}
+                                    events={activeEvents}
+                                    setRenderNumber={val.setStateFn}
+                                    renderNumber={val.renderNumber}
+                                    error={profileError}
+                                    isVotable={val.isVotable}
+                                    user={user}
+                                />
+                                :
+                                <>
+                                    <ContentTitle title={val.title} subtitle={"Non sono state trovate votazioni " + val.title.toLowerCase()} align={false} />
+                                </>
+                        }
+                    </Stack>
+                })}
         </Stack>
 
     );

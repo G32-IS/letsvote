@@ -22,12 +22,12 @@ const postVote = async (vote: { choiceId:string, eventId:string }) => {
 export const useAddVote = () => {
     const client = useQueryClient();
  
-    const { mutate: vote, error, isPending: isLoading } = useMutation({
+    const { mutate: vote, error, isPending: isLoading, isSuccess } = useMutation({
         mutationFn: postVote,
         onSuccess: () => {
             client.invalidateQueries({queryKey: [QUERY_KEY.votes]});
         }
     });
 
-    return { vote, error, isLoading };
+    return { vote, error, isLoading, isSuccess};
 }

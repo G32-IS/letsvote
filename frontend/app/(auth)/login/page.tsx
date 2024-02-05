@@ -32,7 +32,8 @@ export default function Page() {
             form.reset();
             router.push("/");
         }
-    }, [form, isSuccess, router]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isSuccess]);
     
     if (error && !(error instanceof CustomError)) return <Error message="Si è verificato un errore"/>
 

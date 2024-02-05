@@ -19,7 +19,7 @@ const loginFn = async ({email, password}: Credentials): Promise<Credentials> => 
     if (!response.ok) {
         switch (response.status) {
             case 401:
-                throw new CustomError("Non autorizzato", response.status);
+                throw new CustomError("Credenziali errate", response.status);
             case 404:
                 throw new CustomError("Utente non trovato", response.status);
             case 500:
@@ -39,7 +39,8 @@ export const useLogin = () => {
         mutationFn: loginFn,
         onSuccess: () => {
             client.invalidateQueries({queryKey: [QUERY_KEY.profile]});
-        }
+        },
+        retry: false
     });
 
     return { login, error, isLoading, isSuccess };
