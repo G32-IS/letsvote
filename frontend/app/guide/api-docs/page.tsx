@@ -16,7 +16,6 @@ export default function Page() {
                 );
                 const result = await response.text();
                 setApiData(result);
-                console.log(apiData);
             } catch (error) {
                 console.error("Error fetching data:", error);
             }

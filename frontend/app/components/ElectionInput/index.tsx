@@ -52,13 +52,10 @@ const ElectionInput = ({ state, setState, subState, setSubState }: Props) => {
                                 data={subState[val]}
                                 value={subState[val]}
                                 onChange={(newState) => {
-                                    console.log(newState)
                                     const newSubState: OptionDesc = { ...subState };
                                     newSubState[val] = newState;
 
                                     setSubState(newSubState);
-
-                                    console.log(newSubState)
                                 }}
                                 placeholder="Inserisci i candidati" />
                         </Stack>

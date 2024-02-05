@@ -14,22 +14,33 @@ import parse from "html-react-parser"
 import Loading from "@/app/components/loading"
 import ContentTitle from "@/app/components/ContentTitle"
 import { isReferendum } from "@/app/utils/event"
+import { useState } from "react"
+import { useAddVote } from "@/app/hooks/useAddVote"
+import { useRouter } from "next/navigation"
 
 type Props = {
     params: { id: string }
 }
 
 const page = ({ params }: Props) => {
+    const router = useRouter();
+
+    const [voted, setVoted] = useState<boolean>(false);
+
     const { singleEvent, error, isLoading } = useSingleEvent(params.id);
+    const { vote, error: voteError, isLoading: isVoteLoading } = useAddVote()
 
-    if (isLoading) return <Loading />
+    const [value, setValue] = useState(singleEvent?.choices[0] || 0);
+
+    if (isLoading || isVoteLoading) return <Loading />
+
+    if (voted) voteError ? router.push("vote/error") : router.push("vote/completed")
+    
     if (error) return <Text>error</Text>
-
-    console.log(singleEvent)
 
     return (
         <Stack w="100%">
-            <ContentTitle title={singleEvent.title} subtitle={fromCamelCase(singleEvent.type)} align={false}/>
+            <ContentTitle title={singleEvent.title} subtitle={fromCamelCase(singleEvent.type)} align={false} />
             <Stack gap="0" className={style.bodyDesc}>
                 {parse(singleEvent.body)}
             </Stack>
@@ -41,6 +52,8 @@ const page = ({ params }: Props) => {
                 isReferendum(singleEvent.type) ?
                     <>
                         <SegmentedControl
+                            value={value}
+                            onChange={setValue}
                             color="blue"
                             orientation="vertical"
                             fullWidth
@@ -54,6 +67,7 @@ const page = ({ params }: Props) => {
                             color="blue"
                             orientation="vertical"
                             fullWidth
+                            onChange={setValue}
                             data={singleEvent.choices.map((val: { id: string, title: string, body: string }) => {
                                 const candidates = val.body.split(";");
                                 const groupLeader = candidates[0];
@@ -94,8 +108,15 @@ const page = ({ params }: Props) => {
                     variant='filled'
                     mb={30}
                     leftSection={<MdHowToVote />}
-                // disabled={!canConfirm() || isLoading}
-                // onClick={e => handleSubmit(e)}
+                    disabled={value == 0}
+                    onClick={async () => {
+                        await vote({
+                            eventId: singleEvent.id,
+                            choiceId: value
+                        })
+
+                        setVoted(true)
+                    }}
                 >Conferma</Button>
             </Group>
         </Stack>
