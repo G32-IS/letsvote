@@ -28,12 +28,12 @@ app.use((req: Request, res: Response, next: any) => {
 });
 
 // Routes
-app.use("/test", testRouter);
-app.use("/auth", authRouter);
-app.use("/user", userRouter);
-app.use("/request", requestRouter);
-app.use("/event", eventRouter);
-app.use("/vote", voteRouter);
+app.use("/api/test", testRouter);
+app.use("/api/auth", authRouter);
+app.use("/api/user", userRouter);
+app.use("/api/request", requestRouter);
+app.use("/api/event", eventRouter);
+app.use("/api/vote", voteRouter);
 
 const swaggerDocument = YAML.load("./swagger.yaml");
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));

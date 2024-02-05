@@ -56,5 +56,5 @@ BE_DATABASE_URL="mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PAS
 
 # Frontend
 FE_PORT=3000
-API_URL=http://localhost:${BE_PORT}
+API_URL=http://localhost:${BE_PORT}/api
 ```

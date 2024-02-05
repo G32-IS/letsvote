@@ -13,7 +13,7 @@ info:
 
 servers:
   - url: https://letsvote.it/api
-  - url: http://localhost:4000
+  - url: http://localhost:4000/api
 
 tags:
   - name: auth
