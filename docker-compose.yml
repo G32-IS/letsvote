@@ -19,11 +19,12 @@ services:
     build: 
       context: ./backend
     environment:
-      - BE_PORT=${BE_PORT}
       - BE_DATABASE_URL=${DATABASE_URL}
       - JWT_SECRET=${JWT_SECRET}
       - SA_EMAIL=${SA_EMAIL}
       - SA_PASSWORD=${SA_PASSWORD}
+      - BE_PORT=${BE_PORT}
+      - FE_PORT=${FE_PORT}
       - REDIS_PORT=${REDIS_PORT}
     ports: 
       - ${BE_PORT}:${BE_PORT}
