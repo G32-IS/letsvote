@@ -1,7 +1,7 @@
 import { Request, Response } from "express";;
 import express from "express";
 import cookieParser from "cookie-parser";
-import swaggerUi from "swagger-ui-express";
+import swaggerUi, { setup } from "swagger-ui-express";
 import YAML from "yamljs";
 
 import { authRouter } from "./routes/auth.router";
@@ -38,12 +38,9 @@ app.use("/api/vote", voteRouter);
 const swaggerDocument = YAML.load("./swagger.yaml");
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-setupPrisma()
-    .then(setupRedis)
-    .then(() => {
-        const port = process.env.BE_PORT || 9999;
-        app.listen(port, () => console.log(`Server running http://localhost:${port}`));
-    })
-    .catch((error: Error) => {
-        console.error(error.message)
-    });
+const port = process.env.BE_PORT || 9999;
+app.listen(port, () => {
+    setupRedis();
+    setupPrisma();
+    console.log(`Server running http://localhost:${port}`)
+});
