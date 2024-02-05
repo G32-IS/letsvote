@@ -29,6 +29,12 @@ npx prisma generate
 npx prisma db push
 ```
 
+Creating admin user and test data
+
+```
+npx prisma db seed
+```
+
 # Environment
 
 A `.env` file should have these variables defined

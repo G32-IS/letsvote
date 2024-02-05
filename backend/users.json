@@ -6,10 +6,8 @@
             "name": "Mario Verdi",
             "role": "Admin",
             "pob": {
-                "create": {
-                    "region": "MI",
-                    "locality": "F205"
-                }
+                "region": "MI",
+                "locality": "F205"
             }
         },
         {
@@ -18,10 +16,8 @@
             "name": "Mario Bianchi",
             "role": "Admin",
             "pob": {
-                "create": {
-                    "region": "TN",
-                    "locality": "L378"
-                }
+                "region": "TN",
+                "locality": "L378"
             }
         },
         {
@@ -30,10 +26,8 @@
             "name": "Mario Rossi",
             "role": "Admin",
             "pob": {
-                "create": {
-                    "region": "CT",
-                    "locality": "C351"
-                }
+                "region": "CT",
+                "locality": "C351"
             }
         },
         {
@@ -42,10 +36,8 @@
             "name": "Luca Verdi",
             "role": "Voter",
             "pob": {
-                "create": {
-                    "region": "NA",
-                    "locality": "F839"
-                }
+                "region": "NA",
+                "locality": "F839"
             }
         },
         {
@@ -54,10 +46,8 @@
             "name": "Luca Bianchi",
             "role": "Voter",
             "pob": {
-                "create": {
-                    "region": "TO",
-                    "locality": "L219"
-                }
+                "region": "TO",
+                "locality": "L219"
             }
         },
         {
@@ -66,10 +56,8 @@
             "name": "Luca Rossi",
             "role": "Voter",
             "pob": {
-                "create": {
-                    "region": "FI",
-                    "locality": "D612"
-                }
+                "region": "FI",
+                "locality": "D612"
             }
         }
     ]

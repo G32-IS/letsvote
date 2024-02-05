@@ -10,7 +10,7 @@ import { testRouter } from "./routes/test.router";
 import { eventRouter } from "./routes/event.router";
 import { voteRouter } from "./routes/vote.router";
 import { requestRouter } from "./routes/request.router";
-import { prisma, setupPrisma } from "./prisma/prisma-client";
+import { prisma } from "./prisma/prisma-client";
 import { redisClient, setupRedis } from "./redis/redis-client";
 
 export const app = express();
@@ -38,8 +38,7 @@ app.use("/api/vote", voteRouter);
 const swaggerDocument = YAML.load("./swagger.yaml");
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-// Check for initial configuration
-setupPrisma();
+// Setup redis
 setupRedis();
 
 const port = process.env.BE_PORT || 9999;

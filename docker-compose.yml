@@ -28,6 +28,9 @@ services:
       - REDIS_PORT=${REDIS_PORT}
     ports: 
       - ${BE_PORT}:${BE_PORT}
+    depends_on:
+      - db
+      - redis
 
   db:
     container_name: db
