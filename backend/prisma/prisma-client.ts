@@ -14,9 +14,7 @@ export const setupPrisma = async () => {
         }
     });
 
-    if (sysAdmin) {
-        console.log(`SysAdmin ${sysAdmin.email} is already in the database`);
-    } else {
+    if (!sysAdmin) {
         const email = process.env.SA_EMAIL;
         const password = process.env.SA_PASSWORD;
 
@@ -40,9 +38,7 @@ export const setupPrisma = async () => {
             },
         });
 
-        if (newUser) {
-            console.log(`SysAdmin ${newUser.email} created successfully`);
-        } else {
+        if (!newUser) {
             throw new Error(`Could not create SysAdmin ${email}`);
         }
     }
@@ -55,9 +51,7 @@ export const setupPrisma = async () => {
             }
         });
 
-        if (oldUser) {
-            console.log(`User ${user.email} is already in the database`);
-        } else {
+        if (!oldUser) {
             const oldPob = await prisma.placeOfBirth.findFirst({
                 where: user.pob.create
             });
@@ -85,9 +79,7 @@ export const setupPrisma = async () => {
                 })
             }
 
-            if (newUser) {
-                console.log(`User ${user.email} created successfully`);
-            } else {
+            if (!newUser) {
                 throw new Error(`Could not create user ${user.email}`);
             }
         }

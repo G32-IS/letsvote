@@ -1,7 +1,7 @@
 import { Request, Response } from "express";;
 import express from "express";
 import cookieParser from "cookie-parser";
-import swaggerUi, { setup } from "swagger-ui-express";
+import swaggerUi from "swagger-ui-express";
 import YAML from "yamljs";
 
 import { authRouter } from "./routes/auth.router";
@@ -10,8 +10,8 @@ import { testRouter } from "./routes/test.router";
 import { eventRouter } from "./routes/event.router";
 import { voteRouter } from "./routes/vote.router";
 import { requestRouter } from "./routes/request.router";
-import { setupPrisma } from "./prisma/prisma-client";
-import { setupRedis } from "./redis/redis-client";
+import { prisma, setupPrisma } from "./prisma/prisma-client";
+import { redisClient, setupRedis } from "./redis/redis-client";
 
 export const app = express();
 
@@ -21,7 +21,7 @@ app.use(cookieParser());
 
 app.use((req: Request, res: Response, next: any) => {
     res.setHeader("Access-Control-Allow-Origin", `http://localhost:${process.env.FE_PORT}`);
-    res.setHeader("Access-Control-Allow-Credentials", 'true');
+    res.setHeader("Access-Control-Allow-Credentials", "true");
     res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
     res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
     next();
@@ -36,11 +36,32 @@ app.use("/api/event", eventRouter);
 app.use("/api/vote", voteRouter);
 
 const swaggerDocument = YAML.load("./swagger.yaml");
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
+// Check for initial configuration
+setupPrisma();
+setupRedis();
 
 const port = process.env.BE_PORT || 9999;
-app.listen(port, () => {
-    setupRedis();
-    setupPrisma();
+const server = app.listen(port, () => {
     console.log(`Server running http://localhost:${port}`)
+
+    const terminate = () => {
+        // Disconnect from prisma
+        console.log("Closing prisma connection")
+        prisma.$disconnect();
+
+        // Disconnect from redis
+        console.log("Closing redis connection")
+        redisClient.disconnect();
+
+        // Close server
+        server.close(() => {
+          console.log("Server shutting down...");
+          process.exit(0);
+        });
+    };
+
+    process.on("SIGINT", terminate);
+    process.on("SIGTERM", terminate);
 });
