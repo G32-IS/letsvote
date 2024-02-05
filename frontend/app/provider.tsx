@@ -11,9 +11,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
 import { createTheme, MantineProvider } from '@mantine/core';
 import { DatesProvider } from '@mantine/dates';
 
-const theme = createTheme({
-  /** Put your mantine theme override here */
-});
+const theme = createTheme({});
 
 export default function Provider({
     children,

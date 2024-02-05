@@ -1,3 +1,5 @@
+import { CustomError } from "../utils/errors/CustomError";
+
 import { useQuery } from "@tanstack/react-query";
 import { QUERY_KEY } from "../react-query/client";
 
@@ -7,9 +9,16 @@ export const fetchProfile = async () => {
     });
 
     if (!response.ok) {
-        throw new Error('Not authorized')
+        switch (response.status) {
+            case 401:
+                throw new CustomError('Non autorizzato', response.status);
+            case 500:
+                throw new CustomError('Errore interno del server', response.status);
+            default:
+                throw new CustomError('Si è verificato un errore', response.status);
+        }
     }
-    
+
     const data = await response.json();
     return data.user;
 };

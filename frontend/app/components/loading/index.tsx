@@ -1,12 +1,9 @@
-import Link from "next/link";
+"use client"
 
-import styles from "./loading.module.css";
+import { Text } from "@mantine/core";
 
 export default function Loading() {
     return (
-        <>
-            {/* TODO: it may be a spinning wheel */}
-            <h1>loading...</h1>
-        </>
+        <Text>loading...</Text>
     );
 }

@@ -6,11 +6,14 @@ import { Credentials } from '@/app/types';
 import { useRouter } from "next/navigation"
 import { useForm } from "@mantine/form"
 import ContentTitle from '@/app/components/ContentTitle';
+import Error from '@/app/components/Error';
+import { useEffect } from 'react';
+import { CustomError } from '@/app/utils/errors/CustomError';
 
 export default function Page() {
     const router = useRouter();
 
-    const { login, error, isLoading } = useLogin();
+    const { login, error, isLoading, isSuccess } = useLogin();
 
     const form = useForm({
         initialValues: {
@@ -24,17 +27,22 @@ export default function Page() {
         },
     });
 
-    const handleLogin = ({email, password}:Credentials) => {
-        login({email,password});
-        if (!error) {
+    useEffect(() => {
+        if (isSuccess) {
             form.reset();
-            router.push("/")
+            router.push("/");
         }
+    }, [form, isSuccess, router]);
+    
+    if (error && !(error instanceof CustomError)) return <Error message="Si è verificato un errore"/>
+
+    const handleLogin = ({ email, password }: Credentials) => {
+        login({ email, password });
     }
 
     return (
         <Stack gap="xl">
-            <ContentTitle title="Accedi al tuo profilo" subtitle='Per usufruire dei servizi accedi con le tue credenziali' align={false}/>
+            <ContentTitle title="Accedi al tuo profilo" subtitle='Per usufruire dei servizi accedi con le tue credenziali' align={false} />
             <form onSubmit={form.onSubmit(values => handleLogin(values))}>
                 <Stack gap="xs">
                     <TextInput
@@ -44,8 +52,7 @@ export default function Page() {
                         placeholder="your@email.com"
                         disabled={isLoading}
                         {...form.getInputProps('email')}
-                        />
-
+                    />
                     <PasswordInput
                         size='md'
                         placeholder='your_pswd'
@@ -53,7 +60,7 @@ export default function Page() {
                         label="Password"
                         disabled={isLoading}
                         {...form.getInputProps('password')}
-                        error={error ? "Credenziali errate" : false}
+                        error={error && error instanceof CustomError ? error.message : false}
                     />
                 </Stack>
 

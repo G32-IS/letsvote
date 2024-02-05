@@ -1,12 +1,13 @@
 "use client";
 
 import { useEvents } from "../hooks/useEvents";
-import Loading from "../components/loading";
+import Loading from "../components/Loading";
 import { EventFromDb } from "../types";
 
 import { Stack } from "@mantine/core";
 
 import ContentTitle from "../components/ContentTitle";
+import Error from "../components/Error";
 
 import { useEffect, useState } from "react";
 import { useProfile } from "../hooks/useProfile";
@@ -22,10 +23,8 @@ export default function Page() {
     const [activeNumber, setActiveNumber] = useState<number>(10);
     const [inactiveNumber, setInactiveNumber] = useState<number>(10);
 
-    console.log(events)
-
     useEffect(() => {
-        if (!isLoadingEvents && !isLoadingProfile && !eventsError) {
+        if (!isLoadingEvents && !isLoadingProfile && !eventsError && events) {
             const now = new Date();
             const { activeEvents, inactiveEvents } = events.reduce(
                 (acc: { activeEvents: EventFromDb[]; inactiveEvents: EventFromDb[]; }, evnt: EventFromDb) => {
@@ -46,13 +45,7 @@ export default function Page() {
     }, [events, isLoadingEvents, isLoadingProfile, eventsError]);
 
     if (isLoadingEvents || isLoadingProfile) return <Loading />;
-    if (eventsError)
-        return (
-            <>
-                <h1>Error</h1>
-                {/* <p>{error}</p> */}
-            </>
-        );
+    if (eventsError) return (<Error message={eventsError.message}/>);
 
     interface Content {
         title: string,

@@ -11,7 +11,7 @@ import { MdHowToVote } from "react-icons/md";
 
 import parse from "html-react-parser"
 
-import Loading from "@/app/components/loading"
+import Loading from "@/app/components/Loading"
 import ContentTitle from "@/app/components/ContentTitle"
 import { isReferendum } from "@/app/utils/event"
 import { useState } from "react"
