@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import SwaggerUI from "swagger-ui-react";
 import "swagger-ui-react/swagger-ui.css";
-import letsvoteapiData from "../../../public/letsvoteapi.json";
+// import letsvoteapiData from "../../../public/letsvoteapi.json";
 
 export default function Page() {
     // const [apiData, setApiData] = useState("");
