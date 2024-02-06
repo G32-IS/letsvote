@@ -7,5 +7,6 @@ export const QUERY_KEY = {
     adminEvents: 'adminEvents',
     events: 'events',
     singleEvent: 'singleEvent/',
-    votes: 'votes'
+    votes: 'votes',
+    requests: 'requests',
 };

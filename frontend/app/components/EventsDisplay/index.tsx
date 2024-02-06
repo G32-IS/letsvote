@@ -59,7 +59,7 @@ const EventsDisplay = ({ title, subtitle, user, error, isVotable, events, render
         <>
             <Stack align="flex-end">
                 <Group justify="space-between" align="flex-start" w="100%">
-                    <ContentTitle title={title} subtitle={subtitle} align={false}/>
+                    <ContentTitle title={title} subtitle={subtitle} align={false} />
                     <Group align="flex-end">
                         <NumberInput
                             label="Mostra"
@@ -116,9 +116,7 @@ const EventsDisplay = ({ title, subtitle, user, error, isVotable, events, render
                     </Group>
                 </Group>
             </Stack>
-            <ScrollArea.Autosize mah={300} w="100%" mx="auto">
-                <EventsTable user={user} events={eventsToDisplay} renderNumber={renderNumber} isVotable={isVotable} />
-            </ScrollArea.Autosize>
+            <EventsTable user={user} events={eventsToDisplay} renderNumber={renderNumber} isVotable={isVotable} />
         </>
     )
 }

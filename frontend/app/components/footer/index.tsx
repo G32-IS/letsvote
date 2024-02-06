@@ -1,8 +1,12 @@
 import Link from "next/link";
 
 import styles from "./footer.module.css";
+import { useProfile } from "@/app/hooks/useProfile";
+import RequestToBeAdmin from "../RequestToBeAdmin";
 
 export default function Footer() {
+    const {user, isLoading, error} = useProfile();
+
     return (
         <div className={styles.footerWrapper}>
             <footer className={styles.footer}>
@@ -19,16 +23,14 @@ export default function Footer() {
                     </div>
                 </div>
                 <div className={`${styles.textCont} ${styles.rightTextCont}`}>
-                    <Link className={styles.link} href="#">
-                        Richiedi di amministrare le votazioni
-                    </Link>
+                    {!isLoading && !error && user.role == "Voter" ? <RequestToBeAdmin /> : <></>}
                     <article>
                         <h4>For developers</h4>
                         <ul>
                             <li>
                                 <Link
                                     className={styles.link}
-                                    href="/guide/api-docs"
+                                    href={`${process.env.SERVER_URL}/api-docs`}
                                 >
                                     api-docs
                                 </Link>

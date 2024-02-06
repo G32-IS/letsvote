@@ -11,7 +11,10 @@ const HeaderContentSwitch = ({ role }: Props) => {
     const getContent = (role: string) => {
         switch (role) {
             case "SysAdmin":
-                return <Link href="#">Gestisci amministratori</Link>
+                return <>
+                    <Link href="/requests">Gestisci richieste</Link>
+                    <Link href="#">Gestisci amministratori</Link>
+                </>
                 break;
 
             case "Admin":
@@ -25,7 +28,7 @@ const HeaderContentSwitch = ({ role }: Props) => {
                 break;
         }
     }
-    
+
     return (
         getContent(role)
     )

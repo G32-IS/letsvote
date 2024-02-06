@@ -24,10 +24,12 @@ type Props = {
 }
 
 const EventsTable = ({ events, renderNumber, isVotable, user }: Props) => {
+    console.log("rendering events table...")
+
     const router = useRouter();
     const { deleteEvent, error, isSuccess } = useRemoveEvent()
 
-    useEffect(()=>{
+    useEffect(() => {
         if (isSuccess) {
             notifications.show({
                 title: "Evento rimosso",
@@ -42,10 +44,10 @@ const EventsTable = ({ events, renderNumber, isVotable, user }: Props) => {
         }
     }, [error, isSuccess])
 
-    // if (isLoading) return <Text>Loading</Text>
-
+    console.log("events: ", events)
 
     const rows = events.map((evnt: EventFromDb, index: number) => {
+        console.log("rendering event row...")
         if (index >= renderNumber) return <></>;
 
         const { year, month, day, hour, minute } = getDate(new Date(evnt.endDate))
@@ -91,10 +93,12 @@ const EventsTable = ({ events, renderNumber, isVotable, user }: Props) => {
         </Table.Tr>
     );
     return (
-        <Table striped>
-            <Table.Thead>{ths}</Table.Thead>
-            <Table.Tbody>{rows}</Table.Tbody>
-        </Table>
+        <Table.ScrollContainer minWidth="100%" mx="auto" w="100%" mah={300}>
+            <Table striped>
+                <Table.Thead>{ths}</Table.Thead>
+                <Table.Tbody>{rows}</Table.Tbody>
+            </Table>
+        </Table.ScrollContainer>
     )
 }
 

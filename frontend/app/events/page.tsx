@@ -78,8 +78,8 @@ export default function Page() {
 
     return (
         <Stack gap="xl" w="100%">
-            {activeEvents.length == 0 && inactiveEvents.length == 0 ?
-                <ContentTitle title="Non sono state trovate votazioni" subtitle="Non sono presenti votazioni, se pensi che sia un errore contattaci." align={true}/>
+            {events.length == 0 && events.length == 0 ?
+                <ContentTitle title="Non sono state trovate votazioni" subtitle="Non sono presenti votazioni, se pensi che sia un errore contattaci." align={true} />
                 :
                 contents.map((val: Content, index: number) => {
                     return <Stack gap="xl" w="100%" key={index}>
@@ -88,7 +88,7 @@ export default function Page() {
                                 <EventsDisplay
                                     title={val.title}
                                     subtitle={val.subtitle}
-                                    events={activeEvents}
+                                    events={val.events}
                                     setRenderNumber={val.setStateFn}
                                     renderNumber={val.renderNumber}
                                     error={profileError}

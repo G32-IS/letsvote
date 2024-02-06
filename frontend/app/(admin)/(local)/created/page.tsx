@@ -2,7 +2,7 @@
 
 import { Button } from "@mantine/core"
 
-import ContentTitle from "../../components/ContentTitle"
+import ContentTitle from "../../../components/ContentTitle"
 
 import { useRouter } from "next/navigation"
 import { useEvents } from "@/app/hooks/useEvents"

@@ -3,10 +3,38 @@
 import Link from "next/link";
 import React, { useState } from "react";
 
-import styles from "./page.module.css";
+import { Button, Group, Stack, Text, Title } from "@mantine/core"
 
+import RequestToBeAdmin from "../components/RequestToBeAdmin";
+
+const guideContent = [
+    {
+        title: `Lista votazioni`,
+        content: `Nella pagina delle votazioni puoi vedere le votazioni attualmente in corso e, se ne rispetti i requisiti, puoi prenderne parte.`,
+        visit: <Link href="/events">Votazioni</Link>
+    },
+    {
+        title: `Andamento votazioni`,
+        content: `Per ogni votazione è possibile osservarne l'andamento in tempo reale.`
+    },
+    {
+        title: `Accesso`,
+        content: `Per poter prendere parte a una votazione è necessario effettuare il login tramite uno tra i servizi di identità digitale`,
+        visit: <Link href="/login">Accedi</Link>
+    },
+    {
+        title: `Amministrare le votazioni`,
+        content: `Con questo permesso puoi creare votazioni al livello
+        e nel territorio di tua competenza, una volta
+        verificata la tua identità da parte di un amm. di
+        sistema.`,
+        visit: <RequestToBeAdmin />
+    }
+
+
+]
 export default function Page() {
-    const numPages = 5;
+    const numPages = 4;
     const [currentPage, setCurrentPage] = useState(1);
 
     const nextPage = () => {
@@ -18,112 +46,28 @@ export default function Page() {
     };
 
     return (
-        <main className={styles.main}>
-            <h1>Guida Introduttiva</h1>
-            {/* questi soprastanti sono i punti su cui costruire le slide.
-                Gli abbiamo messi nel D2 */}
-            <article>
-                <div className={styles.slider}>
-                    <section
-                        className={
-                            currentPage === 1
-                                ? styles.displayBlock
-                                : styles.displayNone
-                        }
-                    >
-                        <h2>Lista Votazioni</h2>
-                        <p>
-                            Nella <Link href="/">Home</Link> page puoi vedere le
-                            votazioni attualmente in corso e, se ne rispetti i
-                            requisiti, puoi prenderne parte.
-                        </p>
-                    </section>
-                    <section
-                        className={
-                            currentPage === 2
-                                ? styles.displayBlock
-                                : styles.displayNone
-                        }
-                    >
-                        <h2>Andamento votazioni</h2>
-                        <p>
-                            Per ogni votazione è possibile osservarne
-                            l&apos andamento in tempo reale
-                        </p>
-                    </section>
-                    <section
-                        className={
-                            currentPage === 3
-                                ? styles.displayBlock
-                                : styles.displayNone
-                        }
-                    >
-                        <h2>Particepa a votazione</h2>
-                        <p>
-                            Per poter prendere parte a una votazione è
-                            necessario effettuare il{" "}
-                            <Link href="login">login</Link> tramie uno tra i
-                            servizi di identità digitale{" "}
-                            <a
-                                href="https://www.spid.gov.it/en/"
-                                target="_blank"
-                            >
-                                SPID
-                            </a>{" "}
-                            o{" "}
-                            <a
-                                href="https://www.cartaidentita.interno.gov.it/en/home/"
-                                target="_blank"
-                            >
-                                CIE
-                            </a>
-                        </p>
-                    </section>
-                    <section
-                        className={
-                            currentPage === 4
-                                ? styles.displayBlock
-                                : styles.displayNone
-                        }
-                    >
-                        <h2>Storico votazioni</h2>
-                        <p>
-                            Nell&apos <Link href="#">Area Personale</Link> puoi
-                            visualizzare lo storico delle votazione a cui hai
-                            partecipato
-                        </p>
-                    </section>
-                    <section
-                        className={
-                            currentPage === numPages
-                                ? styles.displayBlock
-                                : styles.displayNone
-                        }
-                    >
-                        <h2>Richiedi amm. delle votazioni</h2>
-                        <p>
-                            Con questo permesso puoi creare votazioni al livello
-                            e nel territorio di tua competenza, una volta
-                            verificata la tua identità da parte di un amm. di
-                            sistema. Per fare richiesta, visita la pagina{" "}
-                            <Link href="#">
-                                Richiedi di amministrare le votazioni
-                            </Link>
-                        </p>
-                    </section>
-                </div>
-                <div className={styles.btnsContainer}>
-                    <button onClick={prevPage}>Prev</button>
-                    <p>
-                        {currentPage} / {numPages}
-                    </p>
-                    <button onClick={nextPage}>Next</button>
-                </div>
-            </article>
-            <footer>
-                To know more about the usage of letsvote, visit the{" "}
-                <Link href="/guide/api-docs">api-docs</Link> page
-            </footer>
-        </main>
+        <Stack w="100%" align="center">
+            <Title order={1}>Guida Introduttiva</Title>
+
+            <Stack h="100%" justify="center">
+                <Stack gap="xs" w="100%" mb="auto" h={150} align="center">
+                    <Stack gap="0" w="100%" align="center">
+                        <Title order={2}>{guideContent[currentPage-1].title}</Title>
+                        {guideContent[currentPage-1].visit}
+                    </Stack>
+                    <Text w="70%" ta="center">{guideContent[currentPage-1].content}</Text>
+                </Stack>
+
+                <Group justify="center">
+                    <Button variant="default" onClick={prevPage}>Precedente</Button>
+                    <Text>{currentPage} / {numPages}</Text>
+                    <Button onClick={nextPage}>Successivo</Button>
+                </Group>
+            </Stack>
+            <Text ta="center">
+                {`Per saperne di più riguardo l'utilizzo di letsvote, visita `}
+                <Link href="/guide/api-docs">api-docs</Link>.
+            </Text>
+        </Stack>
     );
 }
