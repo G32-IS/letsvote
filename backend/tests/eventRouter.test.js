@@ -62,6 +62,7 @@ jest.mock("../redis/redis-client", () => ({
         json: {
             set: jest.fn(),
             get: jest.fn(),
+            del: jest.fn(),
         },
         expire: jest.fn(),
     },
@@ -145,6 +146,8 @@ describe("Test event.router", () => {
         test("test", async () => {});
 
         test("Expected: 200, Event deleted sccessfully", async () => {
+            // I do not care about what redis is going to return back. It is out of the scope of this test. I just let it return true to prevent it from hindering the test
+            redisClient.json.get.mockImplementation(async () => true);
             const mockEvent = {
                 count: 3,
             };
@@ -201,7 +204,25 @@ describe("Test event.router", () => {
     });
 
     describe("GET /get/single/:id", () => {
-        test("test", async () => {});
+        test("Expected: 404, event id not in db", async () => {
+            redisClient.json.get.mockImplementation(async () => false);
+            redisClient.json.set.mockImplementation(async () => true);
+            redisClient.expire.mockImplementation(async () => true);
+
+            const mockEventId = "123mock123";
+            const mockStoredEventId = "321mock321";
+            prisma.event.findUnique.mockImplementation(async (query) => {
+                if (mockStoredEventId === mockEventId) return mockOutputEvent;
+                else return null;
+            });
+
+            const { statusCode, body } = await req.get(
+                `/api/event/get/single/${mockEventId}`
+            );
+
+            expect(statusCode).toBe(404);
+            expect(body.message).toEqual("Event not found");
+        });
 
         test("test", async () => {});
 
@@ -210,11 +231,35 @@ describe("Test event.router", () => {
             redisClient.json.set.mockImplementation(async () => true);
             redisClient.expire.mockImplementation(async () => true);
 
+            const mockOutputEvent = {
+                id: "123mock123",
+                title: "mock title?",
+                startDate: new Date(),
+                endDate: new Date(),
+            };
+            const mockEventId = "123mock123";
+
             prisma.event.findUnique.mockImplementation(async (query) => {
-                return {
-                    id: "mockeventid123",
-                };
+                if (query.where.id === mockEventId) return mockOutputEvent;
+                else return null;
             });
+
+            const { statusCode, body } = await req.get(
+                `/api/event/get/single/${mockEventId}`
+            );
+
+            expect(statusCode).toBe(200);
+            expect(body.event).toBeDefined();
+            expect(body.fromCache).toBe(false);
+        });
+
+        test("Expected: 200, get event from cache", async () => {
+            redisClient.json.get.mockImplementation(async () => true);
+            redisClient.json.set.mockImplementation(async () => true);
+            redisClient.expire.mockImplementation(async () => true);
+
+            // event though it should be called, I mock it anyway because I cannot assume is not going to be called. I'm testing for that :)
+            prisma.event.findUnique.mockImplementation(async (query) => true);
 
             const mockEventId = "123mock123";
             const { statusCode, body } = await req.get(
@@ -223,7 +268,7 @@ describe("Test event.router", () => {
 
             expect(statusCode).toBe(200);
             expect(body.event).toBeDefined();
-            expect(body.fromCache).toBe(false);
+            expect(body.fromCache).toBe(true);
         });
     });
 
