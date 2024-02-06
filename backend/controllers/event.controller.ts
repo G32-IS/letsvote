@@ -3,7 +3,7 @@ import { prisma } from "../prisma/prisma-client";
 import { redisClient } from "../redis/redis-client";
 
 export const createEvent = async (req: Request, res: Response) => {
-    return prisma.$transaction(async _ => {
+    return prisma.$transaction(async (_) => {
         try {
             const { event, user } = req.body;
             const newEvent = await prisma.event.create({
@@ -16,12 +16,12 @@ export const createEvent = async (req: Request, res: Response) => {
                     authorId: user.id,
                     pobId: user.pobId,
                     choices: {
-                        create: event.choices
-                    }
+                        create: event.choices,
+                    },
                 },
                 include: {
-                    choices: true
-                }
+                    choices: true,
+                },
             });
 
             const eventsExists = await redisClient.json.type("events");
@@ -41,31 +41,31 @@ export const createEvent = async (req: Request, res: Response) => {
             res.status(500).json({ message: "Internal server error" });
         }
     });
-}
+};
 
 export const updateEvent = async (req: Request, res: Response) => {
     try {
-        const { event, user } = req.body
+        const { event, user } = req.body;
         const updatedEvent = await prisma.event.update({
             where: {
                 id: event.id,
-                authorId: user.id
+                authorId: user.id,
             },
             data: event,
             include: {
-                choices: true
-            }
+                choices: true,
+            },
         });
 
         if (updatedEvent) {
             res.status(200).json({ event: updatedEvent });
         } else {
-            res.status(500).json({ message: "Could not update event" })
+            res.status(500).json({ message: "Could not update event" });
         }
     } catch (err: any) {
         res.status(500).json({ message: "Internal server error" });
     }
-}
+};
 
 export const deleteEvent = async (req: Request, res: Response) => {
     try {
@@ -74,12 +74,12 @@ export const deleteEvent = async (req: Request, res: Response) => {
         const deletedEvent = await prisma.event.deleteMany({
             where: {
                 id: eventId,
-                authorId: user.id
-            }
+                authorId: user.id,
+            },
         });
 
         if (deletedEvent.count) {
-            await redisClient.json.del(`events:${eventId}`)
+            await redisClient.json.del(`events:${eventId}`);
             await redisClient.json.del("events");
             res.status(200).json({ message: "Event deleted sccessfully" });
         } else {
@@ -88,7 +88,7 @@ export const deleteEvent = async (req: Request, res: Response) => {
     } catch (err: any) {
         res.status(500).json({ message: "Internal server error" });
     }
-}
+};
 
 export const getMyEvents = async (req: Request, res: Response) => {
     try {
@@ -96,18 +96,18 @@ export const getMyEvents = async (req: Request, res: Response) => {
 
         const events = await prisma.event.findMany({
             where: {
-                authorId: user.id
+                authorId: user.id,
             },
             include: {
-                choices: true
-            }
+                choices: true,
+            },
         });
 
         res.status(200).json({ events: events });
     } catch (err: any) {
         res.status(500).json({ message: "Internal server error" });
     }
-}
+};
 
 export const getAllEvents = async (req: Request, res: Response) => {
     try {
@@ -118,8 +118,8 @@ export const getAllEvents = async (req: Request, res: Response) => {
         } else {
             const events = await prisma.event.findMany({
                 include: {
-                    choices: true
-                }
+                    choices: true,
+                },
             });
 
             if (events) {
@@ -131,7 +131,7 @@ export const getAllEvents = async (req: Request, res: Response) => {
     } catch (err: any) {
         res.status(500).json({ message: "Internal server error" });
     }
-}
+};
 
 export const getEvent = async (req: Request, res: Response) => {
     try {
@@ -143,11 +143,11 @@ export const getEvent = async (req: Request, res: Response) => {
         } else {
             const event = await prisma.event.findUnique({
                 where: {
-                    id: eventId
+                    id: eventId,
                 },
                 include: {
-                    choices: true
-                }
+                    choices: true,
+                },
             });
 
             if (event) {
@@ -161,7 +161,7 @@ export const getEvent = async (req: Request, res: Response) => {
     } catch (err: any) {
         res.status(500).json({ message: "Internal server error" });
     }
-}
+};
 
 export const getEventVotes = async (req: Request, res: Response) => {
     try {
@@ -173,7 +173,7 @@ export const getEventVotes = async (req: Request, res: Response) => {
         } else {
             const votes = await prisma.vote.findMany({
                 where: {
-                    eventId: eventId
+                    eventId: eventId,
                 },
             });
 
@@ -181,34 +181,43 @@ export const getEventVotes = async (req: Request, res: Response) => {
                 await redisClient.json.set(`votes:${eventId}`, "$", votes);
                 await redisClient.expire(`votes:${eventId}`, 10);
             }
-            res.status(200).json({ fromCache: false, votes: votes })
+            res.status(200).json({ fromCache: false, votes: votes });
         }
     } catch (err: any) {
         res.status(500).json({ message: "Internal server error" });
     }
-}
+};
 
 export const getEventParticipations = async (req: Request, res: Response) => {
     try {
         const eventId = req.params.id;
-        const cachedParticipation = await redisClient.get(`participations:${eventId}`);
+        const cachedParticipation = await redisClient.get(
+            `participations:${eventId}`
+        );
 
         if (cachedParticipation) {
-            res.status(200).json({ fromCache: true, participations: cachedParticipation });
+            res.status(200).json({
+                fromCache: true,
+                participations: cachedParticipation,
+            });
         } else {
             const participations = await prisma.participation.findMany({
                 where: {
-                    eventId: eventId
+                    eventId: eventId,
                 },
             });
 
             if (participations) {
-                await redisClient.json.set(`votes:${eventId}`, "$", participations);
+                await redisClient.json.set(
+                    `votes:${eventId}`,
+                    "$",
+                    participations
+                );
                 await redisClient.expire(`votes:${eventId}`, 10);
             }
-            res.status(200).json({ fromCache: false, votes: participations })
+            res.status(200).json({ fromCache: false, votes: participations });
         }
     } catch (err: any) {
         res.status(500).json({ message: "Internal server error" });
     }
-}
+};

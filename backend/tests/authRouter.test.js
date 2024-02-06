@@ -4,6 +4,7 @@ import { prisma } from "../prisma/prisma-client";
 import jwt from "jsonwebtoken";
 import * as utils from "../utils/bcrypt";
 import { app } from "../utils/testServer";
+import * as auth from "../controllers/auth.controller";
 
 jest.mock("../prisma/prisma-client", () => ({
     prisma: {
@@ -16,6 +17,11 @@ jest.mock("../prisma/prisma-client", () => ({
 app.use("/auth", authRouter);
 
 const req = supertest(app);
+
+afterEach(() => {
+    // restore the spy created with spyOn
+    jest.restoreAllMocks();
+});
 
 describe("auth.router (/auth)", () => {
     describe("POST /login", () => {
@@ -93,27 +99,5 @@ describe("auth.router (/auth)", () => {
             expect(res.status).toBe(401);
             expect(res.body.message).toEqual("User token was not provided");
         });
-
-        
-        // // TODO: Non so come passare il token. mi dà sempre errore
-        // test("It should return 401 because of wrong token", async () => {
-        //     const key = process.env.JWT_SECRET;
-        //     const token = jwt.sign({ id: "65c0bea5959e924eaf699c67" }, key, {
-        //         expiresIn: "7d",
-        //     });
-        //     const res = await req
-        //         .post("/auth/logout")
-        //         .set('x-access-token', token)
-        //         .send({
-        //             user: {},
-        //         });
-
-        //     expect(res.status).toBe(401);
-        //     expect(res.body.message).toEqual("User token was not correct");
-        // });
-        
-        test("", async () => {
-            
-        })
     });
 });
