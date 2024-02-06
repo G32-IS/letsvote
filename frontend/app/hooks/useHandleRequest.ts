@@ -1,7 +1,7 @@
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { QUERY_KEY } from "../react-query/client";
 
-const handleRequest = async (request) => {
+const handleRequest = async (request: any) => {
     const response = await fetch(`${process.env.API_URL}/request/handle`, {
         method: "PUT",
         headers: {

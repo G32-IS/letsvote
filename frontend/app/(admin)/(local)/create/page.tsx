@@ -20,6 +20,8 @@ import { useAddEvent } from '@/app/hooks/useAddEvent';
 import TextEditor from '@/app/components/TextEditor';
 import { useRouter } from 'next/navigation';
 import { useEvents } from '@/app/hooks/useEvents';
+import { useProfile } from '@/app/hooks/useProfile';
+import Loading from '@/app/components/Loading';
 
 export type Props = {}
 
@@ -35,9 +37,10 @@ const publishType = [
 
 const CreatePage: FC = (props: Props) => {
     const { events } = useEvents()
+    const { addEvent, error, isLoading, isSuccess } = useAddEvent();
+    const { user, error: userError, isLoading: isUserLoading } = useProfile();
 
     const router = useRouter()
-    const { addEvent, error, isLoading, isSuccess } = useAddEvent();
 
     const [createState, setCreateState] = useState<number>(0);
     const [title, setTitle] = useState<string>("");
@@ -95,20 +98,32 @@ const CreatePage: FC = (props: Props) => {
         }
     }
 
-    useEffect(() => {
-        if (isSuccess) router.push("/created");
-        else if (error) router.push("/events/error");
-
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isSuccess, error])
-
     const getSecondPartInput = () => {
         if (isReferendum(eventType))
             return <ReferendumInput state={options} setState={setOptions} />
         else return <ElectionInput state={options} setState={setOptions} subState={optionsDesc} setSubState={setOptionsDesc} />
     }
 
+    useEffect(() => {
+        if (isSuccess) router.push("/created");
+        else if (error) router.push("/error");
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isSuccess, error])
+
+    useEffect(() => {
+        if (userError) {
+            router.push("/error");
+        }
+        else if (user?.role != "Admin") {
+            router.push("/error");
+        }
+    }, [userError, user, router])
+
+    if (isUserLoading || (!user && !userError)) return <Loading />
+
     return (
+        
         <Stack gap="xl">
             <ContentTitle
                 title={"Creazione votazione (" + Number(createState + 1) + "/2)"}

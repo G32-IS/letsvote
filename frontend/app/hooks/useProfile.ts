@@ -34,7 +34,7 @@ export const useProfile = () => {
         retry: false,
         refetchOnWindowFocus: false,
         refetchOnMount: false,
-        staleTime: Infinity,
+        staleTime: 50,
     });
 
     return { user, isLoading, error };
