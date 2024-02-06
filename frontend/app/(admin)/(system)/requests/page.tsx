@@ -45,15 +45,16 @@ const Requests = (props: Props) => {
     });
   }
 
-  if (isUserLoading) return <Loading />
-  else if (userError) {
-    router.push("/error");
-    return <></>;
-  }
-  else if (user.role != "SysAdmin") {
-    router.push("/error");
-    return <></>;
-  }
+  useEffect(() => {
+    if (userError) {
+      router.push("/error");
+    }
+    else if (user?.role != "SysAdmin") {
+      router.push("/error");
+    }
+  }, [userError, user, router])
+
+  if (isUserLoading || (!user && !userError)) return <Loading />
 
   return (
     <Stack w="100%">

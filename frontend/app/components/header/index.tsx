@@ -10,6 +10,7 @@ import { useLogout } from "@/app/hooks/useLogout";
 import HeaderContentSwitch from "../HeaderContentSwitch";
 import { useRouter } from "next/navigation";
 import Loading from "../Loading";
+import { useEffect } from "react";
 
 export default function Header() {
     const router = useRouter();
@@ -24,16 +25,18 @@ export default function Header() {
         router.push("/")
     };
 
-    if (logoutError) return <Text>error...</Text>;
-    if (isSuccess) {
-        router.push("/");
-        return <></>
-    }
+    // if (logoutError) return <Text>error...</Text>;
+    useEffect(() => {
+        if (isSuccess) {
+            router.push("/");
+        }
+    }, [isSuccess, router])
+ 
 
     return (
         <div className={styles.headerWrapper}>
             <header className={styles.header}>
-                
+
                 <Link className={styles.logo} href="/">
                     letsvote
                 </Link>

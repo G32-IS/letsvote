@@ -111,17 +111,19 @@ const CreatePage: FC = (props: Props) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isSuccess, error])
 
-    if (isUserLoading) return <Loading />
-    else if (userError) {
-        router.push("/error");
-        return <></>;
-    }
-    else if (user.role != "Admin") {
-        router.push("/error");
-        return <></>;
-    }
+    useEffect(() => {
+        if (userError) {
+            router.push("/error");
+        }
+        else if (user?.role != "Admin") {
+            router.push("/error");
+        }
+    }, [userError, user, router])
+
+    if (isUserLoading || (!user && !userError)) return <Loading />
 
     return (
+        
         <Stack gap="xl">
             <ContentTitle
                 title={"Creazione votazione (" + Number(createState + 1) + "/2)"}
