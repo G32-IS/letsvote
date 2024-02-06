@@ -9,8 +9,8 @@ export const createRequest = async (req: Request, res: Response) => {
         const oldRequest = await prisma.request.findFirst({
             where: {
                 userId: user.id,
-                state: RequestState.Pending
-            }
+                state: RequestState.Pending,
+            },
         });
 
         if (oldRequest) {
@@ -107,8 +107,4 @@ export const handleRequest = async (req: Request, res: Response) => {
             return;
         }
     });
-<<<<<<< HEAD
 };
-=======
-}
->>>>>>> 2f213d901fe034a929418142f5a4d1bc2ff79c38
