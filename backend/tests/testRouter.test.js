@@ -1,6 +1,6 @@
-import express from "express";
 import { testRouter } from "../routes/test.router";
 import supertest from "supertest";
+import { app } from "../utils/testServer";
 
 // !!! use jest.mock() during testing to avoid affecting the database
 // this is a simulation of the real object
@@ -18,17 +18,23 @@ jest.mock("../prisma/prisma-client", () => ({
 }));
 
 // if app is imported from index.ts instead of creating an instance, the tests are propagated to all files interacting with index.ts
-const app = express();
 app.use("/test", testRouter);
 
 const req = supertest(app);
 
+/* 
+    Why to mock
+        1) You interact with and affect the db, changing its data
+        2) You cannot isolate the function you test, because you also have to handle the db
+        3) You have to follow all the rules to actually put data into the db and avoid conflicts
+*/
+
 describe("test.router (/test)", () => {
     describe("GET /", () => {
         test("It should return a success msg", async () => {
-            const res = await req.get("/test");
-            expect(res.statusCode).toBe(200);
-            expect(res.body).toEqual({ message: "Connection successful" });
+            const { statusCode, body } = await req.get("/test");
+            expect(statusCode).toBe(200);
+            expect(body).toEqual({ message: "Connection successful" });
         });
     });
 
