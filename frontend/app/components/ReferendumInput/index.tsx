@@ -14,7 +14,8 @@ const ReferendumInput = ({ state, setState }: Props) => {
             < TagsInput
                 size='md'
                 label="Opzioni"
-                description="* Le opzioni scelte corrispondono alle alternative che appariranno al votante."
+                description="Le opzioni scelte corrispondono alle alternative che appariranno al votante.
+                Premere invio dopo ogni opzione per aggiungerne un'altra."
                 data={[]}
                 value={state}
                 onChange={setState}

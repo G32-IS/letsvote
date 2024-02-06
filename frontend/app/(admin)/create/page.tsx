@@ -1,5 +1,5 @@
 "use client";
-import { useState, FC } from 'react';
+import { useState, FC, useEffect } from 'react';
 
 // import { FileWithPath } from '@mantine/dropzone';
 import { Stack, Button, Text, TextInput, Group, Tooltip } from '@mantine/core';
@@ -37,7 +37,7 @@ const CreatePage: FC = (props: Props) => {
     const { events } = useEvents()
 
     const router = useRouter()
-    const { addEvent, error, isLoading } = useAddEvent();
+    const { addEvent, error, isLoading, isSuccess } = useAddEvent();
 
     const [createState, setCreateState] = useState<number>(0);
     const [title, setTitle] = useState<string>("");
@@ -92,12 +92,15 @@ const CreatePage: FC = (props: Props) => {
             }
 
             addEvent(eventObj);
-
-            if (!error) {
-                router.push("/events");
-            }
         }
     }
+
+    useEffect(() => {
+        if (isSuccess) router.push("/created");
+        else if (error) router.push("/events/error");
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isSuccess, error])
 
     const getSecondPartInput = () => {
         if (isReferendum(eventType))

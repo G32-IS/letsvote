@@ -6,11 +6,15 @@ import { Table, Button, Text } from '@mantine/core'
 import { MdHowToVote, MdDelete } from "react-icons/md";
 import { IoEye } from "react-icons/io5";
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import { getDate } from '@/app/utils/date';
 import { useRouter } from 'next/navigation';
 import { fromCamelCase } from '@/app/utils/stringManipulation';
 import { useProfile } from '@/app/hooks/useProfile';
+import { useRemoveEvent } from '@/app/hooks/useRemoveEvent';
+
+import { notifications } from '@mantine/notifications';
+import { CustomError } from '@/app/utils/errors/CustomError';
 
 type Props = {
     events: EventFromDb[],
@@ -21,8 +25,22 @@ type Props = {
 
 const EventsTable = ({ events, renderNumber, isVotable, user }: Props) => {
     const router = useRouter();
+    const { deleteEvent, error, isSuccess } = useRemoveEvent()
 
-    // const { user, error, isLoading } = useProfile();
+    useEffect(()=>{
+        if (isSuccess) {
+            notifications.show({
+                title: "Evento rimosso",
+                message: "Evento rimosso con successo"
+            })
+        } else if (error) {
+            notifications.show({
+                color: "red",
+                title: "Errore",
+                message: error instanceof CustomError ? error.message : "C'è stato un errore",
+            })
+        }
+    }, [error, isSuccess])
 
     // if (isLoading) return <Text>Loading</Text>
 
@@ -52,7 +70,9 @@ const EventsTable = ({ events, renderNumber, isVotable, user }: Props) => {
                 {
                     user && user.role == "Admin" ?
                         <Table.Td>
-                            <Button color='red' leftSection={<MdDelete />} disabled={user.id != evnt.authorId}>Rimuovi</Button>
+                            <Button onClick={() => {
+                                deleteEvent(evnt.id);
+                            }} color='red' leftSection={<MdDelete />} disabled={user.id != evnt.authorId}>Rimuovi</Button>
                         </Table.Td> : <></>
                 }
             </Table.Tr>

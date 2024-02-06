@@ -24,12 +24,12 @@ const postEvent = async (Event: EventInterface): Promise<EventInterface> => {
 export const useAddEvent = () => {
     const client = useQueryClient();
  
-    const { mutate: addEvent, error, isPending: isLoading } = useMutation({
+    const { mutate: addEvent, error, isPending: isLoading, isSuccess } = useMutation({
         mutationFn: postEvent,
         onSuccess: () => {
             client.invalidateQueries({queryKey: [QUERY_KEY.events]});
         },
     });
 
-    return { addEvent, error, isLoading };
+    return { addEvent, error, isLoading, isSuccess };
 }

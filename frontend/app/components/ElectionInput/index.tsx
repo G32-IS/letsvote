@@ -21,7 +21,7 @@ const ElectionInput = ({ state, setState, subState, setSubState }: Props) => {
                 size='md'
                 label="Liste / Partiti"
                 withAsterisk
-                description="Inserire il nome delle liste / partiti premendo invio"
+                description="Premere invio dopo ogni nome per aggiungere una nuova lista / partito"
                 data={[]}
                 value={state}
                 onChange={(val) => {
@@ -46,9 +46,9 @@ const ElectionInput = ({ state, setState, subState, setSubState }: Props) => {
                             <Text fw={700}>{val}</Text>
                             <TagsInput
                                 size='md'
-                                label="Inserire i candidati della lista / partito"
+                                label="Premere invio dopo ogni nome per aggiungere un nuovo candidato"
                                 withAsterisk
-                                description="Il primo candidato inserito sarà automaticamente il capolista."
+                                description="Il primo candidato inserito sarà automaticamente il capolista"
                                 data={subState[val]}
                                 value={subState[val]}
                                 onChange={(newState) => {

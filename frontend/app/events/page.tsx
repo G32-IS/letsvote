@@ -29,7 +29,9 @@ export default function Page() {
             const { activeEvents, inactiveEvents } = events.reduce(
                 (acc: { activeEvents: EventFromDb[]; inactiveEvents: EventFromDb[]; }, evnt: EventFromDb) => {
                     const endDate = new Date(evnt.endDate);
-                    if (endDate > now) {
+                    const startDate = new Date(evnt.startDate);
+
+                    if (endDate > now && startDate <= now) {
                         acc.activeEvents.push(evnt);
                     } else {
                         acc.inactiveEvents.push(evnt);
