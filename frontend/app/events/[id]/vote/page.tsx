@@ -37,7 +37,7 @@ const VotePage = ({ params }: Props) => {
 
     useEffect(() => {
         if (isSuccess) router.push("vote/completed")
-        else if (voteError) router.push("vote/error")
+        else if (voteError) router.push("/error")
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isSuccess, voteError])
 

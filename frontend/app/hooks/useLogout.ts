@@ -18,12 +18,12 @@ const logoutFn = async () => {
 export const useLogout = () => {
     const client = useQueryClient();
  
-    const { mutate: logout } = useMutation({
+    const { mutate: logout, isSuccess, error, isPending: isLoading } = useMutation({
         mutationFn: logoutFn,
         onSuccess: () => {
             client.invalidateQueries({queryKey: [QUERY_KEY.profile]});
         },
     });
 
-    return { logout };
+    return { logout, error, isLoading, isSuccess};
 }

@@ -15,8 +15,6 @@ export default function Home() {
     if (error && !(error instanceof CustomError))
         return <ContentTitle title="Errore" subtitle="Si è verificato un errore" align={true} />;
 
-    console.log(user)
-
     return (
         <Stack w="100%" gap="md">
             <Stack gap="0">

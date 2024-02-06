@@ -3,20 +3,26 @@
 import ContentTitle from '@/app/components/ContentTitle'
 import Loading from '@/app/components/Loading'
 import { useHandleRequest } from '@/app/hooks/useHandleRequest'
+import { useProfile } from '@/app/hooks/useProfile'
 import { useRequests } from '@/app/hooks/useRequests'
 import { Button, Stack, Table } from '@mantine/core'
+import { useEffect } from 'react'
 
 import { FaCheckCircle } from "react-icons/fa";
 import { IoIosRemoveCircle } from "react-icons/io";
-
+import { useRouter } from 'next/navigation'
 type Props = {}
 
 const Requests = (props: Props) => {
+  const router = useRouter();
+
   const { requests, error, isLoading } = useRequests();
   const { handle } = useHandleRequest();
 
-  const getRows = (elements) => {
-    return elements.map((element) => {
+  const { user, error: userError, isLoading: isUserLoading } = useProfile();
+
+  const getRows = (elements: any) => {
+    return elements.map((element: any) => {
       return (
         <Table.Tr key={element.id}>
           <Table.Td fw={600}>{element.state}</Table.Td>
@@ -37,6 +43,16 @@ const Requests = (props: Props) => {
         </Table.Tr>
       )
     });
+  }
+
+  if (isUserLoading) return <Loading />
+  else if (userError) {
+    router.push("/error");
+    return <></>;
+  }
+  else if (user.role != "SysAdmin") {
+    router.push("/error");
+    return <></>;
   }
 
   return (

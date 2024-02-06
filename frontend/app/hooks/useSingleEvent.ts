@@ -41,6 +41,7 @@ export const useSingleEvent = (eventId: string) => {
     } = useQuery({
         queryKey: [QUERY_KEY.singleEvent + eventId],
         queryFn: _ => fetchSingleEvent(eventId),
+        retry: false
     });
 
     return { singleEvent, isLoading, error };

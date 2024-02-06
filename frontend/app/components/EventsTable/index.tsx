@@ -24,8 +24,6 @@ type Props = {
 }
 
 const EventsTable = ({ events, renderNumber, isVotable, user }: Props) => {
-    console.log("rendering events table...")
-
     const router = useRouter();
     const { deleteEvent, error, isSuccess } = useRemoveEvent()
 
@@ -44,10 +42,7 @@ const EventsTable = ({ events, renderNumber, isVotable, user }: Props) => {
         }
     }, [error, isSuccess])
 
-    console.log("events: ", events)
-
     const rows = events.map((evnt: EventFromDb, index: number) => {
-        console.log("rendering event row...")
         if (index >= renderNumber) return <></>;
 
         const { year, month, day, hour, minute } = getDate(new Date(evnt.endDate))
