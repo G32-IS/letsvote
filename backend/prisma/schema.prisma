@@ -41,7 +41,7 @@ model Choice {
     id              String      @id @default(auto()) @map("_id") @db.ObjectId
     title           String
     body            String?
-    event           Event       @relation(fields: [eventId], references: [id])
+    event           Event       @relation(fields: [eventId], onDelete: Cascade, references: [id])
     eventId         String      @db.ObjectId
     votes           Vote[]
 }
