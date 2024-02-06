@@ -136,13 +136,6 @@ describe("Test event.router", () => {
     });
 
     describe("DELETE /delete/:id", () => {
-        // test("It should delete the event", async () => {
-        //     const eventId = "123";
-        //     const res = await req.delete(`/event/delete/${eventId}`);
-
-        //     expect(res.status).toBe(200);
-        // });
-
         test("test", async () => {});
 
         test("Expected: 200, Event deleted sccessfully", async () => {

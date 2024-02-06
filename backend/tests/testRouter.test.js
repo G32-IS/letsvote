@@ -29,6 +29,7 @@ const req = supertest(app);
         3) You have to follow all the rules to actually put data into the db and avoid conflicts
 */
 
+// In questi test non uso il mocking anche se né ho parlato sopra, perché faccio solamente una piccola interazione di get con db e non influisce. Volevo solo provare l'approcccio
 describe("test.router (/test)", () => {
     describe("GET /", () => {
         test("It should return a success msg", async () => {

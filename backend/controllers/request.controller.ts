@@ -9,50 +9,52 @@ export const createRequest = async (req: Request, res: Response) => {
         const oldRequest = await prisma.request.findFirst({
             where: {
                 userId: user.id,
-                state: RequestState.Pending
-            }
-        });;
+                state: RequestState.Pending,
+            },
+        });
 
         if (oldRequest) {
-            res.status(422).json({ message: "User already has a pending request" });
+            res.status(422).json({
+                message: "User already has a pending request",
+            });
             return;
         }
 
         const newRequest = await prisma.request.create({
             data: {
-                userId: user.id
-            }
+                userId: user.id,
+            },
         });
 
         if (newRequest) {
             res.status(200).json({ message: "Request created successfully" });
         } else {
-            res.status(500).json({ message: "Could not create request"});
+            res.status(500).json({ message: "Could not create request" });
         }
     } catch (err: any) {
         res.status(400).json({ message: "Bad request" });
     }
-}
+};
 
 export const getAllRequests = async (req: Request, res: Response) => {
     try {
         const requests = await prisma.request.findMany({
             include: {
-                user: true
-            }
+                user: true,
+            },
         });
         res.status(200).json({ requests: requests });
     } catch (err: any) {
         res.status(500).json({ message: "Internal server error" });
     }
-}
+};
 
 export const getRequest = async (req: Request, res: Response) => {
     try {
         const request = await prisma.request.findUnique({
             where: {
-                id: req.params.id
-            }
+                id: req.params.id,
+            },
         });
         if (request) {
             res.status(200).json({ request: request });
@@ -62,19 +64,19 @@ export const getRequest = async (req: Request, res: Response) => {
     } catch (err: any) {
         res.status(500).json({ message: "Internal server error" });
     }
-}
+};
 
 export const handleRequest = async (req: Request, res: Response) => {
-    return prisma.$transaction(async _ => {
+    return prisma.$transaction(async (_) => {
         try {
             const { request } = req.body;
             const newRequest = await prisma.request.update({
                 where: {
-                    id: request.id
+                    id: request.id,
                 },
                 data: {
-                    state: request.state
-                }
+                    state: request.state,
+                },
             });
 
             if (!newRequest) {
@@ -85,11 +87,11 @@ export const handleRequest = async (req: Request, res: Response) => {
             if (newRequest.state === RequestState.Accepted) {
                 const newUser = await prisma.user.update({
                     where: {
-                        id: request.userId
+                        id: request.userId,
                     },
                     data: {
-                        role: UserRole.Admin
-                    }
+                        role: UserRole.Admin,
+                    },
                 });
 
                 if (newUser) {
@@ -105,4 +107,4 @@ export const handleRequest = async (req: Request, res: Response) => {
             return;
         }
     });
-}
+};
