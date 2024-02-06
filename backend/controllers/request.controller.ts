@@ -11,7 +11,7 @@ export const createRequest = async (req: Request, res: Response) => {
                 userId: user.id,
                 state: RequestState.Pending
             }
-        });;
+        });
 
         if (oldRequest) {
             res.status(422).json({ message: "User already has a pending request" });
