@@ -328,7 +328,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/vote'
+                  $ref: '#/components/schemas/participation'
         '401':
           description: User role does not allow this operation
           content:
