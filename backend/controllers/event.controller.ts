@@ -68,14 +68,14 @@ export const updateEvent = async (req: Request, res: Response) => {
 export const deleteEvent = async (req: Request, res: Response) => {
     try {
         const { user } = req.body;
-        const deletedEvent = await prisma.event.delete({
+        const deletedEvent = await prisma.event.deleteMany({
             where: {
                 id: req.params.id,
                 authorId: user.id
             }
         });
 
-        if (deletedEvent) {
+        if (deletedEvent.count) {
             res.status(200).json({ message: "Event deleted sccessfully" });
         } else {
             res.status(404).json({ message: "Event not found" });
