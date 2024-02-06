@@ -28,6 +28,8 @@ export const createEvent = async (req: Request, res: Response) => {
 
             if (eventsExists) {
                 await redisClient.json.arrAppend("events", "$", newEvent);
+            } else {
+                await redisClient.json.set("event", "$", newEvent);
             }
 
             if (newEvent) {
@@ -68,14 +70,17 @@ export const updateEvent = async (req: Request, res: Response) => {
 export const deleteEvent = async (req: Request, res: Response) => {
     try {
         const { user } = req.body;
+        const eventId = req.params.id;
         const deletedEvent = await prisma.event.deleteMany({
             where: {
-                id: req.params.id,
+                id: eventId,
                 authorId: user.id
             }
         });
 
         if (deletedEvent.count) {
+            await redisClient.json.del(`events:${eventId}`)
+            await redisClient.json.del("events");
             res.status(200).json({ message: "Event deleted sccessfully" });
         } else {
             res.status(404).json({ message: "Event not found" });
