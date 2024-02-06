@@ -193,9 +193,12 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/event'
+                type: object
+                properties:
+                  events:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/event'
         '500':
           description: Internal server error
           content:
@@ -215,9 +218,12 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/event'
+                type: object
+                properties:
+                  events:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/event'
         '401':
           description: User role does not allow this operation
           content:
@@ -291,9 +297,12 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/vote'
+                type: object
+                properties:
+                  votes:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/vote'
         '401':
           description: User role does not allow this operation
           content:
@@ -326,9 +335,12 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/participation'
+                type: object
+                properties:
+                  participations:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/participation'
         '401':
           description: User role does not allow this operation
           content:
@@ -423,9 +435,12 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/request'
+                type: object
+                properties:
+                  requests:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/request'
         '401':
           description: User role does not allow this operation
           content:
