@@ -1,5 +1,5 @@
 import express from 'express'
-import { verifyToken, createIfNew, login, logout } from '../controllers/auth.controller';
+import { verifyToken, login, logout } from '../controllers/auth.controller';
 
 export const authRouter = express.Router();
 authRouter.use(express.json());

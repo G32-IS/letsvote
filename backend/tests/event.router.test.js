@@ -2,6 +2,7 @@ import express from "express";
 import supertest from "supertest";
 import { app } from "../utils/testServer";
 import {
+    createEvent,
     getMyEvents,
     getEvent,
     updateEvent,
@@ -14,6 +15,7 @@ import { redisClient } from "../redis/redis-client";
 const eventRouter = express.Router();
 eventRouter.use(express.json());
 
+eventRouter.post("/create", createEvent);
 eventRouter.put("/update", updateEvent);
 eventRouter.delete("/delete/:id", deleteEvent);
 eventRouter.get("/get/mine", getMyEvents);
@@ -44,7 +46,11 @@ jest.mock("../prisma/prisma-client", () => ({
             deleteMany: jest.fn(),
             findMany: jest.fn(),
             findUnique: jest.fn(),
+            create: jest.fn(),
         },
+        $transaction: jest.fn().mockImplementation(async (transactionCallback) => {
+            return transactionCallback();
+        }),
     },
 }));
 
@@ -54,6 +60,8 @@ jest.mock("../redis/redis-client", () => ({
             set: jest.fn(),
             get: jest.fn(),
             del: jest.fn(),
+            arrAppend: jest.fn(),
+            type: jest.fn(),
         },
         expire: jest.fn(),
     },
@@ -65,6 +73,22 @@ afterEach(() => {
 
 describe("Test event.router", () => {
     describe("POST /create", () => {
+        test("Expected: 200, new event returned", async () => {
+            redisClient.json.arrAppend.mockImplementation(async () => true);
+            redisClient.json.set.mockImplementation(async () => true);
+            redisClient.json.type.mockImplementation(async () => true);
+
+            prisma.event.create.mockImplementation(async () => {
+                return { newMockEventId: "mock123" };
+            })
+
+            const mockUser = {}
+            const mockEvent = {};
+            const { statusCode, body } = await req.post("/api/event/create").send({user: mockUser, event: mockEvent});
+
+            expect(statusCode).toBe(200);
+            expect(body.event).toBeDefined();
+        })
     });
 
     describe("PUT /update", () => {

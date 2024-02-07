@@ -59,74 +59,74 @@ export const roles = (...args: UserRole[]) => {
     };
 };
 
-export const createIfNew = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-) => {
-    try {
-        const { email, password } = req.body.user;
+// export const createIfNew = async (
+//     req: Request,
+//     res: Response,
+//     next: NextFunction
+// ) => {
+//     try {
+//         const { email, password } = req.body.user;
 
-        if (!email) {
-            res.status(400).json({ message: "Email was not provided" });
-            return;
-        }
+//         if (!email) {
+//             res.status(400).json({ message: "Email was not provided" });
+//             return;
+//         }
 
-        if (!password) {
-            res.status(400).json({ message: "Password was not provided" });
-            return;
-        }
+//         if (!password) {
+//             res.status(400).json({ message: "Password was not provided" });
+//             return;
+//         }
 
-        const user = await prisma.user.findUnique({
-            where: {
-                email: email,
-            },
-        });
+//         const user = await prisma.user.findUnique({
+//             where: {
+//                 email: email,
+//             },
+//         });
 
-        if (!user) {
-            const pobData = {
-                region: "MI",
-                locality: "F205",
-            };
+//         if (!user) {
+//             const pobData = {
+//                 region: "MI",
+//                 locality: "F205",
+//             };
 
-            const pob = await prisma.placeOfBirth.findFirst({
-                where: pobData,
-            });
+//             const pob = await prisma.placeOfBirth.findFirst({
+//                 where: pobData,
+//             });
 
-            if (pob) {
-                const hashedPassword = await hashPassword(password);
-                const newUser = await prisma.user.create({
-                    data: {
-                        email: email,
-                        hashedPassword: hashedPassword,
-                        role: UserRole.Voter,
-                        pobId: pob.id,
-                    },
-                });
+//             if (pob) {
+//                 const hashedPassword = await hashPassword(password);
+//                 const newUser = await prisma.user.create({
+//                     data: {
+//                         email: email,
+//                         hashedPassword: hashedPassword,
+//                         role: UserRole.Voter,
+//                         pobId: pob.id,
+//                     },
+//                 });
 
-                if (!newUser) {
-                    res.status(400).json({ message: "Could not create user" });
-                    return;
-                }
-            } else {
-                const hashedPassword = await hashPassword(password);
-                const newUser = await prisma.user.create({
-                    data: {
-                        email: email,
-                        hashedPassword: hashedPassword,
-                        role: UserRole.Voter,
-                        pob: {
-                            create: pobData,
-                        },
-                    },
-                });
-            }
-        }
-        next();
-    } catch (err: any) {
-        res.status(500).json({ message: "Internal server error" });
-    }
-};
+//                 if (!newUser) {
+//                     res.status(400).json({ message: "Could not create user" });
+//                     return;
+//                 }
+//             } else {
+//                 const hashedPassword = await hashPassword(password);
+//                 const newUser = await prisma.user.create({
+//                     data: {
+//                         email: email,
+//                         hashedPassword: hashedPassword,
+//                         role: UserRole.Voter,
+//                         pob: {
+//                             create: pobData,
+//                         },
+//                     },
+//                 });
+//             }
+//         }
+//         next();
+//     } catch (err: any) {
+//         res.status(500).json({ message: "Internal server error" });
+//     }
+// };
 
 export const login = async (req: Request, res: Response) => {
     try {

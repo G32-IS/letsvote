@@ -1,6 +1,8 @@
-import { verifyToken } from '../controllers/auth.controller';
+import { verifyToken, roles } from '../controllers/auth.controller';
 import jwt from 'jsonwebtoken';
 import { prisma } from '../prisma/prisma-client';
+import express from "express";
+import supertest from "supertest";
 
 jest.mock('jsonwebtoken', () => ({
     verify: jest.fn(),
@@ -83,4 +85,56 @@ describe('Test auth.controller.ts functions', () => {
             expect(res.clearCookie).toHaveBeenCalledWith('token');
         });
     })
+
+    describe("Test roles function", () => {
+        let mockReq;
+        let mockRes;
+        let mockNext;
+
+        beforeEach(() => {
+            mockReq = { body: {} };
+            mockRes = {
+                status: jest.fn().mockReturnThis(),
+                json: jest.fn().mockReturnThis(),
+            };
+            mockNext = jest.fn();
+        });
+
+        test('It should call next for allowed roles', async () => {
+            mockReq.body.user = { role: "Admin" };
+
+            const middleware = roles("Admin", "SysAdmin");
+            await middleware(mockReq, mockRes, mockNext);
+
+            expect(mockNext).toHaveBeenCalled();
+            expect(mockRes.status).not.toHaveBeenCalled();
+        });
+
+        test('It should return 401 for disallowed roles', async () => {
+            mockReq.body.user = { role: "Voter" };
+
+            const middleware = roles("Admin", "SysAdmin");
+            await middleware(mockReq, mockRes, mockNext);
+
+            expect(mockNext).not.toHaveBeenCalled();
+            expect(mockRes.status).toHaveBeenCalledWith(401);
+            expect(mockRes.json).toHaveBeenCalledWith({
+                message: "User role does not allow this operation",
+            });
+        });
+
+        test('It should return 401 when role is missing', async () => {
+            mockReq.body.user = {}; // No role provided
+
+            const middleware = roles("Admin", "SysAdmin");
+            await middleware(mockReq, mockRes, mockNext);
+
+            expect(mockNext).not.toHaveBeenCalled();
+            expect(mockRes.status).toHaveBeenCalledWith(401);
+            expect(mockRes.json).toHaveBeenCalledWith({
+                message: "User role does not allow this operation",
+            });
+        });
+    })
 });
+

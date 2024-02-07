@@ -36,76 +36,40 @@ jest.mock("../prisma/prisma-client", () => ({
             create: jest.fn(),
             findFirst: jest.fn(),
         },
-        $transaction: jest.fn(),
+        $transaction: jest.fn().mockImplementation(async (transactionCallback) => {
+            return transactionCallback();
+        }),
     },
 }));
 
-// prisma.$transaction.mockImplementation(async (_) => {
-//     try {
-//         const { vote, user } = req.body;
-
-//         // Create vote
-//         const newVote = await prisma.vote.create({
-//             data: vote,
-//         });
-
-//         if (!newVote) {
-//             res.status(400).json({
-//                 message: "Could not create vote",
-//             });
-//             return;
-//         }
-
-//         // Create participation
-//         const newParticipation = await prisma.participation.create({
-//             data: {
-//                 userId: user.id,
-//                 eventId: newVote.eventId,
-//             },
-//         });
-
-//         if (newParticipation) {
-//             res.status(200).json({
-//                 participation: newParticipation,
-//             });
-//         } else {
-//             res.status(500).json({
-//                 message: "Could not create participation",
-//             });
-//         }
-//     } catch (err) {
-//         res.status(500).json({ message: "Internal server error" });
-//     }
-// });
-
 describe("Test vote.router (/vote)", () => {
     describe("POST /create", () => {
-        // test("Expected: 200, User was able to vote and the vote is stored", async () => {
-        //     const mockUser = {
-        //         id: "mockid123",
-        //     };
-        //     const mockedVote = {
-        //         eventId: "mockEventId123",
-        //         choiceId: "mockChoiceId123",
-        //     };
-        //     const mockedParticipation = {
-        //         userId: mockUser.id,
-        //         eventId: mockedVote.eventId,
-        //     };
-        //     prisma.vote.create.mockImplementation(async () => mockedVote);
-        //     prisma.participation.create.mockImplementation(
-        //         async () => mockedParticipation
-        //     );
-        //     const { statusCode, body } = await req
-        //         .post("/api/vote/create")
-        //         .send({
-        //             vote: mockedVote,
-        //             user: mockUser,
-        //         });
+        test("Expected: 200, User was able to vote and the vote is stored", async () => {
+            const mockUser = {
+                id: "mockid123",
+            };
+            const mockedVote = {
+                eventId: "mockEventId123",
+                choiceId: "mockChoiceId123",
+            };
+            const mockedParticipation = {
+                userId: mockUser.id,
+                eventId: mockedVote.eventId,
+            };
+            prisma.vote.create.mockImplementation(async () => mockedVote);
+            prisma.participation.create.mockImplementation(
+                async () => mockedParticipation
+            );
+            const { statusCode, body } = await req
+                .post("/api/vote/create")
+                .send({
+                    vote: mockedVote,
+                    user: mockUser,
+                });
 
-        //     expect(statusCode).toBe(200);
-        //     expect(body.participation).toBeDefined();
-        // });
+            expect(statusCode).toBe(200);
+            expect(body.participation).toBeDefined();
+        });
 
         test("Expected: 200, and creation of new participation", () => {});
     });

@@ -33,6 +33,9 @@ jest.mock("../prisma/prisma-client", () => ({
         user: {
             update: jest.fn(),
         },
+        $transaction: jest.fn().mockImplementation(async (transactionCallback) => {
+            return transactionCallback();
+        }),
     },
 }));
 
@@ -78,6 +81,27 @@ describe("Test request.router (/request)", () => {
     });
 
     describe("PUT /handle", () => {
+        test("Expected: 200, request returned", async () => {
+            const mockNewRequest = {
+                state: "Accepted",
+            }
+            const mockUser = {
+                id: "mockid123",
+            }
+            prisma.request.update.mockImplementation(async () => {
+                return mockNewRequest;
+            });
+            prisma.user.update.mockImplementation(async () => {
+                return mockUser;
+            })
+
+            const { statusCode, body } = await req.put("/api/request/handle").send({
+                request: {}
+            });
+
+            expect(statusCode).toBe(200);
+            expect(body.request).toBeDefined();
+        });
     });
 
     describe("GET /get/all", () => {
