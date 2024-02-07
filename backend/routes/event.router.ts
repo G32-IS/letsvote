@@ -30,15 +30,10 @@ eventRouter.get('/get/mine',
     getMyEvents);
 
 eventRouter.get("/get/single/:id",
-    verifyToken,
     getEvent);
 
 eventRouter.get("/get/votes/:id",
-    verifyToken,
-    roles(UserRole.Admin),
     getEventVotes);
 
 eventRouter.get("/get/participations/:id",
-    verifyToken,
-    roles(UserRole.Admin),
     getEventParticipations);

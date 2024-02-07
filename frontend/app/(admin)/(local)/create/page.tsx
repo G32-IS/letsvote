@@ -115,15 +115,14 @@ const CreatePage: FC = (props: Props) => {
         if (userError) {
             router.push("/error");
         }
-        else if (user?.role != "Admin") {
+        else if (!isUserLoading && user?.role != "Admin") {
             router.push("/error");
         }
-    }, [userError, user, router])
+    }, [isUserLoading, userError, user, router])
 
     if (isUserLoading || (!user && !userError)) return <Loading />
 
     return (
-        
         <Stack gap="xl">
             <ContentTitle
                 title={"Creazione votazione (" + Number(createState + 1) + "/2)"}

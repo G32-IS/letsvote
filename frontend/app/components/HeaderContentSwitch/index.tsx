@@ -13,7 +13,6 @@ const HeaderContentSwitch = ({ role }: Props) => {
             case "SysAdmin":
                 return <>
                     <Link href="/requests">Gestisci richieste</Link>
-                    <Link href="#">Gestisci amministratori</Link>
                 </>
                 break;
 

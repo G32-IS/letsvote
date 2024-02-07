@@ -20,10 +20,10 @@ const Created = (props: Props) => {
     if (userError) {
       router.push("/error");
     }
-    else if (user?.role != "SysAdmin") {
+    else if (!isUserLoading && user?.role != "Admin") {
       router.push("/error");
     }
-  }, [userError, user, router])
+  }, [isUserLoading, userError, user, router])
 
   if (isUserLoading || (!user && !userError)) return <Loading />
 
