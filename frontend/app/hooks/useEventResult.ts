@@ -21,9 +21,10 @@ export const useEventResult = (id: string) => {
         error,
         data: result,
     } = useQuery({
-        queryKey: [QUERY_KEY.events],
+        queryKey: [QUERY_KEY.singleEventResult+id],
         queryFn: _ => fetchEventResult(id),
-        retry: false
+        retry: false,
+        refetchInterval: 3000
     });
 
     return { result, isLoading, error };

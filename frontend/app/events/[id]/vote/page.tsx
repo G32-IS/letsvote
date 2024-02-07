@@ -20,6 +20,7 @@ import { useRouter } from "next/navigation"
 import Error from "@/app/components/Error"
 import { CustomError } from "@/app/utils/errors/CustomError"
 import { useDisclosure } from "@mantine/hooks"
+import { useProfile } from "@/app/hooks/useProfile"
 
 type Props = {
     params: { id: string }
@@ -32,17 +33,18 @@ const VotePage = ({ params }: Props) => {
 
     const { singleEvent, error, isLoading } = useSingleEvent(params.id);
     const { vote, error: voteError, isLoading: isVoteLoading, isSuccess } = useAddVote()
+    const { user, error: userError, isLoading: isUserLoading } = useProfile();
 
     const [value, setValue] = useState(singleEvent?.choices[0] || 0);
 
     useEffect(() => {
-        if (error instanceof CustomError && error.status == 401) router.push("/login");
+        if (userError) router.push("/login");
         else if (isSuccess) router.push("vote/completed")
         else if (voteError) router.push("/error")
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isSuccess, voteError, error])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isSuccess, voteError, error, userError])
 
-    if (isLoading || isVoteLoading || (error instanceof CustomError && error.status == 401)) return <Loading />
+    if (isLoading || isVoteLoading || isUserLoading) return <Loading />
     if (error) return <Error message={error instanceof CustomError ? error.message : "C'è stato un errore"} />
 
     return (

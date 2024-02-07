@@ -1,12 +1,16 @@
 "use client"
 
+import style from "./result.module.css"
+
 import ContentTitle from '@/app/components/ContentTitle'
 import Loading from '@/app/components/Loading'
 import { useEventResult } from '@/app/hooks/useEventResult'
 import { useSingleEvent } from '@/app/hooks/useSingleEvent'
-import { Button, Stack, Text } from '@mantine/core'
+import { Button, Group, Stack, Text, Title } from '@mantine/core'
 import { useRouter } from 'next/navigation'
 import React, { useEffect } from 'react'
+
+import { MdDownload } from "react-icons/md";
 
 type Props = {
     params: { id: string }
@@ -21,7 +25,7 @@ const ResultPage = ({ params }: Props) => {
         if (resultError || singleEventError) router.push("/error");
     }, [resultError, singleEventError, router])
 
-    if (isEventResultLoading || isSingleEventLoading) return <Loading />
+    if (isEventResultLoading || isSingleEventLoading || resultError || singleEventError) return <Loading />
 
     const exportData = (data: any) => {
         const jsonString = `data:text/json;chatset=utf-8,${encodeURIComponent(
@@ -34,13 +38,31 @@ const ResultPage = ({ params }: Props) => {
         link.click();
     };
 
+    const isLive = (date: string): boolean => {
+        const now = new Date();
+        const endDate = new Date(date)
+        if (now < endDate) return true;
+        return false;
+    }
+
     return (
         <Stack w="100%">
-            <ContentTitle title='Risultato votazione' subtitle={singleEvent.title} align={false} />
+            <Group align='flex-start'>
+                <Stack gap="0" align={"flex-start"}>
+                    <Group align="center" gap="xs">
+                        <Title order={1}>{isLive(singleEvent.endDate) ? 'Andamento live' : 'Risultato votazione'}</Title>
+                        {isLive(singleEvent.endDate) ? <div className={style.circle}></div> : <></>}
+                    </Group>
+                    <Text>{singleEvent.title}</Text>
+                </Stack>
+            </Group>
             <Text>Numero di voti: {result.length}</Text>
-            <Button onClick={() => {
-                exportData(result)
-            }}>Scarica dati</Button>
+            <Group justify="flex-end" mt="md">
+                <Button leftSection={<MdDownload />} onClick={() => {
+                    exportData(result)
+                }}>Scarica dati</Button>
+            </Group>
+
         </Stack>
     )
 }

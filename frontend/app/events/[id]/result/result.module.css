@@ -1,0 +1,33 @@
+.circle {
+  width: 25px;
+  height: 25px;
+  background-color: red;
+  border-radius: 50%;
+  /* animation: pulse 1.25s cubic-bezier(0.215, 0.61, 0.355, 1) infinite; */
+  animation: circle 1.2s cubic-bezier(0.455, 0.03, 0.515, 0.955) -0.4s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.33);
+  }
+  80%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes circle {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0.7;
+    transform: scale(0.8);
+  }
+}
