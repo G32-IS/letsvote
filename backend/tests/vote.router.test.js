@@ -5,6 +5,7 @@ import { app } from "../utils/testServer";
 import { prisma } from "../prisma/prisma-client";
 import { verifyToken } from "../controllers/auth.controller";
 import { createVote } from "../controllers/vote.controller";
+import { checkPrerequisites } from "../controllers/vote.controller";
 
 const voteRouter = express.Router();
 voteRouter.use(express.json());
@@ -111,9 +112,39 @@ describe("Test vote.router (/vote)", () => {
 });
 
 // this are not tests strictly related with voteRouter, but are just for its middleware checkPrerequisites()
-describe("Test checkPrerequisites() middleware", () => {
-    // test("Expected: 200, ", async () => {
-    //     const myNext = () => true;
-    //     checkPrerequisites(req, res, myNext);
-    // });
-});
+// describe("Test checkPrerequisites() middleware", () => {
+//     test("Expected: 200, ", async () => {
+//         const mockUser = {
+//             id: "mockid123",
+//         };
+//         const mockVote = {
+//             eventId: "mockeventid123",
+//         };
+
+//         const myNext = () => true;
+//         let mockReq = {
+//             body: {
+//                 user: mockUser,
+//                 vote: mockVote,
+//             },
+//         };
+
+//         const mockEvent = {
+//             startDate: new Date(),
+//             endDate: new Date(),
+//             type: "ReferendumNazionale",
+//         };
+
+//         prisma.event.findUnique.mockImplementation(async () => {
+//             return mockEvent;
+//         });
+//         prisma.participation.findFirst.mockImplementation(async () => {
+//             return null;
+//         });
+//         prisma.user.findUnique.mockImplementation(async () => {
+//             return { pob: {} };
+//         });
+
+//         const res = await checkPrerequisites(req, res, myNext);
+//     });
+// });

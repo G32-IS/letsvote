@@ -2,12 +2,8 @@ import express from "express";
 import supertest from "supertest";
 import { app } from "../utils/testServer";
 import {
-    createEvent,
-    getAllEvents,
     getMyEvents,
-    getEventParticipations,
     getEvent,
-    getEventVotes,
     updateEvent,
     deleteEvent,
 } from "../controllers/event.controller";
@@ -41,11 +37,6 @@ const mockUser = {
     },
 };
 
-// TODO:
-/* 
-    - I need to mock prisma.$transaction to test /event/create
-*/
-
 jest.mock("../prisma/prisma-client", () => ({
     prisma: {
         event: {
@@ -68,25 +59,12 @@ jest.mock("../redis/redis-client", () => ({
     },
 }));
 
-// jest.mock('../prisma/prisma-client', () => ({
-//     prisma: {
-//         user: {
-//             findUnique: jest.fn(),
-//         },
-//     }
-// }));
-
 afterEach(() => {
     jest.clearAllMocks();
 });
 
 describe("Test event.router", () => {
     describe("POST /create", () => {
-        test("Expected: 401, User role does not allow this operation", async () => {});
-
-        test("Expected: 500, Internal server error", async () => {});
-
-        test("Expected: 200, event created", async () => {});
     });
 
     describe("PUT /update", () => {
@@ -161,18 +139,9 @@ describe("Test event.router", () => {
     });
 
     describe("GET /get/all", () => {
-        test("test", async () => {});
-
-        test("test", async () => {});
-
-        test("test", async () => {});
     });
 
     describe("GET /get/mine", () => {
-        test("test", async () => {});
-
-        test("test", async () => {});
-
         test("Expected: 200", async () => {
             const mockMyEvents = [
                 {
@@ -266,18 +235,8 @@ describe("Test event.router", () => {
     });
 
     describe("GET /get/votes/:id", () => {
-        test("test", async () => {});
-
-        test("test", async () => {});
-
-        test("test", async () => {});
     });
 
     describe("GET /get/participations/:id", () => {
-        test("test", async () => {});
-
-        test("test", async () => {});
-
-        test("test", async () => {});
     });
 });

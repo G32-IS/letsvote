@@ -78,11 +78,6 @@ describe("Test request.router (/request)", () => {
     });
 
     describe("PUT /handle", () => {
-        test("test", async () => {
-            // const res = await req.put("/api/request/handle");
-        });
-
-        test("test", async () => {});
     });
 
     describe("GET /get/all", () => {
