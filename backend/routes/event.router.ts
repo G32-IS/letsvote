@@ -33,11 +33,7 @@ eventRouter.get("/get/single/:id",
     getEvent);
 
 eventRouter.get("/get/votes/:id",
-    verifyToken,
-    roles(UserRole.Admin),
     getEventVotes);
 
 eventRouter.get("/get/participations/:id",
-    verifyToken,
-    roles(UserRole.Admin),
     getEventParticipations);
