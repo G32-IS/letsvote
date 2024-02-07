@@ -15,19 +15,9 @@ export const fetchSingleEvent = async (eventId: string) => {
         switch (response.status) {
             case 401:
                 throw new CustomError("Non sei autorizzato", response.status)
-                break;
-            case 404:
-                throw new CustomError("C'è stato un errore", response.status)
-                break;
-            case 500:
-                throw new CustomError("C'è stato un errore", response.status)
-                break;
             default:
                 throw new CustomError("C'è stato un errore", response.status)
-                break;
         }
-
-        throw new Error(data.message);
     }
 
     return data.event;

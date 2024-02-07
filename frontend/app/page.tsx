@@ -35,7 +35,7 @@ export default function Home() {
                 <Text>Se hai domande, dubbi o hai bisogno di assistenza, siamo qui per aiutarti! Puoi contattarci tramite i seguenti canali:</Text>
                 <Stack mt="5px" mb="5px" gap="0">
                     <Text>- Email: info@letsvote.it</Text>
-                    <Text>- Assistenza telefonica: +39 XXX XXX XXXX</Text>
+                    <Text>- Assistenza telefonica: +39 1234567890</Text>
                 </Stack>
                 <Text>Siamo impegnati a fornire un servizio di alta qualità e a garantire una partecipazione democratica senza intoppi. La tua opinione è fondamentale, e siamo pronti ad assisterti in ogni fase del processo elettorale. Grazie per scegliere letsvote e contribuire a rafforzare la democrazia digitale in Italia.</Text>
             </Stack>

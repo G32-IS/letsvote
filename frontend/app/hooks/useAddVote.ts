@@ -24,8 +24,9 @@ export const useAddVote = () => {
  
     const { mutate: vote, error, isPending: isLoading, isSuccess } = useMutation({
         mutationFn: postVote,
-        onSuccess: () => {
+        onSuccess: (data, variables) => {
             client.invalidateQueries({queryKey: [QUERY_KEY.votes]});
+            client.invalidateQueries({queryKey: [QUERY_KEY.singleEventResult+variables.eventId]});
         }
     });
 

@@ -49,10 +49,10 @@ const Requests = (props: Props) => {
     if (userError) {
       router.push("/error");
     }
-    else if (user?.role != "SysAdmin") {
+    else if (!isUserLoading && user?.role != "SysAdmin") {
       router.push("/error");
     }
-  }, [userError, user, router])
+  }, [isUserLoading, userError, user, router])
 
   if (isUserLoading || (!user && !userError)) return <Loading />
 

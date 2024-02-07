@@ -36,12 +36,13 @@ const VotePage = ({ params }: Props) => {
     const [value, setValue] = useState(singleEvent?.choices[0] || 0);
 
     useEffect(() => {
-        if (isSuccess) router.push("vote/completed")
+        if (error instanceof CustomError && error.status == 401) router.push("/login");
+        else if (isSuccess) router.push("vote/completed")
         else if (voteError) router.push("/error")
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isSuccess, voteError])
+    }, [isSuccess, voteError, error])
 
-    if (isLoading || isVoteLoading) return <Loading />
+    if (isLoading || isVoteLoading || (error instanceof CustomError && error.status == 401)) return <Loading />
     if (error) return <Error message={error instanceof CustomError ? error.message : "C'è stato un errore"} />
 
     return (

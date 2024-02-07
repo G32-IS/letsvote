@@ -62,7 +62,9 @@ const EventsTable = ({ events, renderNumber, isVotable, user }: Props) => {
                     }}>Vota</Button>
                 </Table.Td> : <></>}
                 <Table.Td>
-                    <Button variant='default' leftSection={<IoEye />}>Visualizza andamento</Button>
+                    <Button variant='default' onClick={() => {
+                        router.push(`/events/${evnt.id}/result`)
+                    }} leftSection={<IoEye />}>{isVotable ? "Visualizza andamento" : "Visualizza risultato"}</Button>
                 </Table.Td>
                 {
                     user && user.role == "Admin" ?
