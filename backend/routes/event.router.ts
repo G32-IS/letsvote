@@ -30,7 +30,6 @@ eventRouter.get('/get/mine',
     getMyEvents);
 
 eventRouter.get("/get/single/:id",
-    verifyToken,
     getEvent);
 
 eventRouter.get("/get/votes/:id",
